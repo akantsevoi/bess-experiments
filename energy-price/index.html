@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Energy Price Forecast</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    #controls {
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 5px 10px;
+      margin-right: 5px;
+    }
+
+    #currentTime {
+      font-weight: bold;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Energy Price Forecast</h1>
+  <div id="controls">
+    <button id="prevBtn">← Previous Hour</button>
+    <button id="nextBtn">Next Hour →</button>
+    <span id="currentTime"></span>
+  </div>
+  <canvas id="forecastChart" width="800" height="400"></canvas>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Import events data -->
+  <script type="module">
+    import { events } from './events.js';
+
+    let currentIndex = 0;
+    let chart;
+
+    function updateChart() {
+      const event = events[currentIndex];
+      document.getElementById('currentTime').textContent = `Issued at: ${event.issued_at}`;
+      const labels = event.prices.map(p => new Date(p.start).toLocaleString());
+      const data = event.prices.map(p => p.price);
+
+      if (chart) {
+        chart.data.labels = labels;
+        chart.data.datasets[0].data = data;
+        chart.options.plugins.title.text = `Forecast run ${event.forecast_run_id}`;
+        chart.update();
+      } else {
+        const ctx = document.getElementById('forecastChart').getContext('2d');
+        chart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: `Price (${event.price_unit})`,
+              data: data,
+              fill: false,
+              borderWidth: 2,
+              tension: 0.1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              title: {
+                display: true,
+                text: `Forecast run ${event.forecast_run_id}`
+              },
+            },
+            scales: {
+              x: {
+                display: true,
+                title: { display: true, text: 'Time' }
+              },
+              y: {
+                display: true,
+                title: { display: true, text: `Price (${event.price_unit})` }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateChart();
+      }
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      if (currentIndex < events.length - 1) {
+        currentIndex++;
+        updateChart();
+      }
+    });
+
+    // Initialize chart on load
+    updateChart();
+  </script>
+</body>
+
+</html>
