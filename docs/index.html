@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BESS Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .main-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .maintenance-list {
+            width: 300px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            position: relative;
+        }
+
+        .maintenance-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+
+        .maintenance-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .hover-panel {
+            position: absolute;
+            left: 320px;
+            top: 0;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+            width: 300px;
+        }
+
+        .chart-container {
+            flex-grow: 1;
+            height: 300px;
+        }
+
+        .assets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .asset-box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .asset-box.critical {
+            border-color: red;
+            background-color: rgba(255, 0, 0, 0.1);
+        }
+
+        .asset-box.low {
+            border-color: #ffd700;
+            background-color: rgba(255, 215, 0, 0.1);
+        }
+
+        .asset-box.highlighted {
+            background-color: rgba(0, 0, 255, 0.1);
+        }
+
+        .asset-details {
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+            width: 250px;
+        }
+
+        .highlighted-request {
+            background-color: rgba(0, 0, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="maintenance-list">
+            <h2>Maintenance Requests</h2>
+            <div id="maintenanceList"></div>
+            <div id="hoverPanel" class="hover-panel"></div>
+        </div>
+        <div class="chart-container">
+            <canvas id="priceChart"></canvas>
+        </div>
+    </div>
+    <div class="assets-grid" id="assetsGrid"></div>
+
+    <script>
+        // Data from the documentation
+        const maintenanceData = {
+            "requests": [
+                {
+                    "event_id": "93656c8c-a1e1-11ee-8f33-fbc920f02a36",
+                    "issue_id": "3883a81a-aebd-4573-87b3-ea46350f1be8",
+                    "revision": 1,
+                    "detected_at": "2025-05-23T05:17:00Z",
+                    "asset_id": "BESS-03",
+                    "component_name": "Power Conversion System",
+                    "component_id": "BESS-03.PCS-2",
+                    "fault_code": "PCS_OVERTEMP",
+                    "severity_level": "CRITICAL",
+                    "reaction_time_limit": "30h",
+                    "estimated_repair_hours": 2.5,
+                    "manual_url": "https://maint.example.com/pcs/ovtemp#step3",
+                    "status": "OPEN",
+                    "comment": "Temperature rose to 95 °C; fan #2 failed.",
+                    "schema_version": 3
+                },
+                {
+                    "event_id": "d14b6d0a-d68b-48c6-86f9-3b9b6c6844f9",
+                    "issue_id": "5d95696b-a100-4a7a-9f05-c2eef82c659a",
+                    "revision": 1,
+                    "detected_at": "2025-05-23T04:18:00Z",
+                    "asset_id": "BESS-01",
+                    "component_name": "Power Conversion System",
+                    "component_id": "BESS-01.PCS-1",
+                    "fault_code": "PCS_OVERTEMP",
+                    "severity_level": "LOW",
+                    "reaction_time_limit": "30h",
+                    "estimated_repair_hours": 0.5,
+                    "manual_url": "https://maint.example.com/pcs/ovtemp#step3",
+                    "status": "OPEN",
+                    "comment": "Temperature rose to 75 °C; fan #2 failed.",
+                    "schema_version": 3
+                }
+            ]
+        };
+
+        const assetsData = {
+            "assets": [
+                {
+                    "id": "BESS-01",
+                    "display_name": "Module 1",
+                    "modules": [
+                        {
+                            "id": "BESS-01.PCS-1",
+                            "type": "fan"
+                        },
+                        {
+                            "id": "BESS-01.PCS-2",
+                            "type": "fan"
+                        }
+                    ]
+                },
+                {
+                    "id": "BESS-02",
+                    "display_name": "Forgot to add the name",
+                    "modules": [
+                        {
+                            "id": "BESS-02.PCS-1",
+                            "type": "fan"
+                        },
+                        {
+                            "id": "BESS-02.PCS-2",
+                            "type": "fan"
+                        }
+                    ]
+                },
+                {
+                    "id": "BESS-03",
+                    "display_name": "Best module",
+                    "modules": [
+                        {
+                            "id": "BESS-03.PCS-1",
+                            "type": "fan"
+                        },
+                        {
+                            "id": "BESS-03.PCS-2",
+                            "type": "fan"
+                        }
+                    ]
+                },
+                {
+                    "id": "BESS-04",
+                    "display_name": "unknown",
+                    "modules": [
+                        {
+                            "id": "BESS-04.PCS-1",
+                            "type": "fan"
+                        },
+                        {
+                            "id": "BESS-04.PCS-2",
+                            "type": "fan"
+                        }
+                    ]
+                },
+                {
+                    "id": "BESS-05",
+                    "display_name": "default name",
+                    "modules": [
+                        {
+                            "id": "BESS-05.PCS-1",
+                            "type": "fan"
+                        },
+                        {
+                            "id": "BESS-06.PCS-2",
+                            "type": "fan"
+                        }
+                    ]
+                },
+                {
+                    "id": "BESS-07",
+                    "display_name": ":)",
+                    "modules": [
+                        {
+                            "id": "BESS-07.PCS-1",
+                            "type": "fan"
+                        },
+                        {
+                            "id": "BESS-07.PCS-2",
+                            "type": "fan"
+                        }
+                    ]
+                }
+            ]
+        };
+
+        const priceData = {
+            "forecast_run_id": "run-0",
+            "issued_at": "2025-05-27T00:00:00Z",
+            "market_node": "SE3",
+            "currency": "EUR",
+            "price_unit": "€/MWh",
+            "horizon_hours": 24,
+            "prices": [
+                { "start": "2025-05-27T01:00:00Z", "price": 70.40 },
+                { "start": "2025-05-27T02:00:00Z", "price": 70.80 },
+                { "start": "2025-05-27T03:00:00Z", "price": 71.20 },
+                { "start": "2025-05-27T04:00:00Z", "price": 71.60 },
+                { "start": "2025-05-27T05:00:00Z", "price": 72.00 },
+                { "start": "2025-05-27T06:00:00Z", "price": 72.40 },
+                { "start": "2025-05-27T07:00:00Z", "price": 89.80 },
+                { "start": "2025-05-27T08:00:00Z", "price": 134.20 },
+                { "start": "2025-05-27T09:00:00Z", "price": 178.60 },
+                { "start": "2025-05-27T10:00:00Z", "price": 101.00 },
+                { "start": "2025-05-27T11:00:00Z", "price": 60.40 },
+                { "start": "2025-05-27T12:00:00Z", "price": 52.80 },
+                { "start": "2025-05-27T13:00:00Z", "price": 51.20 },
+                { "start": "2025-05-27T14:00:00Z", "price": 75.60 },
+                { "start": "2025-05-27T15:00:00Z", "price": 76.00 },
+                { "start": "2025-05-27T16:00:00Z", "price": 80.40 },
+                { "start": "2025-05-27T17:00:00Z", "price": 98.80 },
+                { "start": "2025-05-27T18:00:00Z", "price": 158.20 },
+                { "start": "2025-05-27T19:00:00Z", "price": 156.60 },
+                { "start": "2025-05-27T20:00:00Z", "price": 154.00 },
+                { "start": "2025-05-27T21:00:00Z", "price": 134.40 },
+                { "start": "2025-05-27T22:00:00Z", "price": 90.80 },
+                { "start": "2025-05-27T23:00:00Z", "price": 79.20 },
+                { "start": "2025-05-28T00:00:00Z", "price": 60.60 }
+            ],
+            "schema_version": 2
+        };
+
+        const maintenanceSchedule = {
+            "schedule": [
+                {
+                    "plan_id": "5460e244-2fb1-45ce-ad45-e90d3aca1473",
+                    "request_issue_id": "3883a81a-aebd-4573-87b3-ea46350f1be8",
+                    "maintenance_start": "2025-05-27T12:00:00Z",
+                    "maintenance_end": "2025-05-27T14:00:00Z",
+                    "asset_id": "BESS-03"
+                },
+                {
+                    "plan_id": "709d5c30-b8e5-4e5e-ade0-d4e321f5b921",
+                    "request_issue_id": "5d95696b-a100-4a7a-9f05-c2eef82c659a",
+                    "maintenance_start": "2025-05-27T15:00:00Z",
+                    "maintenance_end": "2025-05-27T16:00:00Z",
+                    "asset_id": "BESS-01"
+                }
+            ]
+        };
+
+        // Initialize maintenance list
+        function initializeMaintenanceList() {
+            const listContainer = document.getElementById('maintenanceList');
+            const hoverPanel = document.getElementById('hoverPanel');
+
+            maintenanceData.requests.forEach(request => {
+                const item = document.createElement('div');
+                item.className = 'maintenance-item';
+                item.innerHTML = `
+                    <div>Detected: ${new Date(request.detected_at).toLocaleString()}</div>
+                    <div>Severity: ${request.severity_level}</div>
+                    <div>Repair Hours: ${request.estimated_repair_hours}</div>
+                `;
+
+                item.addEventListener('mouseenter', () => {
+                    hoverPanel.innerHTML = `
+                        <h3>Maintenance Details</h3>
+                        <p><strong>Event ID:</strong> ${request.event_id}</p>
+                        <p><strong>Asset ID:</strong> ${request.asset_id}</p>
+                        <p><strong>Component:</strong> ${request.component_name}</p>
+                        <p><strong>Fault Code:</strong> ${request.fault_code}</p>
+                        <p><strong>Status:</strong> ${request.status}</p>
+                        <p><strong>Comment:</strong> ${request.comment}</p>
+                    `;
+                    hoverPanel.style.display = 'block';
+
+                    // Highlight related asset
+                    const assetBox = document.querySelector(`[data-asset-id="${request.asset_id}"]`);
+                    if (assetBox) {
+                        assetBox.classList.add('highlighted');
+                    }
+                });
+
+                item.addEventListener('mouseleave', () => {
+                    hoverPanel.style.display = 'none';
+                    document.querySelectorAll('.asset-box').forEach(box => {
+                        box.classList.remove('highlighted');
+                    });
+                });
+
+                listContainer.appendChild(item);
+            });
+        }
+
+        // Initialize price chart
+        function initializePriceChart() {
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            const labels = priceData.prices.map(p => new Date(p.start).toLocaleTimeString());
+            const data = priceData.prices.map(p => p.price);
+
+            // Create annotations for maintenance periods
+            const annotations = {
+                annotations: {}
+            };
+
+            // Add maintenance schedule annotations
+            maintenanceSchedule.schedule.forEach((maintenance, index) => {
+                const startTime = new Date(maintenance.maintenance_start);
+                const endTime = new Date(maintenance.maintenance_end);
+
+                // Find the indices in the price data that correspond to maintenance period
+                const startIndex = priceData.prices.findIndex(p => new Date(p.start) >= startTime);
+                const endIndex = priceData.prices.findIndex(p => new Date(p.start) >= endTime);
+
+                if (startIndex !== -1 && endIndex !== -1) {
+                    annotations.annotations[`maintenance-${index}`] = {
+                        type: 'box',
+                        xMin: startIndex,
+                        xMax: endIndex,
+                        backgroundColor: 'rgba(255, 99, 132, 0.25)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                        label: {
+                            content: 'Maintenance',
+                            display: true,
+                            position: 'start'
+                        },
+                        // Add custom properties for hover interaction
+                        maintenanceId: maintenance.request_issue_id,
+                        assetId: maintenance.asset_id
+                    };
+                }
+            });
+
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Energy Prices (€/MWh)',
+                        data: data,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    },
+                    plugins: {
+                        annotation: annotations,
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return `Price: ${context.parsed.y} €/MWh`;
+                                }
+                            }
+                        }
+                    },
+                    onHover: (event, elements) => {
+                        // Reset all maintenance items highlighting
+                        document.querySelectorAll('.maintenance-item').forEach(item => {
+                            item.classList.remove('highlighted-request');
+                        });
+                        document.querySelectorAll('.asset-box').forEach(box => {
+                            box.classList.remove('highlighted');
+                        });
+
+                        // Get mouse position
+                        const rect = event.native.target.getBoundingClientRect();
+                        const x = event.x;
+                        const y = event.y - rect.top;
+
+                        // Check if mouse is over any maintenance annotation
+                        Object.entries(chart.options.plugins.annotation.annotations).forEach(([key, annotation]) => {
+                            const xScale = chart.scales.x;
+                            const xMin = xScale.getPixelForValue(annotation.xMin);
+                            const xMax = xScale.getPixelForValue(annotation.xMax);
+
+                            if (x >= xMin && x <= xMax) {
+                                // Find and highlight the corresponding maintenance request
+                                const maintenanceItems = document.querySelectorAll('.maintenance-item');
+                                maintenanceItems.forEach((item, index) => {
+                                    if (maintenanceData.requests[index].issue_id === annotation.maintenanceId) {
+                                        item.classList.add('highlighted-request');
+                                    }
+                                });
+
+                                const assetBox = document.querySelector(`[data-asset-id="${annotation.assetId}"]`);
+                                if (assetBox) {
+                                    assetBox.classList.add('highlighted');
+                                }
+
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        // Initialize assets grid
+        function initializeAssetsGrid() {
+            const gridContainer = document.getElementById('assetsGrid');
+
+            assetsData.assets.forEach(asset => {
+                const assetBox = document.createElement('div');
+                assetBox.className = 'asset-box';
+                assetBox.setAttribute('data-asset-id', asset.id);
+
+                // Check if asset has maintenance requests
+                const assetRequests = maintenanceData.requests.filter(req => req.asset_id === asset.id);
+                if (assetRequests.length > 0) {
+                    const hasCritical = assetRequests.some(req => req.severity_level === 'CRITICAL');
+                    assetBox.classList.add(hasCritical ? 'critical' : 'low');
+                }
+
+                assetBox.innerHTML = `
+                    <div>${asset.id}</div>
+                    <div class="asset-details">
+                        <h3>${asset.display_name}</h3>
+                        <p><strong>Modules:</strong></p>
+                        <ul>
+                            ${asset.modules.map(module => `<li>${module.id} (${module.type})</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+
+                const detailsPanel = assetBox.querySelector('.asset-details');
+
+                assetBox.addEventListener('mouseenter', () => {
+                    detailsPanel.style.display = 'block';
+
+                    // Highlight related maintenance requests
+                    const relatedRequests = document.querySelectorAll('.maintenance-item');
+                    relatedRequests.forEach((req, index) => {
+                        if (maintenanceData.requests[index].asset_id === asset.id) {
+                            req.classList.add('highlighted-request');
+                        }
+                    });
+                });
+
+                assetBox.addEventListener('mouseleave', () => {
+                    detailsPanel.style.display = 'none';
+                    document.querySelectorAll('.maintenance-item').forEach(req => {
+                        req.classList.remove('highlighted-request');
+                    });
+                });
+
+                gridContainer.appendChild(assetBox);
+            });
+        }
+
+        // Initialize all components
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeMaintenanceList();
+            initializePriceChart();
+            initializeAssetsGrid();
+        });
+    </script>
+</body>
+
+</html>
