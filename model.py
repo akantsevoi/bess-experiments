@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """
-Оптимальное планирование окон обслуживания энергетических систем
+Simplified Energy System Maintenance Optimization - LEARNING VERSION
 Optimal Energy System Maintenance Window Scheduling
 
-Based on recommendations for MILP-based discrete optimal control approach.
-Implements extensible cost function C_total = C_elec + C_risk
-(Simplified version without labor costs for easier understanding)
+Simplified version using ONLY electricity prices for easier learning.
+Finds the cheapest time window to perform maintenance.
 """
 
 import pulp
@@ -20,313 +19,378 @@ import os
 
 class MaintenanceOptimizer:
     """
-    Класс для оптимизации планирования окон обслуживания энергосистем
-    Maintenance window optimization for energy systems
+    Simplified maintenance window optimizer - LEARNING VERSION
+    Only considers electricity costs (no failure risks)
     """
     
-    def __init__(self, horizon_hours: int = 48, time_slot_hours: float = 1.0):
-        """
-        Инициализация оптимизатора
+    def __init__(self, electricity_prices: Dict[int, float] = None, maintenance_durations: List[int] = None):
+        self.H = len(electricity_prices) if electricity_prices else 24  # planning horizon
+        self.dt = 1.0  # time step
+        self.T = list(range(int(self.H / self.dt)))  # time slots
         
-        Args:
-            horizon_hours: Горизонт планирования в часах (planning horizon in hours)
-            time_slot_hours: Дискретизация времени в часах (time discretization in hours)
-        """
-        self.H = horizon_hours  # горизонт планирования
-        self.dt = time_slot_hours  # шаг дискретизации
-        self.T = list(range(int(self.H / self.dt)))  # временные слоты
+        # Maintenance durations for multiple events
+        if maintenance_durations is not None:
+            self.L_list = maintenance_durations  # List of maintenance durations
+        else:
+            self.L_list = [1]  # Default: single 1-hour maintenance
         
-        # Параметры по умолчанию (default parameters)
-        self.E_aux = 2.1  # потребление вспомогательного оборудования, кВт⋅ч
-        self.L = 3  # длительность обслуживания, часов
-        self.Cfail = 10000.0  # стоимость отказа
+        self.num_maintenance_events = len(self.L_list)  # Number of maintenance events
         
-        # Данные временных рядов (time series data)
-        self.P_elec = {}  # цены на электроэнергию
-        self.lambda_failure = {}  # интенсивность отказов
+        # Set electricity prices
+        if electricity_prices is not None:
+            self.P_elec = electricity_prices
+        else:
+            self.P_elec = {}  # empty dict, must be set later
         
-        # PuLP модель
+        # PuLP model
         self.model = None
         self.results = None
         
     def set_electricity_prices(self, prices: Dict[int, float]):
-        """Установить цены на электроэнергию по временным слотам"""
+        """Set electricity prices for each time slot"""
         self.P_elec = prices
         
-    def set_failure_rates(self, rates: Dict[int, float]):
-        """Установить интенсивность отказов по временным слотам"""
-        self.lambda_failure = rates
-        
-    def generate_sample_data(self):
-        """
-        Генерация примерных данных для демонстрации
-        Generate sample data for demonstration
-        """
-        print("Генерирую примерные данные...")
-        
-        # Примерные цены на электроэнергию (волатильные цены в течение дня)
-        base_price = 0.12  # $/кВт⋅ч
-        peak_hours = [8, 9, 10, 17, 18, 19, 20]  # пиковые часы
-        
-        self.P_elec = {}
-        self.lambda_failure = {}
-        
-        for t in self.T:
-            hour_of_day = t % 24
-            
-            # Цена электроэнергии выше в пиковые часы
-            if hour_of_day in peak_hours:
-                self.P_elec[t] = base_price * (1.5 + 0.2 * np.sin(t * 0.1))
-            elif 22 <= hour_of_day or hour_of_day <= 6:  # ночные часы
-                self.P_elec[t] = base_price * (0.6 + 0.1 * np.sin(t * 0.1))
-            else:
-                self.P_elec[t] = base_price * (1.0 + 0.1 * np.sin(t * 0.1))
-            
-            # Интенсивность отказов растет с откладыванием обслуживания
-            self.lambda_failure[t] = 0.001 * (1 + 0.01 * t)  # растущий риск
-    
     def build_model(self):
         """
-        Построение MILP модели оптимизации
-        Build the MILP optimization model
+        Build the SIMPLIFIED MILP optimization model for MULTIPLE maintenance events
+        Only minimizes electricity costs!
         """
-        print("Строю MILP модель...")
+        # Validate that prices are set
+        if not self.P_elec:
+            raise ValueError("Electricity prices must be set before building model. "
+                           "Pass prices to constructor or use set_electricity_prices().")
         
-        # Создание модели PuLP
-        self.model = pulp.LpProblem("MaintenanceOptimization", pulp.LpMinimize)
+        print("Building simplified MILP model for MULTIPLE maintenance events...")
+        print(f"Number of maintenance events: {self.num_maintenance_events}")
+        print(f"Maintenance durations: {self.L_list} hours")
         
-        # Переменные (Variables)
-        # x[t] = 1 если обслуживание начинается в слоте t
-        self.x = pulp.LpVariable.dicts("start", self.T, cat='Binary')
+        # Show valid start times for each maintenance event
+        for i, L in enumerate(self.L_list):
+            valid_start_times = [t for t in self.T if t + L <= len(self.T)]
+            invalid_start_times = [t for t in self.T if t + L > len(self.T)]
+            
+            print(f"Event {i+1} (duration {L}h):")
+            print(f"  Valid start times: slots {valid_start_times}")
+            if invalid_start_times:
+                print(f"  Invalid start times: slots {invalid_start_times}")
         
-        # y[t] = 1 если идет обслуживание в слоте t  
-        self.y = pulp.LpVariable.dicts("maintenance", self.T, cat='Binary')
+        # Create PuLP model
+        self.model = pulp.LpProblem("MultipleMaintenanceOptimization", pulp.LpMinimize)
         
-        # Ограничения (Constraints)
+        # Variables for each maintenance event
+        # x[i][t] = 1 if maintenance event i starts at time slot t
+        self.x = {}
+        for i in range(self.num_maintenance_events):
+            self.x[i] = pulp.LpVariable.dicts(f"start_event_{i}", self.T, cat='Binary')
         
-        # 1. Связь между началом и процессом обслуживания
+        # y[i][t] = 1 if maintenance event i is active at time slot t  
+        self.y = {}
+        for i in range(self.num_maintenance_events):
+            self.y[i] = pulp.LpVariable.dicts(f"maintenance_event_{i}", self.T, cat='Binary')
+        
+        # Constraints
+        
+        # 1. Link between start and active maintenance for each event
+        for i in range(self.num_maintenance_events):
+            L = self.L_list[i]
+            for t in self.T:
+                # y[i][t] = 1 if we started maintenance event i within the last L hours
+                start_times = [tau for tau in self.T if 0 <= t - tau < L]
+                self.model += self.y[i][t] == pulp.lpSum([self.x[i][tau] for tau in start_times])
+        
+        # 2. Must start each maintenance event exactly once
+        for i in range(self.num_maintenance_events):
+            self.model += pulp.lpSum([self.x[i][t] for t in self.T]) == 1
+        
+        # 3. Ensure each maintenance event can complete within time horizon
+        for i in range(self.num_maintenance_events):
+            L = self.L_list[i]
+            for t in self.T:
+                if t + L > len(self.T):  # Not enough time slots remaining
+                    self.model += self.x[i][t] == 0  # Cannot start maintenance at this time
+        
+        # 4. NEW: No overlap between maintenance events
+        # At most one maintenance event can be active at any time slot
         for t in self.T:
-            # y[t] = 1 если начали обслуживание в течение последних L часов
-            start_times = [tau for tau in self.T if 0 <= t - tau < self.L]
-            self.model += self.y[t] == pulp.lpSum([self.x[tau] for tau in start_times])
+            self.model += pulp.lpSum([self.y[i][t] for i in range(self.num_maintenance_events)]) <= 1
         
-        # 2. Единственность окна обслуживания
-        self.model += pulp.lpSum([self.x[t] for t in self.T]) == 1
-        
-        # Целевая функция (Objective Function)
-        # Прямые затраты на электричество
-        direct_costs = pulp.lpSum([
-            self.y[t] * self.P_elec.get(t, 0) * self.E_aux
+        # SIMPLIFIED Objective Function - ONLY electricity costs for ALL events!
+        electricity_costs = pulp.lpSum([
+            self.y[i][t] * self.P_elec.get(t, 0)
+            for i in range(self.num_maintenance_events)
             for t in self.T
         ])
         
-        # Риски отказов (растут с откладыванием обслуживания)
-        risk_costs = pulp.lpSum([
-            self.x[t] * self.lambda_failure.get(t, 0) * self.Cfail * t
-            for t in self.T
-        ])
+        self.model += electricity_costs
         
-        self.model += direct_costs + risk_costs
-        
-        print(f"Модель построена с {len(self.T)} временными слотами")
+        print(f"Model built with {len(self.T)} time slots and {self.num_maintenance_events} maintenance events")
+        print("Objective: Minimize TOTAL electricity costs across all maintenance events")
+        print("Constraint: No maintenance events can overlap")
         
     def solve(self, verbose: bool = True):
         """
-        Решение модели оптимизации
         Solve the optimization model
         """
         if self.model is None:
-            raise ValueError("Модель не построена. Вызовите build_model() сначала.")
+            raise ValueError("Model not built. Call build_model() first.")
         
-        print("Решаю модель с помощью cbc...")
+        print("Solving model with CBC...")
         
         try:
-            # Проверяем наличие CBC в стандартном месте
+            # Check for CBC in standard location
             cbc_path = "/usr/bin/coin.cbc"
             if os.path.exists(cbc_path):
                 solver = pulp.COIN_CMD(path=cbc_path, msg=verbose)
             else:
                 solver = pulp.COIN_CMD(msg=verbose)
             
-            # Проверка доступности решателя
+            # Check solver availability
             if not solver.available():
-                print("⚠ Решатель CBC недоступен, пробую другие...")
-                # Попробуем другие доступные решатели
+                print("⚠ CBC solver not available, trying others...")
+                # Try other available solvers
                 for solver_class in [pulp.PULP_CBC_CMD, pulp.GLPK_CMD]:
                     solver = solver_class(msg=verbose)
                     if solver.available():
                         break
                 else:
-                    print("⚠ Нет доступных решателей")
+                    print("⚠ No available solvers")
                     return False
             
-            # Решение модели
+            # Solve model
             self.model.solve(solver)
             
-            # Проверка статуса решения
+            # Check solution status
             if pulp.LpStatus[self.model.status] == 'Optimal':
-                print("✓ Найдено оптимальное решение!")
+                print("✓ Found optimal solution!")
                 return True
             else:
-                print(f"⚠ Решение не найдено: {pulp.LpStatus[self.model.status]}")
+                print(f"⚠ No solution found: {pulp.LpStatus[self.model.status]}")
                 return False
                 
         except Exception as e:
-            print(f"Ошибка при решении: {e}")
+            print(f"Error solving: {e}")
             return False
     
     def get_results(self) -> Dict:
         """
-        Извлечение результатов оптимизации
-        Extract optimization results
+        Extract optimization results for multiple maintenance events
         """
         if self.model is None:
             return {}
         
         results = {}
         
-        # Найти время начала обслуживания
-        start_times = [t for t in self.T if self.x[t].varValue and self.x[t].varValue > 0.5]
-        if start_times:
-            results['start_time'] = start_times[0]
-            results['start_hour'] = start_times[0] * self.dt
+        # Results for each maintenance event
+        results['events'] = []
         
-        # Расписание обслуживания
-        service_schedule = {t: self.y[t].varValue and self.y[t].varValue > 0.5 for t in self.T}
-        results['service_schedule'] = service_schedule
+        for i in range(self.num_maintenance_events):
+            event_result = {}
+            
+            # Find maintenance start time for this event
+            start_times = [t for t in self.T if self.x[i][t].varValue and self.x[i][t].varValue > 0.5]
+            if start_times:
+                event_result['start_time'] = start_times[0]
+                event_result['start_hour'] = start_times[0] * self.dt
+                event_result['duration'] = self.L_list[i]
+                event_result['end_time'] = start_times[0] + self.L_list[i] - 1
+                event_result['end_hour'] = (start_times[0] + self.L_list[i] - 1) * self.dt
+            
+            # Maintenance schedule for this event
+            service_schedule = {t: self.y[i][t].varValue and self.y[i][t].varValue > 0.5 for t in self.T}
+            event_result['service_schedule'] = service_schedule
+            
+            # Calculate electricity cost for this event
+            if start_times:
+                service_times = [t for t in self.T if service_schedule[t]]
+                elec_cost = sum(self.P_elec.get(t, 0) for t in service_times)
+                event_result['electricity_cost'] = elec_cost
+            
+            results['events'].append(event_result)
         
-        # Значение целевой функции
+        # Total cost across all events
         results['total_cost'] = pulp.value(self.model.objective)
         
-        # Декомпозиция затрат
-        if start_times:
-            start_t = start_times[0]
-            service_times = [t for t in self.T if service_schedule[t]]
-            
-            # Затраты на электричество
-            elec_cost = sum(self.P_elec.get(t, 0) * self.E_aux for t in service_times)
-            results['electricity_cost'] = elec_cost
-            
-            # Риски
-            risk_cost = self.lambda_failure.get(start_t, 0) * self.Cfail * start_t
-            results['risk_cost'] = risk_cost
+        # Combined schedule showing all events
+        combined_schedule = {}
+        for t in self.T:
+            active_events = [i for i in range(self.num_maintenance_events) 
+                           if self.y[i][t].varValue and self.y[i][t].varValue > 0.5]
+            combined_schedule[t] = active_events  # List of active event indices
+        results['combined_schedule'] = combined_schedule
         
         return results
     
     def print_results(self):
-        """Вывод результатов оптимизации"""
+        """Print optimization results for multiple maintenance events"""
         results = self.get_results()
         
         if not results:
-            print("Нет результатов для вывода")
+            print("No results to display")
             return
         
-        print("\n" + "="*50)
-        print("РЕЗУЛЬТАТЫ ОПТИМИЗАЦИИ")
-        print("="*50)
+        print("\n" + "="*60)
+        print("MULTIPLE MAINTENANCE EVENTS OPTIMIZATION RESULTS")
+        print("(Electricity costs only)")
+        print("="*60)
         
-        if 'start_time' in results:
-            print(f"Оптимальное время начала: слот {results['start_time']} "
-                  f"({results['start_hour']:.1f} ч от текущего момента)")
+        print(f"Total electricity cost across all events: ${results['total_cost']:.2f}")
+        print(f"Number of maintenance events: {self.num_maintenance_events}")
         
-        print(f"Общие затраты: ${results['total_cost']:.2f}")
+        # Show results for each event
+        for i, event in enumerate(results['events']):
+            print(f"\n--- Maintenance Event {i+1} (Duration: {event.get('duration', 'N/A')}h) ---")
+            
+            if 'start_time' in event:
+                print(f"Start time: slot {event['start_time']} ({event['start_hour']:.1f}h)")
+                print(f"End time: slot {event['end_time']} ({event['end_hour']:.1f}h)")
+                print(f"Cost: ${event.get('electricity_cost', 0):.2f}")
+                
+                # Show detailed schedule for this event
+                schedule = event.get('service_schedule', {})
+                active_slots = [t for t in self.T if schedule.get(t, False)]
+                if active_slots:
+                    print(f"Active slots: {active_slots}")
+                    for t in active_slots:
+                        hour = t * self.dt
+                        print(f"  Slot {t:2d} ({hour:4.1f}h): Price ${self.P_elec.get(t, 0):.3f}/kWh")
+            else:
+                print("No solution found for this event")
         
-        if 'electricity_cost' in results:
-            print(f"  - Электричество: ${results['electricity_cost']:.2f}")
-            print(f"  - Риски: ${results['risk_cost']:.2f}")
+        # Show combined timeline
+        print(f"\n--- Combined Timeline ---")
+        combined = results.get('combined_schedule', {})
+        active_times = {t: events for t, events in combined.items() if events}
         
-        # Показать расписание
-        print(f"\nРасписание обслуживания (длительность {self.L} ч):")
-        schedule = results.get('service_schedule', {})
-        for t in self.T:
-            if schedule.get(t, False):
+        if active_times:
+            print("Time slots with maintenance:")
+            for t in sorted(active_times.keys()):
                 hour = t * self.dt
-                print(f"  Слот {t:2d} ({hour:4.1f}ч): Обслуживание | "
-                      f"Электр: ${self.P_elec.get(t, 0):.3f}/кВт⋅ч")
+                events = active_times[t]
+                event_labels = [f"Event{i+1}" for i in events]
+                print(f"  Slot {t:2d} ({hour:4.1f}h): {', '.join(event_labels)} | "
+                      f"Price: ${self.P_elec.get(t, 0):.3f}/kWh")
+        else:
+            print("No maintenance scheduled")
     
-    def plot_results(self, figsize: Tuple[int, int] = (15, 5)):
+    def plot_results(self, figsize: Tuple[int, int] = (12, 6)):
         """
-        Визуализация результатов оптимизации
-        Plot optimization results
+        Visualize multiple maintenance events optimization results
         """
         results = self.get_results()
         if not results:
-            print("Нет результатов для визуализации")
+            print("No results to visualize")
             return
         
-        fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=figsize)
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=figsize)
         
         hours = [t * self.dt for t in self.T]
-        
-        # 1. Цены на электроэнергию
         elec_prices = [self.P_elec.get(t, 0) for t in self.T]
-        ax1.plot(hours, elec_prices, 'b-', linewidth=2, label='Цена электричества')
-        ax1.set_xlabel('Время (часы)')
-        ax1.set_ylabel('Цена ($/кВт⋅ч)')
-        ax1.set_title('Цены на электроэнергию')
+        
+        # 1. Electricity prices
+        ax1.plot(hours, elec_prices, 'b-', linewidth=2, label='Electricity Price')
+        ax1.set_xlabel('Time (hours)')
+        ax1.set_ylabel('Price ($/kWh)')
+        ax1.set_title('Electricity Prices Over 24 Hours')
         ax1.grid(True, alpha=0.3)
         ax1.legend()
         
-        # 2. Интенсивность отказов
-        failure_rates = [self.lambda_failure.get(t, 0) for t in self.T]
-        ax2.plot(hours, failure_rates, 'r-', linewidth=2, label='Интенсивность отказов')
-        ax2.set_xlabel('Время (часы)')
-        ax2.set_ylabel('λ (1/час)')
-        ax2.set_title('Риск отказов')
+        # 2. Multiple maintenance events schedule
+        colors = ['orange', 'green', 'red', 'purple', 'brown', 'pink']  # Different colors for events
+        
+        # Plot each maintenance event
+        for i, event in enumerate(results['events']):
+            schedule = event.get('service_schedule', {})
+            maintenance_mask = [1 if schedule.get(t, False) else 0 for t in self.T]
+            
+            if any(maintenance_mask):  # Only plot if there's maintenance scheduled
+                color = colors[i % len(colors)]
+                duration = event.get('duration', 'N/A')
+                cost = event.get('electricity_cost', 0)
+                
+                # Create filled area for this event
+                ax2.fill_between(hours, i*0.1, [(i*0.1 + 0.8) if m else i*0.1 for m in maintenance_mask], 
+                               alpha=0.7, color=color, 
+                               label=f'Event {i+1} ({duration}h, ${cost:.2f})')
+        
+        # Also plot electricity prices as background reference
+        # Normalize prices to fit in the plot
+        max_price = max(elec_prices) if elec_prices else 1
+        normalized_prices = [p / max_price * 0.5 for p in elec_prices]
+        ax2.plot(hours, normalized_prices, 'b--', alpha=0.3, label='Price (normalized)')
+        
+        ax2.set_xlabel('Time (hours)')
+        ax2.set_ylabel('Maintenance Events')
+        ax2.set_title(f'Optimal Maintenance Windows for {self.num_maintenance_events} Events')
         ax2.grid(True, alpha=0.3)
         ax2.legend()
-        
-        # 3. Расписание обслуживания
-        schedule = results.get('service_schedule', {})
-        maintenance_mask = [1 if schedule.get(t, False) else 0 for t in self.T]
-        
-        ax3.fill_between(hours, 0, maintenance_mask, alpha=0.7, color='orange', 
-                        label='Окно обслуживания')
-        ax3.plot(hours, elec_prices, 'b--', alpha=0.5, label='Цена электричества')
-        ax3.set_xlabel('Время (часы)')
-        ax3.set_ylabel('Статус / Цена')
-        ax3.set_title('Оптимальное окно обслуживания')
-        ax3.grid(True, alpha=0.3)
-        ax3.legend()
+        ax2.set_ylim(-0.1, max(self.num_maintenance_events * 0.1 + 0.8, 1))
         
         plt.tight_layout()
         
-        # Save the plot instead of showing it
-        plot_filename = 'maintenance_optimization_results.png'
+        # Save the plot
+        plot_filename = 'multiple_maintenance_results.png'
         plt.savefig(plot_filename, dpi=150, bbox_inches='tight')
-        print(f"График сохранен как: {plot_filename}")
-        plt.close()  # Close the figure to free memory
+        print(f"Plot saved as: {plot_filename}")
+        plt.close()
 
 
 def main():
     """
-    Главная функция для демонстрации работы оптимизатора
-    Main function to demonstrate the optimizer
+    Main function to demonstrate the multiple maintenance events optimizer
     """
-    print("Система оптимизации планирования обслуживания энергосистем")
-    print("Energy Systems Maintenance Optimization")
+    print("MULTIPLE MAINTENANCE EVENTS Optimization")
+    print("Learning Version - Electricity Costs Only")
     print("="*60)
     
-    # Создание оптимизатора
-    optimizer = MaintenanceOptimizer(horizon_hours=48, time_slot_hours=1.0)
+    # Example electricity prices for 24 hours
+    # Simulating a typical daily pattern: cheap at night, expensive during peaks
+    example_prices = {
+        0: 0.06,   1: 0.05,   2: 0.04,   3: 0.04,   # Night: cheap
+        4: 0.05,   5: 0.06,   6: 0.08,   7: 0.12,   # Early morning: rising
+        8: 0.18,   9: 0.22,   10: 0.16,             # Morning peak: expensive
+        11: 0.12,  12: 0.00,  13: 0.13,             # Midday: moderate  
+        14: 0.11,  15: 0.13,  16: 0.15,             # Afternoon: rising
+        17: 0.19,  18: 0.21,  19: 0.20,             # Evening peak: expensive
+        20: 0.17,  21: 0.14,  22: 0.11,  23: 0.09   # Evening: falling
+    }
     
-    # Генерация примерных данных
-    optimizer.generate_sample_data()
+    print("Using example electricity prices:")
+    print("Night (0-3h): $0.04-0.06/kWh (cheapest)")
+    print("Morning peak (8-10h): $0.16-0.22/kWh (expensive)")
+    print("Evening peak (17-19h): $0.19-0.21/kWh (expensive)")
     
-    # Построение модели
+    # Example: Schedule multiple maintenance events with different durations
+    maintenance_durations = [2, 1, 3]  # 2-hour, 1-hour, and 3-hour maintenance
+    
+    print(f"\nScheduling {len(maintenance_durations)} maintenance events:")
+    for i, duration in enumerate(maintenance_durations):
+        print(f"  Event {i+1}: {duration} hour(s)")
+    
+    # Create optimizer with multiple maintenance durations
+    optimizer = MaintenanceOptimizer(
+        electricity_prices=example_prices,
+        maintenance_durations=maintenance_durations
+    )
+    
+    # Build and solve model
     optimizer.build_model()
-    
-    # Решение модели
     success = optimizer.solve(verbose=False)
     
     if success:
-        # Вывод результатов
+        # Show results
         optimizer.print_results()
         
-        # Визуализация
+        # Visualize
         optimizer.plot_results()
+        
+        print("\n" + "="*60)
+        print("🎓 LEARNING NOTE:")
+        print("The optimizer found the cheapest time windows for ALL maintenance events!")
+        print("Notice how it avoids overlaps and picks the cheapest available slots.")
+        print("Try changing durations or prices to see how the solution changes.")
+        print("="*60)
     else:
-        print("Не удалось найти оптимальное решение")
+        print("Could not find optimal solution")
 
 
 if __name__ == "__main__":
