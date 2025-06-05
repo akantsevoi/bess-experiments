@@ -286,44 +286,77 @@ class MaintenanceOptimizer:
         hours = [t * self.dt for t in self.T]
         elec_prices = [self.P_elec.get(t, 0) for t in self.T]
         
-        # 1. Electricity prices
-        ax1.plot(hours, elec_prices, 'b-', linewidth=2, label='Electricity Price')
+        # 1. Electricity prices as bar chart
+        ax1.bar(hours, elec_prices, width=1.0, color='skyblue', edgecolor='blue', alpha=0.7, label='Electricity Price')
         ax1.set_xlabel('Time (hours)')
         ax1.set_ylabel('Price ($/kWh)')
-        ax1.set_title('Electricity Prices Over 24 Hours')
-        ax1.grid(True, alpha=0.3)
+        ax1.set_title('Electricity Prices Over Time')
+        ax1.grid(True, alpha=0.3, axis='y')
         ax1.legend()
         
-        # 2. Multiple maintenance events schedule
+        # 2. Multiple maintenance events schedule - MODIFIED TO DRAW AT BOTTOM
         colors = ['orange', 'green', 'red', 'purple', 'brown', 'pink']  # Different colors for events
         
-        # Plot each maintenance event
+        # Plot electricity prices as bar chart (same style as first chart)
+        ax2.bar(hours, elec_prices, width=1.0, color='skyblue', edgecolor='blue', alpha=0.7, label='Electricity Price')
+        
+        # Plot each maintenance event as filled rectangles AT THE BOTTOM
+        maintenance_height = 0.40  # Height of each maintenance bar
+        y_offset = -0.05  # Start position below the x-axis
+        
         for i, event in enumerate(results['events']):
             schedule = event.get('service_schedule', {})
-            maintenance_mask = [1 if schedule.get(t, False) else 0 for t in self.T]
             
-            if any(maintenance_mask):  # Only plot if there's maintenance scheduled
+            if any(schedule.get(t, False) for t in self.T):  # Only plot if there's maintenance scheduled
                 color = colors[i % len(colors)]
                 duration = event.get('duration', 'N/A')
                 cost = event.get('electricity_cost', 0)
                 
-                # Create filled area for this event
-                ax2.fill_between(hours, i*0.1, [(i*0.1 + 0.8) if m else i*0.1 for m in maintenance_mask], 
-                               alpha=0.7, color=color, 
-                               label=f'Event {i+1} ({duration}h, ${cost:.2f})')
-        
-        # Also plot electricity prices as background reference
-        # Normalize prices to fit in the plot
-        max_price = max(elec_prices) if elec_prices else 1
-        normalized_prices = [p / max_price * 0.5 for p in elec_prices]
-        ax2.plot(hours, normalized_prices, 'b--', alpha=0.3, label='Price (normalized)')
+                # All events on the same horizontal line
+                y_position = y_offset
+                
+                # Find continuous maintenance periods for this event
+                maintenance_periods = []
+                start_time = None
+                
+                for t in self.T:
+                    if schedule.get(t, False):  # Maintenance is active
+                        if start_time is None:
+                            start_time = t
+                    else:  # Maintenance is not active
+                        if start_time is not None:
+                            maintenance_periods.append((start_time, t - 1))
+                            start_time = None
+                
+                # Handle case where maintenance continues to the end
+                if start_time is not None:
+                    maintenance_periods.append((start_time, self.T[-1]))
+                
+                # Draw rectangles for each maintenance period at the bottom
+                for start_t, end_t in maintenance_periods:
+                    start_hour = start_t * self.dt - 0.5  # Align with full-width bars
+                    end_hour = (end_t + 1) * self.dt - 0.5  # +1 to include the end slot
+                    width = end_hour - start_hour
+                    
+                    # Create rectangle at the bottom on the same line
+                    rect = plt.Rectangle((start_hour, y_position), width, maintenance_height, 
+                                       alpha=0.5, facecolor=color, 
+                                       edgecolor='black', linewidth=1)
+                    ax2.add_patch(rect)
+                
+                # Add label (only once per event)
+                ax2.plot([], [], color=color, alpha=0.8, linewidth=10,
+                        label=f'Event {i+1} ({duration}h, ${cost:.2f})')
         
         ax2.set_xlabel('Time (hours)')
-        ax2.set_ylabel('Maintenance Events')
+        ax2.set_ylabel('Price ($/kWh)')
         ax2.set_title(f'Optimal Maintenance Windows for {self.num_maintenance_events} Events')
-        ax2.grid(True, alpha=0.3)
+        ax2.grid(True, alpha=0.3, axis='y')
         ax2.legend()
-        ax2.set_ylim(-0.1, max(self.num_maintenance_events * 0.1 + 0.8, 1))
+        
+        # Adjust y-limits to show maintenance windows at bottom
+        min_y = y_offset - 0.05
+        ax2.set_ylim(min_y, 1.1)
         
         plt.tight_layout()
         
