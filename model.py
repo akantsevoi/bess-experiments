@@ -64,16 +64,6 @@ class MaintenanceOptimizer:
         print(f"Number of maintenance events: {self.num_maintenance_events}")
         print(f"Maintenance durations: {self.L_list} hours")
         
-        # Show valid start times for each maintenance event
-        for i, L in enumerate(self.L_list):
-            valid_start_times = [t for t in self.T if t + L <= len(self.T)]
-            invalid_start_times = [t for t in self.T if t + L > len(self.T)]
-            
-            print(f"Event {i+1} (duration {L}h):")
-            print(f"  Valid start times: slots {valid_start_times}")
-            if invalid_start_times:
-                print(f"  Invalid start times: slots {invalid_start_times}")
-        
         # Create PuLP model
         self.model = pulp.LpProblem("MultipleMaintenanceOptimization", pulp.LpMinimize)
         
@@ -91,6 +81,9 @@ class MaintenanceOptimizer:
         # Constraints
         
         # 1. Link between start and active maintenance for each event
+        # forces to keep maintenance intervals(for the same event) far enough so they don't overlap 
+        # if there are several possible windows of them
+        # because otherwise y[i][t] would not be equal 1
         for i in range(self.num_maintenance_events):
             L = self.L_list[i]
             for t in self.T:
