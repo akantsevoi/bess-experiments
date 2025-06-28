@@ -14,6 +14,29 @@
   let loading = false;
   let costsChartData = null;
   let costsChartOptions = {};
+  let darkMode = false;
+
+  // Theme management
+  function toggleTheme() {
+    darkMode = !darkMode;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('darkMode', darkMode.toString());
+      document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
+    }
+  }
+
+  function initializeTheme() {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('darkMode');
+      if (savedTheme) {
+        darkMode = savedTheme === 'true';
+      } else {
+        // Check for system preference
+        darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      }
+      document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
+    }
+  }
 
   function prepareCostsChartData(electricity, labor, maintenanceEvents = []) {
     const electricityLabels = Object.keys(electricity);
@@ -39,6 +62,11 @@
       'rgba(200, 200, 200, 1)'
     ];
 
+    // Get theme-aware colors
+    const isDark = darkMode;
+    const textColor = isDark ? '#e5e7eb' : '#374151';
+    const gridColor = isDark ? '#374151' : '#e5e7eb';
+
     const annotations = maintenanceEvents.map((event, index) => {
         const colorIndex = index % colors.length;
         return {
@@ -62,14 +90,31 @@
         plugins: {
             annotation: {
                 annotations: annotations
+            },
+            legend: {
+                labels: {
+                    color: textColor
+                }
             }
         },
         scales: {
             x: {
-                stacked: true
+                stacked: true,
+                ticks: {
+                    color: textColor
+                },
+                grid: {
+                    color: gridColor
+                }
             },
             y: {
-                stacked: true
+                stacked: true,
+                ticks: {
+                    color: textColor
+                },
+                grid: {
+                    color: gridColor
+                }
             }
         }
     };
@@ -116,6 +161,7 @@
   }
 
   onMount(() => {
+    initializeTheme();
     fetchExampleData();
   });
 
@@ -166,6 +212,18 @@
       // Ignore parsing errors while user is typing
     }
   }
+
+  // Reactively update chart when theme changes
+  $: if (darkMode !== undefined && electricityPrices && laborCosts) {
+    try {
+      const parsedElectricity = JSON.parse(electricityPrices);
+      const parsedLabor = JSON.parse(laborCosts);
+      const maintenanceEvents = results ? results.events : [];
+      costsChartData = prepareCostsChartData(parsedElectricity, parsedLabor, maintenanceEvents);
+    } catch (e) {
+      // Ignore parsing errors
+    }
+  }
 </script>
 
 <svelte:head>
@@ -173,8 +231,19 @@
 </svelte:head>
 
 <div class="header">
-  <h1>Battery Energy Storage System</h1>
-  <h2>Maintenance Optimization Dashboard</h2>
+  <div class="header-content">
+    <div class="title-section">
+      <h1>Battery Energy Storage System</h1>
+      <h2>Maintenance Optimization Dashboard</h2>
+    </div>
+    <button class="theme-toggle" on:click={toggleTheme} aria-label="Toggle theme">
+      {#if darkMode}
+        🌞
+      {:else}
+        🌙
+      {/if}
+    </button>
+  </div>
 </div>
 
 <div class="main-container">
@@ -231,11 +300,60 @@
     box-sizing: border-box;
   }
 
-  :global(html, body) {
+  :global(html) {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
+  }
+
+  /* CSS Variables for theming */
+  :global([data-theme="light"]) {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-tertiary: #f3f4f6;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --text-accent: #2563eb;
+    --border-primary: #e5e7eb;
+    --border-secondary: #d1d5db;
+    --button-bg: #2563eb;
+    --button-hover: #1d4ed8;
+    --button-text: #ffffff;
+    --input-bg: #ffffff;
+    --input-border: #d1d5db;
+    --error-bg: #fef2f2;
+    --error-text: #991b1b;
+    --error-border: #fecaca;
+  }
+
+  :global([data-theme="dark"]) {
+    --bg-primary: #111827;
+    --bg-secondary: #1f2937;
+    --bg-tertiary: #374151;
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --text-accent: #60a5fa;
+    --border-primary: #374151;
+    --border-secondary: #4b5563;
+    --button-bg: #3b82f6;
+    --button-hover: #2563eb;
+    --button-text: #ffffff;
+    --input-bg: #1f2937;
+    --input-border: #4b5563;
+    --error-bg: #7f1d1d;
+    --error-text: #fecaca;
+    --error-border: #991b1b;
+  }
+
+  :global(body) {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   :global(#svelte) {
@@ -245,21 +363,55 @@
 
   .header {
     padding: 1rem 1.5rem;
-    background-color: #ffffff;
-    border-bottom: 1px solid #e5e7eb;
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border-primary);
     width: 100%;
     margin: 0;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .title-section {
+    flex: 1;
+  }
+
+  .theme-toggle {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: 8px;
+    padding: 0.5rem;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--text-primary);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .theme-toggle:hover {
+    background: var(--bg-tertiary);
+    transform: scale(1.05);
   }
 
   h1 {
-    color: #2563eb;
+    color: var(--text-accent);
     margin: 0 0 0.5rem 0;
+    transition: color 0.3s ease;
   }
 
   h2 {
-    color: #6b7280;
+    color: var(--text-secondary);
     font-weight: 400;
     margin: 0;
+    transition: color 0.3s ease;
   }
 
   .main-container {
@@ -274,11 +426,12 @@
   .left-panel {
     width: 400px;
     flex-shrink: 0;
-    background-color: #f9fafb;
-    border-right: 1px solid #e5e7eb;
+    background-color: var(--bg-secondary);
+    border-right: 1px solid var(--border-primary);
     padding: 1.5rem;
     overflow-y: auto;
     height: 100%;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
   }
 
   .right-panel {
@@ -287,6 +440,8 @@
     padding: 1.5rem;
     overflow-y: auto;
     height: 100%;
+    background-color: var(--bg-primary);
+    transition: background-color 0.3s ease;
   }
 
   .form-container {
@@ -302,46 +457,60 @@
   label {
     margin-bottom: 0.5rem;
     font-weight: 500;
+    color: var(--text-primary);
+    transition: color 0.3s ease;
   }
 
   textarea {
     width: 100%;
     padding: 0.5rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--input-border);
     border-radius: 4px;
     font-family: monospace;
     resize: vertical;
     min-height: 60px;
+    background-color: var(--input-bg);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+  }
+
+  textarea:focus {
+    outline: none;
+    border-color: var(--text-accent);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
   }
 
   button {
     padding: 0.75rem 1.5rem;
-    background-color: #2563eb;
-    color: white;
+    background-color: var(--button-bg);
+    color: var(--button-text);
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
   }
 
-  button:hover {
-    background-color: #1d4ed8;
+  button:hover:not(:disabled) {
+    background-color: var(--button-hover);
+    transform: translateY(-1px);
   }
 
   button:disabled {
-    background-color: #9ca3af;
+    background-color: var(--text-secondary);
     cursor: not-allowed;
+    opacity: 0.6;
   }
 
   .error {
     margin-top: 1rem;
     padding: 0.75rem;
-    background-color: #fef2f2;
-    color: #991b1b;
-    border: 1px solid #fecaca;
+    background-color: var(--error-bg);
+    color: var(--error-text);
+    border: 1px solid var(--error-border);
     border-radius: 4px;
     font-size: 0.875rem;
+    transition: all 0.3s ease;
   }
 
   .charts-container {
@@ -352,17 +521,36 @@
 
   .chart-container {
     padding: 1rem;
-    background-color: #f9fafb;
-    border: 1px solid #e5e7eb;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
     border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .chart-container h3 {
+    color: var(--text-primary);
+    margin-top: 0;
+    transition: color 0.3s ease;
   }
 
   .results-raw {
     margin-top: 2rem;
     padding: 1rem;
-    background-color: #f9fafb;
-    border: 1px solid #e5e7eb;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
     border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .results-raw h3 {
+    color: var(--text-primary);
+    margin-top: 0;
+    transition: color 0.3s ease;
+  }
+
+  .results-raw pre {
+    color: var(--text-primary);
+    transition: color 0.3s ease;
   }
 
   @media (max-width: 1024px) {
