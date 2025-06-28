@@ -52,7 +52,7 @@ python3 test_solvers.py
 ### Basic Usage
 
 ```python
-from model import MaintenanceOptimizer
+from local_run import MaintenanceOptimizer
 
 # Create optimizer for 24-hour horizon with 1-hour time slots
 optimizer = MaintenanceOptimizer(horizon_hours=24, time_slot_hours=1.0)
@@ -98,7 +98,7 @@ optimizer.set_failure_rates(rates)
 
 ### Quick Demo
 ```bash
-python model.py
+python local_run.py
 ```
 
 ## Model Details
@@ -146,7 +146,7 @@ C_total = C_elec + C_risk + C_new
 
 ## Files
 
-- `model.py` - Main optimization model implementation
+- `local_run.py` - Main optimization model implementation
 - `examples.py` - Demonstration scenarios and use cases
 - `test_solvers.py` - CBC solver availability checker
 - `project_requirements.txt` - Python dependencies

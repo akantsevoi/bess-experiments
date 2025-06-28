@@ -29,7 +29,7 @@ source venv/bin/activate && python test_solvers.py
 ### Running the Application
 ```bash
 # Run main optimization demo (always use venv)
-source venv/bin/activate && python model.py
+source venv/bin/activate && python local_run.py
 
 # Run all example scenarios (always use venv)
 source venv/bin/activate && python examples.py
@@ -94,11 +94,12 @@ The optimizer implements a MILP formulation with:
 
 ### File Structure
 
-- `model.py` - Main optimization implementation and demo
+- `model.py` - Core MaintenanceOptimizer class (shared model implementation)
+- `local_run.py` - Local demonstration script using the model
+- `app.py` - Flask web service wrapper using the model
 - `examples.py` - Multiple scenario demonstrations  
 - `test_solvers.py` - Solver availability checker
 - `experiment.py` - Additional experimentation script
-- `app.py` - Flask web service wrapper for the optimization model
 - `test_api.py` - Web service testing script
 - `project_requirements.txt` - Core Python dependencies
 - `requirements.txt` - Full system package list (Fedora-specific)

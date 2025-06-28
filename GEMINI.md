@@ -29,7 +29,7 @@ source venv/bin/activate && python test_solvers.py
 ### Running the Application
 ```bash
 # Run main optimization demo (always use venv)
-source venv/bin/activate && python model.py
+source venv/bin/activate && python local_run.py
 
 # Run all example scenarios (always use venv)
 source venv/bin/activate && python examples.py
@@ -59,7 +59,7 @@ This is a **Battery Energy Storage System (BESS) maintenance optimization** proj
 
 ### Core Components
 
-1. **MaintenanceOptimizer Class** (`model.py`)
+1. **MaintenanceOptimizer Class** (`local_run.py`)
    - Main optimization engine using PuLP library
    - Supports multiple maintenance events with different durations
    - Optimizes both electricity costs and labor costs
@@ -94,7 +94,7 @@ The optimizer implements a MILP formulation with:
 
 ### File Structure
 
-- `model.py` - Main optimization implementation and demo
+- `local_run.py` - Main optimization implementation and demo
 - `examples.py` - Multiple scenario demonstrations  
 - `test_solvers.py` - Solver availability checker
 - `experiment.py` - Additional experimentation script
