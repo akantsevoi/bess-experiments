@@ -1,43 +1,101 @@
-import pulp
+import pulp as pl
 
+prob = pl.LpProblem("ProductionExample", pl.LpMinimize)
 
-# prob = pulp.LpProblem("TinyExample", pulp.LpMinimize)
-
-# x = pulp.LpVariable("x", lowBound=0)
-# y = pulp.LpVariable("y", lowBound=0)
-
-# prob += 3*x + 2*y
-
-
-# prob += x + y >= 5
-# prob += x <= 4
-
-# prob.solve()
-# print("Статус:", pulp.LpStatus[prob.status])
-# print("x =", x.value(), " y =", y.value(), " cost =", pulp.value(prob.objective))
-
-
-prob = pulp.LpProblem("TinyExample", pulp.LpMaximize)
-
-items = {
-    1: (4,20),
-    2: (3,18),
-    3: (5,25),
-    4: (2,8),
-    5: (1,6),
+months_i = [1,2,3]
+months = {
+    1: 50,
+    2: 80,
+    3: 65,
 }
+var_cost = 20
+fix_cost = 500
+store_cost = 1
+max_prod = 70
 
-x1 = pulp.LpVariable("x1", cat='Binary')
-x2 = pulp.LpVariable("x2", cat='Binary')
-x3 = pulp.LpVariable("x3", cat='Binary')
-x4 = pulp.LpVariable("x4", cat='Binary')
-x5 = pulp.LpVariable("x5", cat='Binary')
+prod = {}
+start = {}
+left = {}
+left[0]=0
+for i in months_i:
+    prod[i] = pl.LpVariable(f"prod_m_{i}", lowBound=0, upBound=max_prod, cat="Integer")
+    start[i] = pl.LpVariable(f"start_m_{i}", cat="Binary")
+    left[i] = pl.LpVariable(f"left_m_{i}", lowBound=0, cat="Integer")
 
-prob += x1*20 + x2*18 + x3*25 + x4*8 + x5*6
 
-# prob += x1 + x2 + x3 + x4 + x5 >= 3
-prob += x1*4 + x2*3 + x3*5 + x4*2 + x5*1 <= 10
+# optimize function
+prob += pl.lpSum([
+    prod[i] * var_cost + start[i] * fix_cost + left[i] * store_cost
+    for i in months_i
+])
+
+# constraints
+BIG_M = 70
+for i in months_i:
+    prob += prod[i] + left[i-1] - months[i] == left[i]
+    prob += prod[i] <= BIG_M * start[i]
+
 
 prob.solve();
 
-print(x1.value(), x2.value(), x3.value(), x4.value(), x5.value(), " value =", pulp.value(prob.objective))
+for i in months_i:
+    print("month: ",i, " produced: ", prod[i].value(), " left: ", left[i].value())
+
+##################
+##################
+##################
+
+# prob = pl.LpProblem("ProductionExample", pl.LpMaximize)
+
+# r1 = pl.LpVariable("prop_r1", lowBound=0, upBound=70)
+# r2 = pl.LpVariable("prop_r2", lowBound=0, upBound=90)
+
+# # optimize function
+# prob += (r1+r2) * 25
+
+# # constratins
+# prob += r1 >= 0.3 * (r1 + r2)
+# prob += r2 >= 0.2 * (r1 + r2)
+# prob += r1 * 1 + r2 * 0.5 <= 60
+
+# # solve
+# prob.solve();
+
+# print("Status:", pl.LpStatus[prob.status]);
+# print("c = ", r1.value() + r2.value());
+# print("r1 = ", r1.value());
+# print("r2 = ", r2.value());
+
+##################
+##################
+##################
+
+# prob = pl.LpProblem("ProductionExample", pl.LpMaximize)
+
+# # amount of products
+# a = pl.LpVariable("a", lowBound=0, cat="Integer")
+# b = pl.LpVariable("b", lowBound=0, cat="Integer")
+
+# # production start costs
+# a_sc = pl.LpVariable("a_sc", cat="Binary")
+# b_sc = pl.LpVariable("b_sc", cat="Binary")
+# BIG_M = 100
+
+
+# # optimize function
+# prob += a*40 + b*30 - 200 * (a_sc + b_sc)
+
+# # resource constraints
+# prob += 1 * a + 2 * b <= 100
+# prob += 2 * a + 1 * b <= 80
+# prob += a >= 15 * a_sc
+# prob += b >= 10 * b_sc
+# prob += a <= a_sc * BIG_M
+# prob += b <= b_sc * BIG_M
+
+# prob.solve();
+# # print("Status:", pl.LpStatus[prob.status]);
+# print("a = ", a.value());
+# print("b = ", b.value());
+# print("a_sc = ", a_sc.value());
+# print("b_sc = ", b_sc.value());
