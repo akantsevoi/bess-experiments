@@ -172,68 +172,126 @@
   <title>BESS Maintenance Optimizer</title>
 </svelte:head>
 
-<h1>Battery Energy Storage System</h1>
-<h2>Maintenance Optimization Dashboard</h2>
-
-<div class="form-container">
-  <div class="form-group">
-    <label for="electricity-prices">Electricity Prices (JSON)</label>
-    <textarea id="electricity-prices" bind:value={electricityPrices} rows="10"></textarea>
-  </div>
-
-  <div class="form-group">
-    <label for="labor-costs">Labor Costs (JSON)</label>
-    <textarea id="labor-costs" bind:value={laborCosts} rows="10"></textarea>
-  </div>
-
-  <div class="form-group">
-    <label for="maintenance-durations">Maintenance Durations (JSON Array)</label>
-    <textarea id="maintenance-durations" bind:value={maintenanceDurations} rows="3"></textarea>
-  </div>
-
-  <button on:click={sendRequest} disabled={loading}>
-    {loading ? 'Optimizing...' : 'Run Optimization'}
-  </button>
+<div class="header">
+  <h1>Battery Energy Storage System</h1>
+  <h2>Maintenance Optimization Dashboard</h2>
 </div>
 
-{#if error}
-  <div class="error">
-    <p>Error: {error}</p>
-  </div>
-{/if}
+<div class="main-container">
+  <div class="left-panel">
+    <div class="form-container">
+      <div class="form-group">
+        <label for="electricity-prices">Electricity Prices (JSON)</label>
+        <textarea id="electricity-prices" bind:value={electricityPrices} rows="10"></textarea>
+      </div>
 
-<div class="charts-container">
-  <div class="chart-container">
-    <h3>Costs & Maintenance Schedule</h3>
-    {#if costsChartData}
-      <Bar data={costsChartData} options={costsChartOptions} />
+      <div class="form-group">
+        <label for="labor-costs">Labor Costs (JSON)</label>
+        <textarea id="labor-costs" bind:value={laborCosts} rows="10"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="maintenance-durations">Maintenance Durations (JSON Array)</label>
+        <textarea id="maintenance-durations" bind:value={maintenanceDurations} rows="3"></textarea>
+      </div>
+
+      <button on:click={sendRequest} disabled={loading}>
+        {loading ? 'Optimizing...' : 'Run Optimization'}
+      </button>
+
+      {#if error}
+        <div class="error">
+          <p>Error: {error}</p>
+        </div>
+      {/if}
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <div class="charts-container">
+      <div class="chart-container">
+        <h3>Costs & Maintenance Schedule</h3>
+        {#if costsChartData}
+          <Bar data={costsChartData} options={costsChartOptions} />
+        {/if}
+      </div>
+    </div>
+
+    {#if results}
+      <div class="results-raw">
+        <h3>Optimization Results</h3>
+        <pre>{JSON.stringify(results, null, 2)}</pre>
+      </div>
     {/if}
   </div>
 </div>
 
-{#if results}
-  <div class="results-raw">
-    <h3>Optimization Results</h3>
-    <pre>{JSON.stringify(results, null, 2)}</pre>
-  </div>
-{/if}
-
 <style>
+  :global(*) {
+    box-sizing: border-box;
+  }
+
+  :global(html, body) {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  :global(#svelte) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .header {
+    padding: 1rem 1.5rem;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    width: 100%;
+    margin: 0;
+  }
+
   h1 {
     color: #2563eb;
-    margin-bottom: 0.5rem;
+    margin: 0 0 0.5rem 0;
   }
 
   h2 {
     color: #6b7280;
     font-weight: 400;
-    margin-bottom: 2rem;
+    margin: 0;
+  }
+
+  .main-container {
+    display: flex;
+    gap: 0;
+    height: calc(100vh - 120px);
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+  }
+
+  .left-panel {
+    width: 400px;
+    flex-shrink: 0;
+    background-color: #f9fafb;
+    border-right: 1px solid #e5e7eb;
+    padding: 1.5rem;
+    overflow-y: auto;
+    height: 100%;
+  }
+
+  .right-panel {
+    flex: 1;
+    min-width: 0;
+    padding: 1.5rem;
+    overflow-y: auto;
+    height: 100%;
   }
 
   .form-container {
     display: grid;
     gap: 1.5rem;
-    margin-bottom: 2rem;
   }
 
   .form-group {
@@ -252,6 +310,8 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     font-family: monospace;
+    resize: vertical;
+    min-height: 60px;
   }
 
   button {
@@ -276,18 +336,18 @@
 
   .error {
     margin-top: 1rem;
-    padding: 1rem;
+    padding: 0.75rem;
     background-color: #fef2f2;
     color: #991b1b;
     border: 1px solid #fecaca;
     border-radius: 4px;
+    font-size: 0.875rem;
   }
 
   .charts-container {
     display: grid;
     grid-template-columns: 1fr;
     gap: 2rem;
-    margin-top: 2rem;
   }
 
   .chart-container {
@@ -303,6 +363,16 @@
     background-color: #f9fafb;
     border: 1px solid #e5e7eb;
     border-radius: 4px;
+  }
+
+  @media (max-width: 1024px) {
+    .main-container {
+      flex-direction: column;
+    }
+    
+    .left-panel {
+      width: 100%;
+    }
   }
 
   pre {

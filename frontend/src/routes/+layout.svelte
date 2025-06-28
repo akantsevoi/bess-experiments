@@ -4,8 +4,9 @@
 
 <style>
 	main {
-		padding: 1rem;
-		margin: 0 auto;
-		max-width: 1200px;
+		padding: 0;
+		margin: 0;
+		width: 100%;
+		height: 100vh;
 	}
 </style>
