@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BESS Revenue-Loss Demo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <h1>BESS Revenue-Loss Demo</h1>
+  <div id="inputs">
+    <h2>Inputs</h2>
+    <div class="input-group">
+      <label>Price File <input type="file" id="priceFile" accept=".json,.csv" /></label>
+    </div>
+    <div class="input-group">
+      <label>Battery Meta File <input type="file" id="batteryFile" accept=".json,.csv" /></label>
+    </div>
+    <div class="input-group">
+      <label>Predicted Schedule File <input type="file" id="predFile" accept=".json,.csv" /></label>
+    </div>
+    <div class="input-group">
+      <label>Actual Events File <input type="file" id="actFile" accept=".json,.csv" /></label>
+    </div>
+    <div class="input-group">
+      <label>Start <input type="datetime-local" id="startTs" /></label>
+      <label>End <input type="datetime-local" id="endTs" /></label>
+    </div>
+    <button id="runBtn">Run Calculation</button>
+  </div>
+
+  <div id="results" style="display:none;">
+    <h2>KPIs</h2>
+    <div id="kpis"></div>
+
+    <h2>Per Battery Daily Summary</h2>
+    <div id="summaryTable"></div>
+
+    <h2>Per Slice Diff</h2>
+    <div id="diffTable" class="table-container"></div>
+
+    <div id="exports">
+      <button id="downloadDiff">Download results CSV</button>
+      <button id="downloadSummary">Download summary CSV</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
