@@ -391,9 +391,13 @@ function renderCumChart(batteryId, range) {
       }
     }
   });
-  if (range) {
-    cumChart.options.scales.x.min = range.start;
-    cumChart.options.scales.x.max = range.end;
+  const defaultStart = series.length ? new Date(series[0].ts) : undefined;
+  const defaultEnd = series.length ? new Date(series[series.length - 1].ts) : undefined;
+  const start = range && range.start ? range.start : defaultStart;
+  const end = range && range.end ? range.end : defaultEnd;
+  if (start && end) {
+    cumChart.options.scales.x.min = start;
+    cumChart.options.scales.x.max = end;
     cumChart.update();
   }
 }
