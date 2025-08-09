@@ -1,6 +1,13 @@
 body { font-family: Arial, sans-serif; margin: 20px; }
-input-group { margin-bottom: 10px; }
+.input-group { margin-bottom: 10px; }
 .table-container { max-height: 400px; overflow: auto; border: 1px solid #ccc; }
 table { border-collapse: collapse; width: 100%; }
 th, td { border: 1px solid #ddd; padding: 4px; font-size: 12px; }
 th { background: #f4f4f4; }
+
+canvas { max-width: 100%; }
+
+.heatmap table { border-collapse: collapse; }
+.heatmap th, .heatmap td { border: 1px solid #ddd; padding: 2px; }
+.heatmap td { width: 20px; height: 20px; cursor: pointer; position: relative; }
+.heatmap .diamond { width: 10px; height: 10px; background: #000; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(45deg); }
