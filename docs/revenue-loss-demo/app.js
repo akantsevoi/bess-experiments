@@ -274,8 +274,32 @@ function renderDiffTable(rows) {
   div.innerHTML = html;
 }
 
+function renderCumChart(batteryId, range) {
+  const series = lastDiffRows.filter(r => r.battery_id === batteryId);
+  const scales = { x: {} };
+  if (range) {
+    scales.x.min = range.start;
+    scales.x.max = range.end;
+  } else if (series.length) {
+    scales.x.min = series[0].slice_ts;
+    scales.x.max = series[series.length - 1].slice_ts;
+  }
+  if (typeof Chart === 'undefined') return;
+  const ctx = document.getElementById('cumChart');
+  if (!ctx) return;
+  if (renderCumChart.chart) renderCumChart.chart.destroy();
+  renderCumChart.chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: series.map(r => r.slice_ts),
+      datasets: [{ label: 'Loss EUR', data: series.map(r => r.loss_eur) }]
+    },
+    options: { scales }
+  });
+}
+
 // Main run
-let lastDiffRows = [], lastSummary = [];
+let lastDiffRows = [], lastSummary = [], dataWindow;
 
 async function runCalculation() {
   try {
@@ -301,6 +325,7 @@ async function runCalculation() {
     start = start ? new Date(start) : defaultStart;
     end = end ? new Date(end) : defaultEnd;
     const window = { start, end };
+    dataWindow = window;
     const price5 = stepFillPriceTo5(priceRows, window);
     let pred5 = explodePredTo5(predBlocks, batteries);
     pred5 = pred5.filter(r => { const t = toDate(r.slice_ts); return t >= start && t < end; });
@@ -313,6 +338,11 @@ async function runCalculation() {
     document.getElementById('results').style.display = 'block';
     lastDiffRows = diffRows;
     lastSummary = perBattery;
+    const sel = document.getElementById('batterySel');
+    if (sel) {
+      renderCumChart(sel.value, dataWindow);
+      sel.addEventListener('change', e => renderCumChart(e.target.value, dataWindow));
+    }
   } catch (e) {
     alert(e.message);
     console.error(e);
