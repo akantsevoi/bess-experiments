@@ -1,0 +1,6 @@
+body { font-family: Arial, sans-serif; margin: 20px; }
+input-group { margin-bottom: 10px; }
+.table-container { max-height: 400px; overflow: auto; border: 1px solid #ccc; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #ddd; padding: 4px; font-size: 12px; }
+th { background: #f4f4f4; }
