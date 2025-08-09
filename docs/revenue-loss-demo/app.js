@@ -26,6 +26,11 @@ async function parseJsonOrCsv(fileOrText) {
 
 function toDate(v) { return new Date(v); }
 
+// Register annotation plugin if available
+if (window.ChartAnnotation) {
+  Chart.register(window.ChartAnnotation);
+}
+
 function stepFillPriceTo5(priceRows, window) {
   const pts = priceRows.map(r => ({ ts: toDate(r.ts), price: Number(r.price_eur_mwh), interval: Number(r.interval_min || 60) }));
   pts.sort((a,b)=>a.ts-b.ts);
@@ -46,7 +51,7 @@ function stepFillPriceTo5(priceRows, window) {
       cur = pts[idx].price;
       nextChange = new Date(pts[idx].ts.getTime() + pts[idx].interval*60000);
     }
-    res.push({ slice_ts: t.toISOString(), price_eur_mwh: cur });
+    res.push({ slice_ts: t.toISOString(), price_eur_kwh: cur / 1000 });
   }
   return res;
 }
@@ -144,7 +149,7 @@ function alignByBattery(slices, pred5, act5) {
 }
 
 function computeDiffRows(price5, pred5, act5, batteries) {
-  const priceMap = new Map(price5.map(p => [p.slice_ts, p.price_eur_mwh]));
+  const priceMap = new Map(price5.map(p => [p.slice_ts, p.price_eur_kwh]));
   const aligned = alignByBattery(Array.from(priceMap.keys()), pred5, act5);
   const h = 5/60;
   const rows = [];
@@ -154,15 +159,14 @@ function computeDiffRows(price5, pred5, act5, batteries) {
       const act = maps.act.get(slice_ts) || { mode: 'DOWNTIME', power_kw: 0 };
       const e_pred = pred.power_kw * h;
       const e_act = act.power_kw * h;
-      const price_kwh = price / 1000;
-      const rev_pred = e_pred * price_kwh;
-      const rev_act = e_act * price_kwh;
+      const rev_pred = e_pred * price;
+      const rev_act = e_act * price;
       const loss = rev_pred - rev_act;
       const downtime_loss = act.mode === 'DOWNTIME' ? rev_pred : 0;
       rows.push({
         slice_ts,
         battery_id,
-        price_eur_mwh: price,
+        price_eur_kwh: price,
         pred_mode: pred.mode,
         pred_power_kw: pred.power_kw,
         act_mode: act.mode,
@@ -265,7 +269,7 @@ function renderSummaryTable(rows) {
 function renderDiffTable(rows) {
   const div = document.getElementById('diffTable');
   if (!rows.length) { div.innerHTML = 'No data'; return; }
-  const headers = ['slice_ts','battery_id','price_eur_mwh','pred_mode','pred_power_kw','act_mode','act_power_kw','e_pred_kwh','e_act_kwh','rev_pred_eur','rev_act_eur','loss_eur','is_downtime'];
+  const headers = ['slice_ts','battery_id','price_eur_kwh','pred_mode','pred_power_kw','act_mode','act_power_kw','e_pred_kwh','e_act_kwh','rev_pred_eur','rev_act_eur','loss_eur','is_downtime'];
   let html = '<table><thead><tr>' + headers.map(h=>`<th>${h}</th>`).join('') + '</tr></thead><tbody>';
   for (const r of rows) {
     html += '<tr>' + headers.map(h => `<td>${typeof r[h] === 'number' ? r[h].toFixed(2) : r[h]}</td>`).join('') + '</tr>';
@@ -281,9 +285,18 @@ function buildCumulativeSeries(diffRows, batteryId) {
   const grouped = new Map();
   for (const r of diffRows) {
     if (batteryId && r.battery_id !== batteryId) continue;
-    const g = grouped.get(r.slice_ts) || { rev_pred_eur: 0, rev_act_eur: 0, is_downtime: false, price: r.price_eur_mwh };
+    const g = grouped.get(r.slice_ts) || {
+      rev_pred_eur: 0,
+      rev_act_eur: 0,
+      pred_power_kw: 0,
+      act_power_kw: 0,
+      is_downtime: false,
+      price: r.price_eur_kwh
+    };
     g.rev_pred_eur += r.rev_pred_eur;
     g.rev_act_eur += r.rev_act_eur;
+    g.pred_power_kw += r.pred_power_kw;
+    g.act_power_kw += r.act_power_kw;
     g.is_downtime = g.is_downtime || r.is_downtime;
     grouped.set(r.slice_ts, g);
   }
@@ -294,7 +307,16 @@ function buildCumulativeSeries(diffRows, batteryId) {
     const g = grouped.get(ts);
     cumPred += g.rev_pred_eur;
     cumAct += g.rev_act_eur;
-    series.push({ ts, cum_pred_eur: cumPred, cum_act_eur: cumAct, is_downtime: g.is_downtime, price: g.price });
+    series.push({
+      ts,
+      cum_pred_eur: cumPred,
+      cum_act_eur: cumAct,
+      is_downtime: g.is_downtime,
+      price: g.price,
+      pred_power_kw: g.pred_power_kw,
+      act_power_kw: g.act_power_kw,
+      loss_eur: g.rev_pred_eur - g.rev_act_eur
+    });
   }
   return series;
 }
@@ -342,7 +364,7 @@ function renderCumChart(batteryId, range) {
     data:{
       datasets:[
         { label:'Predicted', data:pred, borderColor:'blue', tension:0, fill:false },
-        { label:'Actual', data:act, borderColor:'orange', tension:0, fill:{ target:'previous', above:'rgba(255,0,0,0.2)', below:'rgba(255,0,0,0.2)' } }
+        { label:'Actual', data:act, borderColor:'orange', tension:0, fill:{ target:'previous', above:'rgba(0,255,0,0.2)', below:'rgba(255,0,0,0.2)' } }
       ]
     },
     options:{
@@ -351,7 +373,22 @@ function renderCumChart(batteryId, range) {
         x:{ type:'time', adapters:{ date:{ zone:'Europe/Stockholm' } }, title:{ display:true, text:'Time' } },
         y:{ title:{ display:true, text:'EUR' } }
       },
-      plugins:{ annotation:{ annotations } }
+      plugins:{
+        annotation:{ annotations },
+        tooltip:{
+          callbacks:{
+            afterBody:(ctx)=>{
+              const p = series[ctx[0].dataIndex];
+              return [
+                `Price: ${(p.price*1000).toFixed(2)} EUR/MWh`,
+                `Pred Power: ${p.pred_power_kw.toFixed(2)} kW`,
+                `Act Power: ${p.act_power_kw.toFixed(2)} kW`,
+                `Loss: ${p.loss_eur.toFixed(2)} EUR`
+              ];
+            }
+          }
+        }
+      }
     }
   });
   if (range) {
