@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <title>BESS Revenue-Loss Demo</title>
   <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.1.0"></script>
 </head>
 <body>
   <h1>BESS Revenue-Loss Demo</h1>
@@ -42,6 +46,17 @@
       <button id="downloadDiff">Download results CSV</button>
       <button id="downloadSummary">Download summary CSV</button>
     </div>
+
+    <h2>Cumulative Revenue Over Time</h2>
+    <div class="input-group"><label>Battery <select id="batterySelect"></select></label></div>
+    <canvas id="cumChart"></canvas>
+
+    <h2>Loss Breakdown by Cause</h2>
+    <canvas id="lossBreakdown"></canvas>
+
+    <h2>Loss Heatmap</h2>
+    <div class="input-group"><label>Metric <select id="heatmapMetric"><option value="loss">Loss EUR</option><option value="error">Dispatch Error</option></select></label></div>
+    <div id="heatmap" class="heatmap"></div>
   </div>
 
   <script src="app.js"></script>

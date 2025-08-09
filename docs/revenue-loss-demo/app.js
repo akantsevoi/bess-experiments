@@ -274,6 +274,194 @@ function renderDiffTable(rows) {
   div.innerHTML = html;
 }
 
+// Chart helpers
+let cumulativeSeries = {}, cumChart = null, breakdownChart = null;
+
+function buildCumulativeSeries(diffRows, batteryId) {
+  const grouped = new Map();
+  for (const r of diffRows) {
+    if (batteryId && r.battery_id !== batteryId) continue;
+    const g = grouped.get(r.slice_ts) || { rev_pred_eur: 0, rev_act_eur: 0, is_downtime: false, price: r.price_eur_mwh };
+    g.rev_pred_eur += r.rev_pred_eur;
+    g.rev_act_eur += r.rev_act_eur;
+    g.is_downtime = g.is_downtime || r.is_downtime;
+    grouped.set(r.slice_ts, g);
+  }
+  const times = Array.from(grouped.keys()).sort();
+  let cumPred = 0, cumAct = 0;
+  const series = [];
+  for (const ts of times) {
+    const g = grouped.get(ts);
+    cumPred += g.rev_pred_eur;
+    cumAct += g.rev_act_eur;
+    series.push({ ts, cum_pred_eur: cumPred, cum_act_eur: cumAct, is_downtime: g.is_downtime, price: g.price });
+  }
+  return series;
+}
+
+function getDowntimeBands(series) {
+  const bands = [];
+  let start = null;
+  for (let i = 0; i < series.length; i++) {
+    const p = series[i];
+    if (p.is_downtime && !start) start = new Date(p.ts);
+    if (!p.is_downtime && start) {
+      const end = new Date(series[i].ts);
+      bands.push({ start, end });
+      start = null;
+    }
+  }
+  if (start) {
+    const last = new Date(series[series.length - 1].ts);
+    bands.push({ start, end: new Date(last.getTime() + 5 * 60000) });
+  }
+  return bands;
+}
+
+function renderCumChart(batteryId, range) {
+  const key = batteryId || 'ALL';
+  const series = cumulativeSeries[key] || [];
+  const pred = series.map(p => ({ x: new Date(p.ts), y: p.cum_pred_eur }));
+  const act = series.map(p => ({ x: new Date(p.ts), y: p.cum_act_eur }));
+  const prices = series.map(p => p.price).sort((a,b)=>a-b);
+  const threshold = prices[Math.floor(prices.length*0.9)] || 0;
+  const annotations = {};
+  getDowntimeBands(series).forEach((b,i)=>{
+    annotations['downtime'+i] = { type:'box', xMin: b.start, xMax: b.end, yMin:'min', yMax:'max', backgroundColor:'rgba(0,0,0,0.1)', borderWidth:0 };
+  });
+  series.forEach((p,i)=>{
+    if (p.price >= threshold) {
+      const x = new Date(p.ts);
+      annotations['price'+i] = { type:'line', xMin:x, xMax:x, borderColor:'rgba(0,0,255,0.3)', borderWidth:2, borderDash:[4,4] };
+    }
+  });
+  if (cumChart) cumChart.destroy();
+  const ctx = document.getElementById('cumChart').getContext('2d');
+  cumChart = new Chart(ctx, {
+    type:'line',
+    data:{
+      datasets:[
+        { label:'Predicted', data:pred, borderColor:'blue', tension:0, fill:false },
+        { label:'Actual', data:act, borderColor:'orange', tension:0, fill:{ target:'previous', above:'rgba(255,0,0,0.2)', below:'rgba(255,0,0,0.2)' } }
+      ]
+    },
+    options:{
+      parsing:false,
+      scales:{
+        x:{ type:'time', adapters:{ date:{ zone:'Europe/Stockholm' } }, title:{ display:true, text:'Time' } },
+        y:{ title:{ display:true, text:'EUR' } }
+      },
+      plugins:{ annotation:{ annotations } }
+    }
+  });
+  if (range) {
+    cumChart.options.scales.x.min = range.start;
+    cumChart.options.scales.x.max = range.end;
+    cumChart.update();
+  }
+}
+
+function renderLossBreakdown(summary) {
+  const labels = summary.map(r => `${r.battery_id} ${r.day}`);
+  const downtime = summary.map(r => r.loss_downtime_eur);
+  const deviation = summary.map(r => Math.max(r.loss_eur - r.loss_downtime_eur, 0));
+  const util = summary.map(r => r.utilization_pct);
+  if (breakdownChart) breakdownChart.destroy();
+  const ctx = document.getElementById('lossBreakdown').getContext('2d');
+  breakdownChart = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels,
+      datasets:[
+        { label:'Downtime Loss', data:downtime, backgroundColor:'rgba(200,0,0,0.6)', stack:'loss' },
+        { label:'Deviation Loss', data:deviation, backgroundColor:'rgba(200,200,0,0.6)', stack:'loss' },
+        { label:'Utilization %', data:util, type:'line', yAxisID:'y1', borderColor:'blue', tension:0 }
+      ]
+    },
+    options:{
+      scales:{
+        x:{ stacked:true },
+        y:{ stacked:true, title:{ display:true, text:'Loss EUR' } },
+        y1:{ position:'right', min:0, max:100, title:{ display:true, text:'Util %' } }
+      }
+    }
+  });
+}
+
+function buildHeatmapMatrix(diffRows, metric) {
+  const matrix = new Map();
+  const hours = new Set();
+  for (const r of diffRows) {
+    const b = r.battery_id;
+    let m = matrix.get(b);
+    if (!m) { m = new Map(); matrix.set(b, m); }
+    const t = new Date(r.slice_ts);
+    t.setMinutes(0,0,0);
+    const key = t.toISOString();
+    hours.add(key);
+    let cell = m.get(key);
+    if (!cell) { cell = { value:0, downtime:false }; m.set(key, cell); }
+    const val = metric === 'error' ? Math.abs(r.act_power_kw - r.pred_power_kw) : Math.max(r.loss_eur,0);
+    cell.value += val;
+    cell.downtime = cell.downtime || r.is_downtime;
+  }
+  const hourList = Array.from(hours).sort();
+  const batteries = Array.from(matrix.keys()).sort();
+  let maxVal = 0;
+  for (const b of batteries) {
+    const m = matrix.get(b);
+    for (const h of hourList) {
+      const v = m.get(h)?.value || 0;
+      if (v > maxVal) maxVal = v;
+    }
+  }
+  return { matrix, hourList, batteries, maxVal };
+}
+
+function renderHeatmap(metric) {
+  const { matrix, hourList, batteries, maxVal } = buildHeatmapMatrix(lastDiffRows, metric);
+  const container = document.getElementById('heatmap');
+  container.innerHTML = '';
+  const table = document.createElement('table');
+  const head = document.createElement('tr');
+  head.appendChild(document.createElement('th'));
+  hourList.forEach(h => {
+    const th = document.createElement('th');
+    th.textContent = new Date(h).toLocaleTimeString('sv-SE', { timeZone:'Europe/Stockholm', day:'2-digit', hour:'2-digit' });
+    head.appendChild(th);
+  });
+  table.appendChild(head);
+  const sel = document.getElementById('batterySelect');
+  batteries.forEach(b => {
+    const tr = document.createElement('tr');
+    const th = document.createElement('th');
+    th.textContent = b;
+    tr.appendChild(th);
+    const m = matrix.get(b);
+    hourList.forEach(h => {
+      const td = document.createElement('td');
+      const cell = m.get(h);
+      const val = cell ? cell.value : 0;
+      const intensity = maxVal ? val / maxVal : 0;
+      td.style.backgroundColor = `rgba(255,0,0,${intensity})`;
+      if (cell && cell.downtime) {
+        const d = document.createElement('div');
+        d.className = 'diamond';
+        td.appendChild(d);
+      }
+      td.dataset.battery = b;
+      td.dataset.start = h;
+      td.addEventListener('click', () => {
+        sel.value = b;
+        renderCumChart(b, { start: new Date(h), end: new Date(new Date(h).getTime()+3600000) });
+      });
+      tr.appendChild(td);
+    });
+    table.appendChild(tr);
+  });
+  container.appendChild(table);
+}
+
 // Main run
 let lastDiffRows = [], lastSummary = [];
 
@@ -313,6 +501,16 @@ async function runCalculation() {
     document.getElementById('results').style.display = 'block';
     lastDiffRows = diffRows;
     lastSummary = perBattery;
+
+    // prepare cumulative series and charts
+    cumulativeSeries = { 'ALL': buildCumulativeSeries(diffRows, null) };
+    const ids = Array.from(new Set(diffRows.map(r => r.battery_id))).sort();
+    ids.forEach(id => cumulativeSeries[id] = buildCumulativeSeries(diffRows, id));
+    const sel = document.getElementById('batterySelect');
+    sel.innerHTML = '<option value="">Portfolio</option>' + ids.map(id => `<option value="${id}">${id}</option>`).join('');
+    renderCumChart(sel.value);
+    renderLossBreakdown(perBattery);
+    renderHeatmap(document.getElementById('heatmapMetric').value);
   } catch (e) {
     alert(e.message);
     console.error(e);
@@ -322,3 +520,5 @@ async function runCalculation() {
 document.getElementById('runBtn').addEventListener('click', runCalculation);
 document.getElementById('downloadDiff').addEventListener('click', () => downloadCsv('diff.csv', lastDiffRows));
 document.getElementById('downloadSummary').addEventListener('click', () => downloadCsv('summary.csv', lastSummary));
+document.getElementById('batterySelect').addEventListener('change', e => renderCumChart(e.target.value));
+document.getElementById('heatmapMetric').addEventListener('change', e => renderHeatmap(e.target.value));
