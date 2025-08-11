@@ -1,0 +1,142 @@
+[
+  {
+    "battery_id": "b-001",
+    "start_ts": "2025-07-01T00:00:00+02:00",
+    "end_ts": "2025-07-01T06:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1500
+  },
+  {
+    "battery_id": "b-001",
+    "start_ts": "2025-07-01T06:00:00+02:00",
+    "end_ts": "2025-07-01T10:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0
+  },
+  {
+    "battery_id": "b-001",
+    "start_ts": "2025-07-01T10:00:00+02:00",
+    "end_ts": "2025-07-01T16:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2000
+  },
+  {
+    "battery_id": "b-001",
+    "start_ts": "2025-07-01T16:00:00+02:00",
+    "end_ts": "2025-07-01T20:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1000
+  },
+  {
+    "battery_id": "b-001",
+    "start_ts": "2025-07-01T20:00:00+02:00",
+    "end_ts": "2025-07-02T00:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500
+  },
+  {
+    "battery_id": "b-002",
+    "start_ts": "2025-07-01T00:00:00+02:00",
+    "end_ts": "2025-07-01T06:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -600
+  },
+  {
+    "battery_id": "b-002",
+    "start_ts": "2025-07-01T06:00:00+02:00",
+    "end_ts": "2025-07-01T10:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0
+  },
+  {
+    "battery_id": "b-002",
+    "start_ts": "2025-07-01T10:00:00+02:00",
+    "end_ts": "2025-07-01T16:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 800
+  },
+  {
+    "battery_id": "b-002",
+    "start_ts": "2025-07-01T16:00:00+02:00",
+    "end_ts": "2025-07-01T20:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -400
+  },
+  {
+    "battery_id": "b-002",
+    "start_ts": "2025-07-01T20:00:00+02:00",
+    "end_ts": "2025-07-02T00:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 600
+  },
+  {
+    "battery_id": "b-001",
+    "start_ts": "2025-07-02T00:00:00+02:00",
+    "end_ts": "2025-07-02T06:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1500
+  },
+  {
+    "battery_id": "b-001",
+    "start_ts": "2025-07-02T06:00:00+02:00",
+    "end_ts": "2025-07-02T10:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0
+  },
+  {
+    "battery_id": "b-001",
+    "start_ts": "2025-07-02T10:00:00+02:00",
+    "end_ts": "2025-07-02T16:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2000
+  },
+  {
+    "battery_id": "b-001",
+    "start_ts": "2025-07-02T16:00:00+02:00",
+    "end_ts": "2025-07-02T20:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1000
+  },
+  {
+    "battery_id": "b-001",
+    "start_ts": "2025-07-02T20:00:00+02:00",
+    "end_ts": "2025-07-03T00:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500
+  },
+  {
+    "battery_id": "b-002",
+    "start_ts": "2025-07-02T00:00:00+02:00",
+    "end_ts": "2025-07-02T06:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -600
+  },
+  {
+    "battery_id": "b-002",
+    "start_ts": "2025-07-02T06:00:00+02:00",
+    "end_ts": "2025-07-02T10:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0
+  },
+  {
+    "battery_id": "b-002",
+    "start_ts": "2025-07-02T10:00:00+02:00",
+    "end_ts": "2025-07-02T16:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 800
+  },
+  {
+    "battery_id": "b-002",
+    "start_ts": "2025-07-02T16:00:00+02:00",
+    "end_ts": "2025-07-02T20:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -400
+  },
+  {
+    "battery_id": "b-002",
+    "start_ts": "2025-07-02T20:00:00+02:00",
+    "end_ts": "2025-07-03T00:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 600
+  }
+]
