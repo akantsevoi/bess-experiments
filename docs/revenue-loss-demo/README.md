@@ -80,6 +80,34 @@ These formulas are applied to both predicted and actual data to get `rev_pred_eu
     The percentage of the battery's potential energy throughput that was actually used.
     `Utilization % = (Total Actual Energy Dispatched / (Rated Power * Time)) * 100`
 
+### 2.4. Availability Metrics (time-based and value-based)
+
+Availability is computed on the same 5-minute intervals.
+
+-   **Time-Based Availability (`A_time`)**
+    Fraction of time the battery is not in `DOWNTIME`:
+    `A_time = (Number of non-DOWNTIME slices) / (Total slices in period)`
+    *Note*: Partial derates still count as “available” here; only explicit `DOWNTIME` marks unavailability.
+
+-   **Value-Based Availability (`A_dispatch`)**
+    Evaluates availability only when the battery was expected to operate (charge or discharge), using the predicted schedule:
+    - Define an “instructed” slice when `abs(pred_power_kw) >= P_min`. (`P_min` is configurable; default is **5% of battery power rating**.)
+    - For instructed slices, compute partial availability:
+      `a(t) = min(1, abs(act_power_kw) / abs(pred_power_kw))`
+    - For non-instructed slices, set `a(t) = 1` (they do not penalize the score).
+    - Dispatch-weighted availability (restricted to instructed slices):
+      `A_dispatch = (Σ a(t) over instructed slices) / (Number of instructed slices)`
+
+-   **(Optional) Price-Weighted Availability (`A_econ`)**
+    Weigh availability by the economic importance of each slice:
+    - Weight per slice: `w(t) = price_eur_mwh(t) * abs(pred_power_kw(t))`
+    - `A_econ = (Σ a(t) * w(t)) / (Σ w(t))`
+
+-   **Headroom Cost (informational)**
+    Monetized shortfall during periods that do **not** breach a time-based SLA threshold (e.g., 95%):
+    `Headroom Cost (EUR) = Σ ((abs(pred_power_kw) - abs(act_power_kw))⁺ * (5/60) * (price_eur_mwh/1000))`
+    computed over slices where the rolling/windowed `A_time` remains ≥ the SLA target.
+
 ## 3. Display & Visualization
 
 The results are presented through several KPIs and charts:
@@ -97,3 +125,17 @@ The results are presented through several KPIs and charts:
 -   **Cumulative Revenue Chart**: A line chart showing the cumulative predicted vs. actual revenue over time. Downtime periods are marked with a transparent grey background.
 -   **Loss Breakdown Chart**: A stacked bar chart showing the breakdown of revenue loss into "Downtime Loss" and "Deviation Loss" for each battery on each day. A line series for "Utilization %" is overlaid.
 -   **Loss Heatmap**: A matrix visualizing either the total `Loss (EUR)` or the dispatch `Error (abs(actual_power - pred_power))` for each battery (y-axis) at each hour of the day (x-axis). Cell color intensity represents the magnitude of the metric. Downtime hours are marked with a diamond shape.
+
+### 3.3. Availability KPIs & Visualizations
+
+-   **Availability KPIs**:
+    - `Time Availability (A_time %)` for the selected window.
+    - `Value-Based Availability (A_dispatch %)`; the configured `P_min` is shown in the legend.
+    - `(Optional) Price-Weighted Availability (A_econ %)` if price-weighting is enabled.
+    - **Headroom Cost (EUR)** and **Distance to Breach** (minutes of additional downtime until a 95% SLA would be breached).
+
+-   **Availability Timeline**: Ribbon view over time per battery with segments colored as *Available*, *Derated* (partial availability), and *Downtime*. Price or predicted power can be overlaid to highlight high-value periods.
+
+-   **Top Outage Episodes Table**: List of contiguous unavailability/derate episodes with start/end time, duration, average price, lost energy (kWh), and estimated cost (EUR). Sortable by cost or duration.
+
+-   **SLA Window Summary**: Monthly (or user-selected) window cards showing `A_time`, `A_dispatch`, `(optional) A_econ`, number of incidents, and cumulative Headroom Cost.

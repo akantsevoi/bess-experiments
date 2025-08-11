@@ -184,42 +184,73 @@ function computeDiffRows(price5, pred5, act5, batteries) {
   return rows;
 }
 
-function aggregateSummaries(diffRows, batteries) {
+function aggregateSummaries(diffRows, batteries, pMinFrac, sla) {
   const perMap = new Map();
   const bmap = new Map(batteries.map(b => [b.battery_id, b]));
   const h = 5/60;
+  const portfolio = { rev_pred_eur:0, rev_act_eur:0, loss_eur:0, loss_downtime_eur:0, util_energy:0, capacity_energy:0,
+    total_slices:0, downtime_slices:0, dispatch_a_sum:0, dispatch_count:0, econ_a_sum:0, econ_w_sum:0, headroom_eur:0 };
   for (const r of diffRows) {
     const day = r.slice_ts.slice(0,10);
     const key = r.battery_id + '|' + day;
     let agg = perMap.get(key);
     if (!agg) {
-      agg = { battery_id: r.battery_id, day, rev_pred_eur: 0, rev_act_eur: 0, loss_eur: 0, loss_downtime_eur: 0, util_energy: 0, capacity_energy: 0 };
+      agg = { battery_id: r.battery_id, day, rev_pred_eur: 0, rev_act_eur: 0, loss_eur: 0, loss_downtime_eur: 0, util_energy: 0,
+        capacity_energy: 0, total_slices:0, downtime_slices:0, dispatch_a_sum:0, dispatch_count:0, econ_a_sum:0, econ_w_sum:0,
+        headroom_eur:0 };
       perMap.set(key, agg);
     }
+    const rating = bmap.get(r.battery_id).power_kw;
+    const pmin = rating * pMinFrac;
+    const instruct = Math.abs(r.pred_power_kw) >= pmin;
+    const a = instruct ? Math.min(1, Math.abs(r.act_power_kw) / Math.abs(r.pred_power_kw || 1)) : 1;
+    const w = r.price_eur_kwh * 1000 * Math.abs(r.pred_power_kw);
+    const shortfall = Math.max(Math.abs(r.pred_power_kw) - Math.abs(r.act_power_kw), 0);
+
     agg.rev_pred_eur += r.rev_pred_eur;
     agg.rev_act_eur += r.rev_act_eur;
     agg.loss_eur += r.loss_eur;
     agg.loss_downtime_eur += r.loss_downtime_eur;
     agg.util_energy += Math.abs(r.e_act_kwh);
-    const rating = bmap.get(r.battery_id).power_kw;
     agg.capacity_energy += rating * h;
-  }
-  const perBattery = [];
-  for (const agg of perMap.values()) {
-    agg.utilization_pct = agg.capacity_energy ? (agg.util_energy/agg.capacity_energy)*100 : 0;
-    perBattery.push(agg);
-  }
-  const portfolio = { rev_pred_eur:0, rev_act_eur:0, loss_eur:0, loss_downtime_eur:0, util_energy:0, capacity_energy:0 };
-  for (const r of diffRows) {
+    agg.total_slices += 1;
+    if (r.is_downtime) agg.downtime_slices += 1;
+    if (instruct) { agg.dispatch_a_sum += a; agg.dispatch_count += 1; }
+    agg.econ_a_sum += a * w;
+    agg.econ_w_sum += w;
+    if (!r.is_downtime) agg.headroom_eur += shortfall * h * r.price_eur_kwh;
+
     portfolio.rev_pred_eur += r.rev_pred_eur;
     portfolio.rev_act_eur += r.rev_act_eur;
     portfolio.loss_eur += r.loss_eur;
     portfolio.loss_downtime_eur += r.loss_downtime_eur;
     portfolio.util_energy += Math.abs(r.e_act_kwh);
-    const rating = bmap.get(r.battery_id).power_kw;
     portfolio.capacity_energy += rating * h;
+    portfolio.total_slices += 1;
+    if (r.is_downtime) portfolio.downtime_slices += 1;
+    if (instruct) { portfolio.dispatch_a_sum += a; portfolio.dispatch_count += 1; }
+    portfolio.econ_a_sum += a * w;
+    portfolio.econ_w_sum += w;
+    if (!r.is_downtime) portfolio.headroom_eur += shortfall * h * r.price_eur_kwh;
+  }
+  const perBattery = [];
+  for (const agg of perMap.values()) {
+    agg.utilization_pct = agg.capacity_energy ? (agg.util_energy/agg.capacity_energy)*100 : 0;
+    agg.time_availability_pct = agg.total_slices ? ((agg.total_slices - agg.downtime_slices)/agg.total_slices)*100 : 100;
+    agg.dispatch_availability_pct = agg.dispatch_count ? (agg.dispatch_a_sum/agg.dispatch_count)*100 : 100;
+    agg.price_weighted_availability_pct = agg.econ_w_sum ? (agg.econ_a_sum/agg.econ_w_sum)*100 : null;
+    const a_time_frac = agg.total_slices ? (agg.total_slices - agg.downtime_slices)/agg.total_slices : 1;
+    agg.headroom_cost_eur = a_time_frac >= sla ? agg.headroom_eur : 0;
+    agg.distance_to_breach_min = Math.max(((agg.total_slices*(1 - sla) - agg.downtime_slices) * 5), 0);
+    perBattery.push(agg);
   }
   portfolio.utilization_pct = portfolio.capacity_energy ? (portfolio.util_energy/portfolio.capacity_energy)*100 : 0;
+  portfolio.time_availability_pct = portfolio.total_slices ? ((portfolio.total_slices - portfolio.downtime_slices)/portfolio.total_slices)*100 : 100;
+  portfolio.dispatch_availability_pct = portfolio.dispatch_count ? (portfolio.dispatch_a_sum/portfolio.dispatch_count)*100 : 100;
+  portfolio.price_weighted_availability_pct = portfolio.econ_w_sum ? (portfolio.econ_a_sum/portfolio.econ_w_sum)*100 : null;
+  const port_a_time_frac = portfolio.total_slices ? (portfolio.total_slices - portfolio.downtime_slices)/portfolio.total_slices : 1;
+  portfolio.headroom_cost_eur = port_a_time_frac >= sla ? portfolio.headroom_eur : 0;
+  portfolio.distance_to_breach_min = Math.max(((portfolio.total_slices*(1 - sla) - portfolio.downtime_slices) * 5), 0);
   return { perBattery, portfolio };
 }
 
@@ -247,20 +278,29 @@ function downloadCsv(name, rows) {
 // Rendering helpers
 function renderKPIs(portfolio) {
   const div = document.getElementById('kpis');
-  div.innerHTML = `
-    <p>Predicted Revenue: ${portfolio.rev_pred_eur.toFixed(2)} EUR</p>
-    <p>Actual Revenue: ${portfolio.rev_act_eur.toFixed(2)} EUR</p>
-    <p>Revenue Loss: ${portfolio.loss_eur.toFixed(2)} EUR</p>
-    <p>Downtime Loss: ${portfolio.loss_downtime_eur.toFixed(2)} EUR</p>
-    <p>Utilization: ${portfolio.utilization_pct.toFixed(2)} %</p>`;
+  const parts = [
+    `<p>Predicted Revenue: ${portfolio.rev_pred_eur.toFixed(2)} EUR</p>`,
+    `<p>Actual Revenue: ${portfolio.rev_act_eur.toFixed(2)} EUR</p>`,
+    `<p>Revenue Loss: ${portfolio.loss_eur.toFixed(2)} EUR</p>`,
+    `<p>Downtime Loss: ${portfolio.loss_downtime_eur.toFixed(2)} EUR</p>`,
+    `<p>Utilization: ${portfolio.utilization_pct.toFixed(2)} %</p>`,
+    `<p>Time Availability: ${portfolio.time_availability_pct.toFixed(2)} %</p>`,
+    `<p>Dispatch Availability: ${portfolio.dispatch_availability_pct.toFixed(2)} %</p>`
+  ];
+  if (portfolio.price_weighted_availability_pct != null) {
+    parts.push(`<p>Price-Weighted Availability: ${portfolio.price_weighted_availability_pct.toFixed(2)} %</p>`);
+  }
+  parts.push(`<p>Headroom Cost: ${portfolio.headroom_cost_eur.toFixed(2)} EUR</p>`);
+  parts.push(`<p>Distance to Breach: ${portfolio.distance_to_breach_min.toFixed(0)} min</p>`);
+  div.innerHTML = parts.join('');
 }
 
 function renderSummaryTable(rows) {
   const div = document.getElementById('summaryTable');
   if (!rows.length) { div.innerHTML = 'No data'; return; }
-  let html = '<table><thead><tr><th>Battery</th><th>Day</th><th>Pred Rev</th><th>Act Rev</th><th>Loss</th><th>Downtime Loss</th><th>Util %</th></tr></thead><tbody>';
+  let html = '<table><thead><tr><th>Battery</th><th>Day</th><th>Pred Rev</th><th>Act Rev</th><th>Loss</th><th>Downtime Loss</th><th>Util %</th><th>A_time %</th><th>A_dispatch %</th><th>Headroom EUR</th></tr></thead><tbody>';
   for (const r of rows) {
-    html += `<tr><td>${r.battery_id}</td><td>${r.day}</td><td>${r.rev_pred_eur.toFixed(2)}</td><td>${r.rev_act_eur.toFixed(2)}</td><td>${r.loss_eur.toFixed(2)}</td><td>${r.loss_downtime_eur.toFixed(2)}</td><td>${r.utilization_pct.toFixed(2)}</td></tr>`;
+    html += `<tr><td>${r.battery_id}</td><td>${r.day}</td><td>${r.rev_pred_eur.toFixed(2)}</td><td>${r.rev_act_eur.toFixed(2)}</td><td>${r.loss_eur.toFixed(2)}</td><td>${r.loss_downtime_eur.toFixed(2)}</td><td>${r.utilization_pct.toFixed(2)}</td><td>${r.time_availability_pct.toFixed(2)}</td><td>${r.dispatch_availability_pct.toFixed(2)}</td><td>${r.headroom_cost_eur.toFixed(2)}</td></tr>`;
   }
   html += '</tbody></table>';
   div.innerHTML = html;
@@ -503,6 +543,70 @@ function renderHeatmap(metric) {
   container.appendChild(table);
 }
 
+function buildAvailabilityMatrix(diffRows, batteries, pMinFrac) {
+  const matrix = new Map();
+  const hours = new Set();
+  const bmap = new Map(batteries.map(b => [b.battery_id, b]));
+  for (const r of diffRows) {
+    const b = r.battery_id;
+    let m = matrix.get(b);
+    if (!m) { m = new Map(); matrix.set(b, m); }
+    const t = new Date(r.slice_ts); t.setMinutes(0,0,0); const key = t.toISOString();
+    hours.add(key);
+    let cell = m.get(key);
+    if (!cell) { cell = { status:'available' }; m.set(key, cell); }
+    if (r.is_downtime) {
+      cell.status = 'downtime';
+    } else {
+      const rating = bmap.get(b).power_kw;
+      const pmin = rating * pMinFrac;
+      if (Math.abs(r.pred_power_kw) >= pmin && Math.abs(r.act_power_kw) < Math.abs(r.pred_power_kw) - 1e-9) {
+        if (cell.status !== 'downtime') cell.status = 'derated';
+      }
+    }
+  }
+  return { matrix, hourList: Array.from(hours).sort(), batteries: Array.from(matrix.keys()).sort() };
+}
+
+function renderAvailabilityTimeline(diffRows, batteries, pMinFrac) {
+  const { matrix, hourList, batteries: ids } = buildAvailabilityMatrix(diffRows, batteries, pMinFrac);
+  const container = document.getElementById('availTimeline');
+  container.innerHTML = '';
+  const table = document.createElement('table');
+  const head = document.createElement('tr');
+  head.appendChild(document.createElement('th'));
+  hourList.forEach(h => {
+    const th = document.createElement('th');
+    th.textContent = new Date(h).toLocaleTimeString('sv-SE', { timeZone:'Europe/Stockholm', day:'2-digit', hour:'2-digit' });
+    head.appendChild(th);
+  });
+  table.appendChild(head);
+  const sel = document.getElementById('batterySelect');
+  ids.forEach(b => {
+    const tr = document.createElement('tr');
+    const th = document.createElement('th');
+    th.textContent = b;
+    tr.appendChild(th);
+    const m = matrix.get(b);
+    hourList.forEach(h => {
+      const td = document.createElement('td');
+      const status = m.get(h)?.status || 'available';
+      if (status === 'downtime') td.style.backgroundColor = 'rgba(244,67,54,0.7)';
+      else if (status === 'derated') td.style.backgroundColor = 'rgba(255,235,59,0.7)';
+      else td.style.backgroundColor = 'rgba(76,175,80,0.7)';
+      td.dataset.battery = b;
+      td.dataset.start = h;
+      td.addEventListener('click', () => {
+        sel.value = b;
+        renderCumChart(b, { start: new Date(h), end: new Date(new Date(h).getTime()+3600000) });
+      });
+      tr.appendChild(td);
+    });
+    table.appendChild(tr);
+  });
+  container.appendChild(table);
+}
+
 // Main run
 let lastDiffRows = [], lastSummary = [];
 
@@ -536,7 +640,11 @@ async function runCalculation() {
     pred5 = pred5.filter(r => { const t = toDate(r.slice_ts); return t >= start && t < end; });
     const act5 = aggregateActualTo5(actRows, batteries, window);
     const diffRows = computeDiffRows(price5, pred5, act5, batteries);
-    const { perBattery, portfolio } = aggregateSummaries(diffRows, batteries);
+    const pMinPct = Number(document.getElementById('pMinPct').value) || 5;
+    const slaPct = Number(document.getElementById('slaPct').value) || 95;
+    const pMinFrac = pMinPct / 100;
+    const sla = slaPct / 100;
+    const { perBattery, portfolio } = aggregateSummaries(diffRows, batteries, pMinFrac, sla);
     renderKPIs(portfolio);
     renderSummaryTable(perBattery);
     renderDiffTable(diffRows);
@@ -553,6 +661,7 @@ async function runCalculation() {
     renderCumChart(sel.value);
     renderLossBreakdown(perBattery);
     renderHeatmap(document.getElementById('heatmapMetric').value);
+    renderAvailabilityTimeline(diffRows, batteries, pMinFrac);
   } catch (e) {
     alert(e.message);
     console.error(e);

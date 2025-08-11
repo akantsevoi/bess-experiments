@@ -29,6 +29,10 @@
       <label>Start <input type="datetime-local" id="startTs" /></label>
       <label>End <input type="datetime-local" id="endTs" /></label>
     </div>
+    <div class="input-group">
+      <label>P_min % <input type="number" id="pMinPct" value="5" min="0" max="100" /></label>
+      <label>SLA % <input type="number" id="slaPct" value="95" min="0" max="100" /></label>
+    </div>
     <button id="runBtn">Run Calculation</button>
   </div>
 
@@ -54,6 +58,9 @@
     <h2>Loss Heatmap</h2>
     <div class="input-group"><label>Metric <select id="heatmapMetric"><option value="loss">Loss EUR</option><option value="error">Dispatch Error</option></select></label></div>
     <div id="heatmap" class="heatmap"></div>
+
+    <h2>Availability Timeline</h2>
+    <div id="availTimeline" class="heatmap"></div>
 
     <h2>Loss Breakdown by Cause</h2>
     <canvas id="lossBreakdown"></canvas>
