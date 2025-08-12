@@ -1,0 +1,14 @@
+[
+  {
+    "battery_id": "b-001",
+    "display_name": "NorthPack A",
+    "capacity_kwh": 3500,
+    "power_kw": 2500
+  },
+  {
+    "battery_id": "b-002",
+    "display_name": "NorthPack B",
+    "capacity_kwh": 1500,
+    "power_kw": 1000
+  }
+]

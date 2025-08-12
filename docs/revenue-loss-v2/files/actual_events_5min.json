@@ -1,0 +1,8066 @@
+[
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T00:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1387,
+    "soc_pct": 53.3
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T00:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -676,
+    "soc_pct": 53.76
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T00:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1474,
+    "soc_pct": 56.81
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T00:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -665,
+    "soc_pct": 57.45
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T00:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1523,
+    "soc_pct": 60.44
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T00:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -519,
+    "soc_pct": 60.33
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T00:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1725,
+    "soc_pct": 64.55
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T00:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -660,
+    "soc_pct": 64.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T00:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1711,
+    "soc_pct": 68.62
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T00:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -677,
+    "soc_pct": 67.76
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T00:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1657,
+    "soc_pct": 72.56
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T00:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -540,
+    "soc_pct": 70.76
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T00:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1494,
+    "soc_pct": 76.12
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T00:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -548,
+    "soc_pct": 73.81
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T00:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1455,
+    "soc_pct": 79.59
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T00:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -521,
+    "soc_pct": 76.7
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T00:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1446,
+    "soc_pct": 83.03
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T00:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -687,
+    "soc_pct": 80.52
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T00:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1394,
+    "soc_pct": 86.35
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T00:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -651,
+    "soc_pct": 84.13
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T00:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1480,
+    "soc_pct": 89.87
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T00:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -586,
+    "soc_pct": 87.39
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T00:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1706,
+    "soc_pct": 93.93
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T00:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -689,
+    "soc_pct": 91.22
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T01:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1525,
+    "soc_pct": 97.56
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T01:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -639,
+    "soc_pct": 94.77
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T01:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1345,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T01:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -563,
+    "soc_pct": 97.89
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T01:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1711,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T01:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -614,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T01:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1519,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T01:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -645,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T01:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1301,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T01:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -615,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T01:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1501,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T01:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -663,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T01:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1346,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T01:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -683,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T01:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1311,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T01:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -543,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T01:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1543,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T01:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -632,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T01:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1381,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T01:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -532,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T01:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1676,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T01:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -554,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T01:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1543,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T01:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -621,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T02:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1464,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T02:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -615,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T02:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1510,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T02:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -678,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T02:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1367,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T02:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -639,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T02:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1382,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T02:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -581,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T02:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1577,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T02:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -564,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T02:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1417,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T02:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -645,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T02:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1308,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T02:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -592,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T02:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1724,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T02:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -689,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T02:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1308,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T02:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -548,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T02:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1394,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T02:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -678,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T02:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1671,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T02:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -668,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T02:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1441,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T02:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -538,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T03:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1650,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T03:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -637,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T03:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1550,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T03:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -688,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T03:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1569,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T03:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -511,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T03:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1643,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T03:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -564,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T03:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1574,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T03:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -679,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T03:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1335,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T03:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -531,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T03:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1323,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T03:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -610,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T03:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1398,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T03:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -619,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T03:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1598,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T03:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -547,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T03:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1560,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T03:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -558,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T03:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1495,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T03:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -673,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T03:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1656,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T03:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -527,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T04:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1466,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T04:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -560,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T04:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1277,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T04:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -649,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T04:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1562,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T04:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -557,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T04:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1609,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T04:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -609,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T04:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1467,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T04:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -512,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T04:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1309,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T04:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -669,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T04:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1682,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T04:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -608,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T04:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1651,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T04:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -615,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T04:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1342,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T04:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -533,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T04:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1414,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T04:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -672,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T04:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1633,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T04:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -665,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T04:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1680,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T04:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -548,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T05:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1387,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T05:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -529,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T05:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1626,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T05:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -669,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T05:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1458,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T05:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -622,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T05:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1345,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T05:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -677,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T05:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1664,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T05:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -686,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T05:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1640,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T05:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -669,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T05:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1286,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T05:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -643,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T05:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1424,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T05:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -678,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T05:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1636,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T05:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -666,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T05:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1640,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T05:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -558,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T05:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1629,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T05:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -529,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T05:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1667,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T05:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -665,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T06:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T06:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T06:05:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T06:05:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T06:10:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T06:10:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T06:15:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T06:15:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T06:20:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T06:20:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T06:25:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T06:25:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T06:30:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T06:30:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T06:35:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T06:35:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T06:40:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T06:40:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T06:45:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T06:45:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T06:50:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T06:50:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T06:55:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T06:55:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T07:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T07:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T07:05:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T07:05:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T07:10:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T07:10:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T07:15:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T07:15:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T07:20:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T07:20:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T07:25:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T07:25:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T07:30:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T07:30:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T07:35:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T07:35:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T07:40:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T07:40:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T07:45:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T07:45:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T07:50:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T07:50:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T07:55:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T07:55:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T08:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T08:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T08:05:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T08:05:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T08:10:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T08:10:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T08:15:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T08:15:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T08:20:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T08:20:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T08:25:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T08:25:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T08:30:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T08:30:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T08:35:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T08:35:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T08:40:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T08:40:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T08:45:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T08:45:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T08:50:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T08:50:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T08:55:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T08:55:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T09:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T09:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T09:05:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T09:05:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T09:10:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T09:10:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T09:15:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T09:15:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T09:20:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T09:20:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T09:25:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T09:25:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T09:30:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T09:30:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T09:35:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T09:35:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T09:40:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T09:40:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T09:45:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T09:45:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T09:50:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T09:50:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T09:55:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T09:55:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T10:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1806,
+    "soc_pct": 95.7
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T10:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 910,
+    "soc_pct": 94.94
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T10:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2011,
+    "soc_pct": 90.91
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T10:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 692,
+    "soc_pct": 91.1
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T10:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1850,
+    "soc_pct": 86.51
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T10:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 884,
+    "soc_pct": 86.19
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T10:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1974,
+    "soc_pct": 81.81
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T10:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 872,
+    "soc_pct": 81.34
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T10:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2101,
+    "soc_pct": 76.8
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T10:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 917,
+    "soc_pct": 76.25
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T10:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2057,
+    "soc_pct": 71.91
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T10:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 908,
+    "soc_pct": 71.21
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T10:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2235,
+    "soc_pct": 66.59
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T10:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 827,
+    "soc_pct": 66.61
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T10:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2132,
+    "soc_pct": 61.51
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T10:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 801,
+    "soc_pct": 62.16
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T10:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2198,
+    "soc_pct": 56.28
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T10:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 811,
+    "soc_pct": 57.66
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T10:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2238,
+    "soc_pct": 50.95
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T10:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 858,
+    "soc_pct": 52.89
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T10:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1985,
+    "soc_pct": 46.22
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T10:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 742,
+    "soc_pct": 48.77
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T10:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1848,
+    "soc_pct": 41.82
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T10:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 833,
+    "soc_pct": 44.14
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T11:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2159,
+    "soc_pct": 36.68
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T11:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 805,
+    "soc_pct": 39.67
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T11:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2076,
+    "soc_pct": 31.74
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T11:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 746,
+    "soc_pct": 35.52
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T11:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1746,
+    "soc_pct": 27.58
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T11:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 749,
+    "soc_pct": 31.36
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T11:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1863,
+    "soc_pct": 23.15
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T11:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 757,
+    "soc_pct": 27.16
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T11:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2024,
+    "soc_pct": 18.33
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T11:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 713,
+    "soc_pct": 23.19
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T11:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1839,
+    "soc_pct": 13.95
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T11:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 847,
+    "soc_pct": 18.49
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T11:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2124,
+    "soc_pct": 8.89
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T11:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 695,
+    "soc_pct": 14.63
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T11:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1945,
+    "soc_pct": 4.26
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T11:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 810,
+    "soc_pct": 10.13
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T11:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1949,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T11:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 730,
+    "soc_pct": 6.07
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T11:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1952,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T11:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 897,
+    "soc_pct": 1.09
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T11:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2050,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T11:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 847,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T11:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2214,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T11:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 864,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T12:00:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T12:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 771,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T12:05:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T12:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 681,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T12:10:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T12:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 764,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T12:15:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T12:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 861,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T12:20:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T12:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 885,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T12:25:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T12:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 909,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T12:30:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T12:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 781,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T12:35:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T12:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 859,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T12:40:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T12:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 811,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T12:45:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T12:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 825,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T12:50:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T12:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 733,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T12:55:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T12:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 733,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T13:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1962,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T13:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 687,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T13:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1902,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T13:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 843,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T13:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1943,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T13:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 720,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T13:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1980,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T13:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 711,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T13:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2073,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T13:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 686,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T13:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1936,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T13:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 815,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T13:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1716,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T13:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 834,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T13:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1781,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T13:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 791,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T13:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1730,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T13:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 771,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T13:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1827,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T13:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 758,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T13:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2157,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T13:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 771,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T13:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2151,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T13:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 880,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T14:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1851,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T14:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 700,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T14:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1712,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T14:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 809,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T14:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2300,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T14:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 764,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T14:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2090,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T14:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 867,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T14:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2091,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T14:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 861,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T14:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2270,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T14:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 728,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T14:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1712,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T14:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 717,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T14:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1776,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T14:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 841,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T14:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2038,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T14:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 732,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T14:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2120,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T14:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 864,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T14:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1801,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T14:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 826,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T14:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2149,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T14:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 707,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T15:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2192,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T15:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 912,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T15:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1765,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T15:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 686,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T15:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1887,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T15:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 843,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T15:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2275,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T15:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 775,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T15:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2129,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T15:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 698,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T15:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2114,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T15:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 831,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T15:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1761,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T15:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 865,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T15:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2210,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T15:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 824,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T15:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1773,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T15:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 916,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T15:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2170,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T15:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 763,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T15:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1957,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T15:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 769,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T15:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2004,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T15:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 762,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T16:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1105,
+    "soc_pct": 2.63
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T16:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -439,
+    "soc_pct": 2.44
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T16:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -882,
+    "soc_pct": 4.73
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T16:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -455,
+    "soc_pct": 4.97
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T16:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1041,
+    "soc_pct": 7.21
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T16:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -439,
+    "soc_pct": 7.41
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T16:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1062,
+    "soc_pct": 9.74
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T16:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -392,
+    "soc_pct": 9.58
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T16:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1070,
+    "soc_pct": 12.29
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T16:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -456,
+    "soc_pct": 12.12
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T16:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -931,
+    "soc_pct": 14.5
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T16:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -437,
+    "soc_pct": 14.54
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T16:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1011,
+    "soc_pct": 16.91
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T16:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -398,
+    "soc_pct": 16.76
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T16:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -981,
+    "soc_pct": 19.25
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T16:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -428,
+    "soc_pct": 19.13
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T16:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -931,
+    "soc_pct": 21.46
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T16:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -442,
+    "soc_pct": 21.59
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T16:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1099,
+    "soc_pct": 24.08
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T16:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -350,
+    "soc_pct": 23.53
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T16:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1114,
+    "soc_pct": 26.73
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T16:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -369,
+    "soc_pct": 25.58
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T16:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -989,
+    "soc_pct": 29.09
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T16:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -413,
+    "soc_pct": 27.88
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T17:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -964,
+    "soc_pct": 31.38
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T17:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -343,
+    "soc_pct": 29.78
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T17:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1105,
+    "soc_pct": 34.01
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T17:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -362,
+    "soc_pct": 31.79
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T17:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -914,
+    "soc_pct": 36.19
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T17:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -436,
+    "soc_pct": 34.22
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T17:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -952,
+    "soc_pct": 38.45
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T17:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -446,
+    "soc_pct": 36.69
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T17:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1060,
+    "soc_pct": 40.98
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T17:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -373,
+    "soc_pct": 38.77
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T17:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -853,
+    "soc_pct": 43.01
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T17:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -454,
+    "soc_pct": 41.29
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T17:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -876,
+    "soc_pct": 45.1
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T17:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -426,
+    "soc_pct": 43.66
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T17:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -997,
+    "soc_pct": 47.47
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T17:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -431,
+    "soc_pct": 46.05
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T17:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1057,
+    "soc_pct": 49.99
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T17:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -418,
+    "soc_pct": 48.37
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T17:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -997,
+    "soc_pct": 52.36
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T17:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -435,
+    "soc_pct": 50.79
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T17:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -878,
+    "soc_pct": 54.45
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T17:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -367,
+    "soc_pct": 52.83
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T17:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1058,
+    "soc_pct": 56.97
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T17:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -377,
+    "soc_pct": 54.92
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T18:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1024,
+    "soc_pct": 59.41
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T18:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -397,
+    "soc_pct": 57.13
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T18:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1009,
+    "soc_pct": 61.81
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T18:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -391,
+    "soc_pct": 59.3
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T18:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1074,
+    "soc_pct": 64.37
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T18:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -380,
+    "soc_pct": 61.41
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T18:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1061,
+    "soc_pct": 66.89
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T18:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -373,
+    "soc_pct": 63.48
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T18:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -925,
+    "soc_pct": 69.1
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T18:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -354,
+    "soc_pct": 65.45
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T18:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -908,
+    "soc_pct": 71.26
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T18:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -354,
+    "soc_pct": 67.42
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T18:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1011,
+    "soc_pct": 73.66
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T18:30:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 67.42
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T18:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1079,
+    "soc_pct": 76.23
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T18:35:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 67.42
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T18:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -906,
+    "soc_pct": 78.39
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T18:40:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 67.42
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T18:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -915,
+    "soc_pct": 80.57
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T18:45:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 67.42
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T18:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -995,
+    "soc_pct": 82.94
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T18:50:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 67.42
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T18:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1067,
+    "soc_pct": 85.48
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T18:55:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 67.42
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T19:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1143,
+    "soc_pct": 88.2
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T19:00:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 67.42
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T19:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1007,
+    "soc_pct": 90.6
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T19:05:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 67.42
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T19:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -935,
+    "soc_pct": 92.82
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T19:10:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 67.42
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T19:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -880,
+    "soc_pct": 94.92
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T19:15:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 67.42
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T19:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -908,
+    "soc_pct": 97.08
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T19:20:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 67.42
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T19:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -918,
+    "soc_pct": 99.27
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T19:25:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 67.42
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T19:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -904,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T19:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -342,
+    "soc_pct": 69.32
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T19:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1010,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T19:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -373,
+    "soc_pct": 71.39
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T19:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1142,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T19:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -406,
+    "soc_pct": 73.64
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T19:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1059,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T19:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -355,
+    "soc_pct": 75.62
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T19:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1111,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T19:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -399,
+    "soc_pct": 77.83
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T19:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1112,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T19:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -409,
+    "soc_pct": 80.11
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T20:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1486,
+    "soc_pct": 96.46
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T20:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 589,
+    "soc_pct": 76.83
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T20:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1358,
+    "soc_pct": 93.23
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T20:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 519,
+    "soc_pct": 73.95
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T20:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1698,
+    "soc_pct": 89.19
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T20:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 596,
+    "soc_pct": 70.64
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T20:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1645,
+    "soc_pct": 85.27
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T20:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 582,
+    "soc_pct": 67.41
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T20:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1308,
+    "soc_pct": 82.15
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T20:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 623,
+    "soc_pct": 63.94
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T20:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1299,
+    "soc_pct": 79.06
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T20:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 537,
+    "soc_pct": 60.96
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T20:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1528,
+    "soc_pct": 75.42
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T20:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 565,
+    "soc_pct": 57.82
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T20:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1722,
+    "soc_pct": 71.32
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T20:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 531,
+    "soc_pct": 54.87
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T20:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1619,
+    "soc_pct": 67.47
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T20:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 619,
+    "soc_pct": 51.43
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T20:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1631,
+    "soc_pct": 63.59
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T20:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 551,
+    "soc_pct": 48.37
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T20:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1510,
+    "soc_pct": 59.99
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T20:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 591,
+    "soc_pct": 45.09
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T20:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1474,
+    "soc_pct": 56.48
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T20:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 665,
+    "soc_pct": 41.39
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T21:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1721,
+    "soc_pct": 52.38
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T21:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 565,
+    "soc_pct": 38.26
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T21:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1554,
+    "soc_pct": 48.68
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T21:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 620,
+    "soc_pct": 34.81
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T21:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1608,
+    "soc_pct": 44.85
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T21:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 681,
+    "soc_pct": 31.03
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T21:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1369,
+    "soc_pct": 41.6
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T21:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 548,
+    "soc_pct": 27.98
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T21:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1572,
+    "soc_pct": 37.85
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T21:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 538,
+    "soc_pct": 24.99
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T21:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1353,
+    "soc_pct": 34.63
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T21:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 524,
+    "soc_pct": 22.08
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T21:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1276,
+    "soc_pct": 31.59
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T21:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 591,
+    "soc_pct": 18.8
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T21:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1542,
+    "soc_pct": 27.92
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T21:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 562,
+    "soc_pct": 15.68
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T21:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1379,
+    "soc_pct": 24.64
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T21:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 637,
+    "soc_pct": 12.14
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T21:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1591,
+    "soc_pct": 20.85
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T21:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 592,
+    "soc_pct": 8.85
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T21:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1584,
+    "soc_pct": 17.08
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T21:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 676,
+    "soc_pct": 5.09
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T21:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1630,
+    "soc_pct": 13.2
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T21:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 623,
+    "soc_pct": 1.63
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T22:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1573,
+    "soc_pct": 9.45
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T22:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 678,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T22:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1466,
+    "soc_pct": 5.96
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T22:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 608,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T22:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1566,
+    "soc_pct": 2.23
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T22:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 674,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T22:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1647,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T22:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 523,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T22:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1350,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T22:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 565,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T22:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1612,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T22:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 612,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T22:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1405,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T22:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 532,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T22:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1585,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T22:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 636,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T22:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1699,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T22:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 600,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T22:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1497,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T22:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 524,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T22:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1293,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T22:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 588,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T22:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1420,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T22:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 555,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T23:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1316,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T23:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 683,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T23:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1651,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T23:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 614,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T23:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1703,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T23:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 690,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T23:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1578,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T23:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 559,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T23:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1293,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T23:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 646,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T23:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1487,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T23:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 627,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T23:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1687,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T23:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 543,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T23:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1538,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T23:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 624,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T23:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1496,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T23:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 526,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T23:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1432,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T23:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 570,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T23:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1577,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T23:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 664,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-01T23:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1423,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-01T23:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 635,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T00:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1405,
+    "soc_pct": 3.35
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T00:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -680,
+    "soc_pct": 3.78
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T00:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1641,
+    "soc_pct": 7.25
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T00:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -609,
+    "soc_pct": 7.16
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T00:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1480,
+    "soc_pct": 10.78
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T00:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -567,
+    "soc_pct": 10.31
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T00:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1420,
+    "soc_pct": 14.16
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T00:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -685,
+    "soc_pct": 14.12
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T00:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1457,
+    "soc_pct": 17.63
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T00:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -603,
+    "soc_pct": 17.47
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T00:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1720,
+    "soc_pct": 21.72
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T00:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -628,
+    "soc_pct": 20.96
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T00:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1519,
+    "soc_pct": 25.34
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T00:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -584,
+    "soc_pct": 24.2
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T00:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1359,
+    "soc_pct": 28.57
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T00:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -575,
+    "soc_pct": 27.39
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T00:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1615,
+    "soc_pct": 32.42
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T00:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -623,
+    "soc_pct": 30.86
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T00:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1617,
+    "soc_pct": 36.27
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T00:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -547,
+    "soc_pct": 33.89
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T00:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1522,
+    "soc_pct": 39.89
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T00:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -677,
+    "soc_pct": 37.66
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T00:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1472,
+    "soc_pct": 43.4
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T00:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -636,
+    "soc_pct": 41.19
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T01:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1330,
+    "soc_pct": 46.56
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T01:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -685,
+    "soc_pct": 44.99
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T01:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1549,
+    "soc_pct": 50.25
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T01:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -553,
+    "soc_pct": 48.07
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T01:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1346,
+    "soc_pct": 53.46
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T01:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -609,
+    "soc_pct": 51.45
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T01:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1524,
+    "soc_pct": 57.09
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T01:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -527,
+    "soc_pct": 54.38
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T01:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1722,
+    "soc_pct": 61.19
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T01:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -674,
+    "soc_pct": 58.12
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T01:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1483,
+    "soc_pct": 64.72
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T01:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -531,
+    "soc_pct": 61.07
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T01:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1649,
+    "soc_pct": 68.64
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T01:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -600,
+    "soc_pct": 64.41
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T01:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1597,
+    "soc_pct": 72.45
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T01:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -602,
+    "soc_pct": 67.75
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T01:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1398,
+    "soc_pct": 75.77
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T01:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -660,
+    "soc_pct": 71.42
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T01:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1716,
+    "soc_pct": 79.86
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T01:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -554,
+    "soc_pct": 74.49
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T01:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1523,
+    "soc_pct": 83.49
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T01:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -579,
+    "soc_pct": 77.71
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T01:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1690,
+    "soc_pct": 87.51
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T01:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -601,
+    "soc_pct": 81.05
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T02:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1671,
+    "soc_pct": 91.49
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T02:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -666,
+    "soc_pct": 84.75
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T02:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1399,
+    "soc_pct": 94.82
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T02:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -652,
+    "soc_pct": 88.37
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T02:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1462,
+    "soc_pct": 98.3
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T02:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -678,
+    "soc_pct": 92.14
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T02:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1503,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T02:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -658,
+    "soc_pct": 95.79
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T02:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1402,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T02:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -564,
+    "soc_pct": 98.93
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T02:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1539,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T02:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -690,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T02:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1495,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T02:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -537,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T02:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1517,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T02:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -572,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T02:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1523,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T02:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -608,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T02:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1480,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T02:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -568,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T02:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1360,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T02:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -636,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T02:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1532,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T02:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -552,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T03:00:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T03:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -650,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T03:05:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T03:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -518,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T03:10:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T03:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -644,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T03:15:00+02:00",
+    "mode": "DOWNTIME",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T03:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -637,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T03:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1640,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T03:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -579,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T03:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1574,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T03:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -658,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T03:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1716,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T03:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -599,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T03:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1292,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T03:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -600,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T03:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1541,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T03:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -667,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T03:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1668,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T03:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -589,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T03:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1512,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T03:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -592,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T03:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1600,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T03:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -584,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T04:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1570,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T04:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -538,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T04:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1486,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T04:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -684,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T04:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1427,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T04:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -635,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T04:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1567,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T04:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -663,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T04:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1659,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T04:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -665,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T04:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1446,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T04:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -567,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T04:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1598,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T04:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -647,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T04:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1668,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T04:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -516,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T04:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1306,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T04:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -624,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T04:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1689,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T04:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -690,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T04:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1611,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T04:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -588,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T04:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1319,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T04:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -624,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T05:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1668,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T05:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -590,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T05:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1587,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T05:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -673,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T05:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1296,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T05:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -653,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T05:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1407,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T05:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -577,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T05:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1341,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T05:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -606,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T05:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1530,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T05:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -653,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T05:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1351,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T05:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -524,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T05:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1667,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T05:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -622,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T05:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1383,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T05:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -674,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T05:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1339,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T05:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -593,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T05:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1389,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T05:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -556,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T05:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1279,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T05:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -655,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T06:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T06:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T06:05:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T06:05:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T06:10:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T06:10:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T06:15:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T06:15:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T06:20:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T06:20:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T06:25:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T06:25:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T06:30:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T06:30:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T06:35:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T06:35:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T06:40:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T06:40:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T06:45:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T06:45:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T06:50:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T06:50:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T06:55:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T06:55:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T07:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T07:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T07:05:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T07:05:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T07:10:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T07:10:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T07:15:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T07:15:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T07:20:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T07:20:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T07:25:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T07:25:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T07:30:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T07:30:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T07:35:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T07:35:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T07:40:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T07:40:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T07:45:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T07:45:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T07:50:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T07:50:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T07:55:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T07:55:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T08:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T08:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T08:05:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T08:05:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T08:10:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T08:10:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T08:15:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T08:15:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T08:20:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T08:20:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T08:25:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T08:25:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T08:30:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T08:30:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T08:35:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T08:35:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T08:40:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T08:40:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T08:45:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T08:45:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T08:50:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T08:50:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T08:55:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T08:55:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T09:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T09:00:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T09:05:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T09:05:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T09:10:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T09:10:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T09:15:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T09:15:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T09:20:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T09:20:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T09:25:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T09:25:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T09:30:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T09:30:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T09:35:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T09:35:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T09:40:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T09:40:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T09:45:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T09:45:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T09:50:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T09:50:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T09:55:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T09:55:00+02:00",
+    "mode": "IDLE",
+    "power_kw": 0,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T10:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 96.43
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T10:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 893,
+    "soc_pct": 95.04
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T10:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 92.86
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T10:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 789,
+    "soc_pct": 90.66
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T10:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 89.29
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T10:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 858,
+    "soc_pct": 85.89
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T10:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 85.71
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T10:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 781,
+    "soc_pct": 81.55
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T10:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 82.14
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T10:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 717,
+    "soc_pct": 77.57
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T10:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 78.57
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T10:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 704,
+    "soc_pct": 73.66
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T10:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 75.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T10:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 778,
+    "soc_pct": 69.33
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T10:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 71.43
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T10:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 688,
+    "soc_pct": 65.51
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T10:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 67.86
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T10:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 786,
+    "soc_pct": 61.14
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T10:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 64.29
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T10:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 885,
+    "soc_pct": 56.23
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T10:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 60.71
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T10:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 845,
+    "soc_pct": 51.53
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T10:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 57.14
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T10:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 915,
+    "soc_pct": 46.45
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T11:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 53.57
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T11:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 776,
+    "soc_pct": 42.14
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T11:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 50.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T11:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 709,
+    "soc_pct": 38.2
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T11:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 46.43
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T11:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 789,
+    "soc_pct": 33.82
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T11:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 42.86
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T11:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 834,
+    "soc_pct": 29.18
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T11:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 39.29
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T11:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 685,
+    "soc_pct": 25.38
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T11:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 35.71
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T11:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 738,
+    "soc_pct": 21.28
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T11:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 32.14
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T11:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 815,
+    "soc_pct": 16.75
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T11:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 28.57
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T11:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 864,
+    "soc_pct": 11.95
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T11:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 25.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T11:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 732,
+    "soc_pct": 7.88
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T11:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 21.43
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T11:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 759,
+    "soc_pct": 3.67
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T11:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 17.86
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T11:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 896,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T11:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1500,
+    "soc_pct": 14.29
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T11:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 886,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T12:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1787,
+    "soc_pct": 10.03
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T12:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 711,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T12:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1850,
+    "soc_pct": 5.63
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T12:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 722,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T12:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2097,
+    "soc_pct": 0.63
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T12:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 686,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T12:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1709,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T12:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 870,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T12:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1843,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T12:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 758,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T12:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1805,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T12:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 693,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T12:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2145,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T12:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 806,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T12:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2147,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T12:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 794,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T12:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2167,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T12:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 803,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T12:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1765,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T12:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 801,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T12:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2267,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T12:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 690,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T12:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2170,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T12:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 888,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T13:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2013,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T13:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 790,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T13:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2278,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T13:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 695,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T13:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1987,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T13:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 776,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T13:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2112,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T13:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 798,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T13:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2246,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T13:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 698,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T13:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1748,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T13:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 826,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T13:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1739,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T13:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 746,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T13:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2080,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T13:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 812,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T13:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1895,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T13:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 919,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T13:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2018,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T13:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 789,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T13:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2063,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T13:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 704,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T13:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2121,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T13:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 885,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T14:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2091,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T14:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 865,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T14:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2133,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T14:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 732,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T14:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1971,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T14:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 735,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T14:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1903,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T14:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 789,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T14:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1950,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T14:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 703,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T14:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1956,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T14:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 840,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T14:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1925,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T14:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 717,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T14:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2254,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T14:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 696,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T14:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2199,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T14:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 702,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T14:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1758,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T14:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 857,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T14:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2187,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T14:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 814,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T14:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2052,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T14:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 815,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T15:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1898,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T15:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 709,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T15:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1912,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T15:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 840,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T15:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2150,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T15:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 888,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T15:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2133,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T15:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 912,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T15:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2060,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T15:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 764,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T15:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2047,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T15:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 731,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T15:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2094,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T15:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 734,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T15:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1765,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T15:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 883,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T15:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1921,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T15:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 863,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T15:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2044,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T15:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 874,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T15:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2207,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T15:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 914,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T15:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 2191,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T15:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 827,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T16:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1043,
+    "soc_pct": 2.48
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T16:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -343,
+    "soc_pct": 1.91
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T16:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1129,
+    "soc_pct": 5.17
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T16:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -440,
+    "soc_pct": 4.35
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T16:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -930,
+    "soc_pct": 7.39
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T16:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -362,
+    "soc_pct": 6.36
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T16:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1061,
+    "soc_pct": 9.91
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T16:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -377,
+    "soc_pct": 8.46
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T16:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -952,
+    "soc_pct": 12.18
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T16:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -341,
+    "soc_pct": 10.35
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T16:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1111,
+    "soc_pct": 14.82
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T16:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -408,
+    "soc_pct": 12.62
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T16:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -970,
+    "soc_pct": 17.13
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T16:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -357,
+    "soc_pct": 14.6
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T16:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1040,
+    "soc_pct": 19.61
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T16:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -344,
+    "soc_pct": 16.51
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T16:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1074,
+    "soc_pct": 22.17
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T16:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -366,
+    "soc_pct": 18.54
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T16:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -976,
+    "soc_pct": 24.49
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T16:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -381,
+    "soc_pct": 20.66
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T16:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -961,
+    "soc_pct": 26.78
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T16:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -427,
+    "soc_pct": 23.03
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T16:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1083,
+    "soc_pct": 29.36
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T16:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -408,
+    "soc_pct": 25.3
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T17:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -875,
+    "soc_pct": 31.44
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T17:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -346,
+    "soc_pct": 27.22
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T17:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -897,
+    "soc_pct": 33.58
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T17:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -414,
+    "soc_pct": 29.52
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T17:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1052,
+    "soc_pct": 36.08
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T17:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -373,
+    "soc_pct": 31.59
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T17:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1049,
+    "soc_pct": 38.58
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T17:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -398,
+    "soc_pct": 33.81
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T17:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -983,
+    "soc_pct": 40.92
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T17:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -373,
+    "soc_pct": 35.88
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T17:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1076,
+    "soc_pct": 43.48
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T17:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -354,
+    "soc_pct": 37.84
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T17:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -979,
+    "soc_pct": 45.81
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T17:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -374,
+    "soc_pct": 39.92
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T17:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1054,
+    "soc_pct": 48.32
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T17:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -398,
+    "soc_pct": 42.13
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T17:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1050,
+    "soc_pct": 50.82
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T17:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -345,
+    "soc_pct": 44.05
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T17:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -969,
+    "soc_pct": 53.13
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T17:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -412,
+    "soc_pct": 46.34
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T17:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -852,
+    "soc_pct": 55.16
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T17:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -376,
+    "soc_pct": 48.43
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T17:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -913,
+    "soc_pct": 57.33
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T17:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -356,
+    "soc_pct": 50.41
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T18:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -927,
+    "soc_pct": 59.54
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T18:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -379,
+    "soc_pct": 52.51
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T18:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -852,
+    "soc_pct": 61.57
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T18:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -430,
+    "soc_pct": 54.9
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T18:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -903,
+    "soc_pct": 63.72
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T18:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -386,
+    "soc_pct": 57.04
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T18:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1061,
+    "soc_pct": 66.24
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T18:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -400,
+    "soc_pct": 59.27
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T18:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1100,
+    "soc_pct": 68.86
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T18:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -437,
+    "soc_pct": 61.69
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T18:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -872,
+    "soc_pct": 70.94
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T18:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -443,
+    "soc_pct": 64.16
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T18:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -863,
+    "soc_pct": 72.99
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T18:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -342,
+    "soc_pct": 66.06
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T18:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1126,
+    "soc_pct": 75.67
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T18:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -443,
+    "soc_pct": 68.52
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T18:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1023,
+    "soc_pct": 78.11
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T18:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -409,
+    "soc_pct": 70.79
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T18:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1063,
+    "soc_pct": 80.64
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T18:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -390,
+    "soc_pct": 72.96
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T18:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -885,
+    "soc_pct": 82.75
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T18:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -343,
+    "soc_pct": 74.86
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T18:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -947,
+    "soc_pct": 85.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T18:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -436,
+    "soc_pct": 77.28
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T19:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1035,
+    "soc_pct": 87.47
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T19:00:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -440,
+    "soc_pct": 79.73
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T19:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1126,
+    "soc_pct": 90.15
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T19:05:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -351,
+    "soc_pct": 81.68
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T19:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1103,
+    "soc_pct": 92.77
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T19:10:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -369,
+    "soc_pct": 83.73
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T19:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1027,
+    "soc_pct": 95.22
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T19:15:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -403,
+    "soc_pct": 85.97
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T19:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -969,
+    "soc_pct": 97.53
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T19:20:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -377,
+    "soc_pct": 88.06
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T19:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -952,
+    "soc_pct": 99.79
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T19:25:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -380,
+    "soc_pct": 90.17
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T19:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -900,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T19:30:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -401,
+    "soc_pct": 92.4
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T19:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -884,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T19:35:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -401,
+    "soc_pct": 94.63
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T19:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1122,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T19:40:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -382,
+    "soc_pct": 96.75
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T19:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1068,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T19:45:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -438,
+    "soc_pct": 99.18
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T19:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -1095,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T19:50:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -368,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T19:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -894,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T19:55:00+02:00",
+    "mode": "CHARGE",
+    "power_kw": -364,
+    "soc_pct": 100.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T20:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1546,
+    "soc_pct": 96.32
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T20:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 647,
+    "soc_pct": 96.41
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T20:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1570,
+    "soc_pct": 92.58
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T20:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 542,
+    "soc_pct": 93.39
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T20:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1623,
+    "soc_pct": 88.72
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T20:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 599,
+    "soc_pct": 90.07
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T20:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1615,
+    "soc_pct": 84.87
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T20:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 647,
+    "soc_pct": 86.47
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T20:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1477,
+    "soc_pct": 81.35
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T20:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 676,
+    "soc_pct": 82.72
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T20:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1529,
+    "soc_pct": 77.71
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T20:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 624,
+    "soc_pct": 79.25
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T20:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1556,
+    "soc_pct": 74.01
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T20:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 666,
+    "soc_pct": 75.55
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T20:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1557,
+    "soc_pct": 70.3
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T20:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 537,
+    "soc_pct": 72.57
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T20:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1306,
+    "soc_pct": 67.19
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T20:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 590,
+    "soc_pct": 69.29
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T20:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1411,
+    "soc_pct": 63.83
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T20:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 559,
+    "soc_pct": 66.18
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T20:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1300,
+    "soc_pct": 60.74
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T20:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 601,
+    "soc_pct": 62.84
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T20:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1415,
+    "soc_pct": 57.37
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T20:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 591,
+    "soc_pct": 59.56
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T21:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1301,
+    "soc_pct": 54.27
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T21:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 660,
+    "soc_pct": 55.89
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T21:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1310,
+    "soc_pct": 51.15
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T21:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 666,
+    "soc_pct": 52.19
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T21:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1660,
+    "soc_pct": 47.2
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T21:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 621,
+    "soc_pct": 48.74
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T21:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1503,
+    "soc_pct": 43.62
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T21:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 593,
+    "soc_pct": 45.45
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T21:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1524,
+    "soc_pct": 39.99
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T21:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 653,
+    "soc_pct": 41.82
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T21:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1678,
+    "soc_pct": 36.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T21:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 591,
+    "soc_pct": 38.54
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T21:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1639,
+    "soc_pct": 32.1
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T21:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 627,
+    "soc_pct": 35.06
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T21:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1420,
+    "soc_pct": 28.71
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T21:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 596,
+    "soc_pct": 31.74
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T21:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1343,
+    "soc_pct": 25.52
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T21:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 521,
+    "soc_pct": 28.85
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T21:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1322,
+    "soc_pct": 22.37
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T21:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 672,
+    "soc_pct": 25.12
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T21:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1430,
+    "soc_pct": 18.96
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T21:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 639,
+    "soc_pct": 21.57
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T21:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1502,
+    "soc_pct": 15.39
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T21:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 541,
+    "soc_pct": 18.56
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T22:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1386,
+    "soc_pct": 12.09
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T22:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 589,
+    "soc_pct": 15.29
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T22:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1473,
+    "soc_pct": 8.58
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T22:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 604,
+    "soc_pct": 11.93
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T22:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1346,
+    "soc_pct": 5.38
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T22:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 577,
+    "soc_pct": 8.73
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T22:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1402,
+    "soc_pct": 2.04
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T22:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 584,
+    "soc_pct": 5.48
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T22:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1427,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T22:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 618,
+    "soc_pct": 2.05
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T22:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1630,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T22:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 627,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T22:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1305,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T22:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 527,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T22:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1580,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T22:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 561,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T22:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1601,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T22:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 628,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T22:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1683,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T22:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 667,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T22:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1425,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T22:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 615,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T22:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1339,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T22:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 573,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T23:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1710,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T23:00:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 636,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T23:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1451,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T23:05:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 617,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T23:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1697,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T23:10:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 566,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T23:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1445,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T23:15:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 652,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T23:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1641,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T23:20:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 631,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T23:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1648,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T23:25:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 643,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T23:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1583,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T23:30:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 605,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T23:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1566,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T23:35:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 586,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T23:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1438,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T23:40:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 575,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T23:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1356,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T23:45:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 549,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T23:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1701,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T23:50:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 598,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-001",
+    "ts": "2025-07-02T23:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 1377,
+    "soc_pct": 0.0
+  },
+  {
+    "battery_id": "b-002",
+    "ts": "2025-07-02T23:55:00+02:00",
+    "mode": "DISCHARGE",
+    "power_kw": 535,
+    "soc_pct": 0.0
+  }
+]
