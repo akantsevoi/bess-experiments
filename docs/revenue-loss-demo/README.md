@@ -104,9 +104,8 @@ Availability is computed on the same 5-minute intervals.
     - `A_econ = (Σ a(t) * w(t)) / (Σ w(t))`
 
 -   **Headroom Cost (informational)**
-    Monetized shortfall during periods that do **not** breach a time-based SLA threshold (e.g., 95%):
-    `Headroom Cost (EUR) = Σ ((abs(pred_power_kw) - abs(act_power_kw))⁺ * (5/60) * (price_eur_mwh/1000))`
-    computed over slices where the rolling/windowed `A_time` remains ≥ the SLA target.
+    Net revenue impact of deviations while the time-based SLA is satisfied; under-charging yields negative values (savings):
+    `Headroom Cost (EUR) = Σ (rev_pred_eur − rev_act_eur)` over non-DOWNTIME slices where the rolling/windowed `A_time` remains ≥ the SLA target.
 
 ## 3. Display & Visualization
 

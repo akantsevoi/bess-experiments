@@ -206,7 +206,8 @@ function aggregateSummaries(diffRows, batteries, pMinFrac, sla) {
     const instruct = Math.abs(r.pred_power_kw) >= pmin;
     const a = instruct ? Math.min(1, Math.abs(r.act_power_kw) / Math.abs(r.pred_power_kw || 1)) : 1;
     const w = r.price_eur_kwh * 1000 * Math.abs(r.pred_power_kw);
-    const shortfall = Math.max(Math.abs(r.pred_power_kw) - Math.abs(r.act_power_kw), 0);
+    // net revenue impact of deviation excluding downtime (negative = gain)
+    const headroom = r.is_downtime ? 0 : (r.rev_pred_eur - r.rev_act_eur);
 
     agg.rev_pred_eur += r.rev_pred_eur;
     agg.rev_act_eur += r.rev_act_eur;
@@ -219,7 +220,7 @@ function aggregateSummaries(diffRows, batteries, pMinFrac, sla) {
     if (instruct) { agg.dispatch_a_sum += a; agg.dispatch_count += 1; }
     agg.econ_a_sum += a * w;
     agg.econ_w_sum += w;
-    if (!r.is_downtime) agg.headroom_eur += shortfall * h * r.price_eur_kwh;
+    agg.headroom_eur += headroom;
 
     portfolio.rev_pred_eur += r.rev_pred_eur;
     portfolio.rev_act_eur += r.rev_act_eur;
@@ -232,7 +233,7 @@ function aggregateSummaries(diffRows, batteries, pMinFrac, sla) {
     if (instruct) { portfolio.dispatch_a_sum += a; portfolio.dispatch_count += 1; }
     portfolio.econ_a_sum += a * w;
     portfolio.econ_w_sum += w;
-    if (!r.is_downtime) portfolio.headroom_eur += shortfall * h * r.price_eur_kwh;
+    portfolio.headroom_eur += headroom;
   }
   const perBattery = [];
   for (const agg of perMap.values()) {
