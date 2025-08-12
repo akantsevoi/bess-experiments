@@ -91,7 +91,7 @@ Availability is computed on the same 5-minute intervals.
 
 -   **Value-Based Availability (`A_dispatch`)**
     Evaluates availability only when the battery was expected to operate (charge or discharge), using the predicted schedule:
-    - Define an “instructed” slice when `abs(pred_power_kw) >= P_min`. (`P_min` is configurable; default is **5% of battery power rating**.)
+    - Define an “instructed”(that will be taken into calculation, so we don't count slices with very low charge/discharge) slice when `abs(pred_power_kw) >= P_min`. (`P_min` is configurable; default is **5% of battery power rating**.)
     - For instructed slices, compute partial availability:
       `a(t) = min(1, abs(act_power_kw) / abs(pred_power_kw))`
     - For non-instructed slices, set `a(t) = 1` (they do not penalize the score).
@@ -131,7 +131,7 @@ The results are presented through several KPIs and charts:
     - `Time Availability (A_time %)` for the selected window.
     - `Value-Based Availability (A_dispatch %)`; the configured `P_min` is shown in the legend.
     - `(Optional) Price-Weighted Availability (A_econ %)` if price-weighting is enabled.
-    - **Headroom Cost (EUR)** and **Distance to Breach** (minutes of additional downtime until a 95% time-based SLA would be breached). The SLA threshold compares `A_time` against the configured percentage.
+    - **Headroom Cost (EUR)** (money you're losing while still passing SLA) and **Distance to Breach** (minutes of additional downtime until a 95% SLA would be breached).
 
 -   **Availability Timeline**: Ribbon view over time per battery with segments colored as *Available*, *Derated* (partial availability), and *Downtime*. Price or predicted power can be overlaid to highlight high-value periods.
 
