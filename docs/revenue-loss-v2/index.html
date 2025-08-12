@@ -3,14 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Revenue loss</title>
+  <title>BESS Revenue-Loss V2</title>
 </head>
 <body>
-  <h1>Revenue</h1>
-  <p id="output"></p>
+  <h1>BESS Revenue-Loss V2</h1>
+  <div id="inputs">
+    <h2>Inputs</h2>
+    <div class="input-group">
+      <label>Price File <input type="file" id="priceFile" accept=".json,.csv" /></label>
+    </div>
+    <div class="input-group">
+      <label>Battery Meta File <input type="file" id="batteryFile" accept=".json,.csv" /></label>
+    </div>
+    <div class="input-group">
+      <label>Predicted Schedule File <input type="file" id="predFile" accept=".json,.csv" /></label>
+    </div>
+    <div class="input-group">
+      <label>Actual Events File <input type="file" id="actFile" accept=".json,.csv" /></label>
+    </div>
+    <div class="input-group">
+      <label>Start <input type="datetime-local" id="startTs" /></label>
+      <label>End <input type="datetime-local" id="endTs" /></label>
+    </div>
+    <div class="input-group">
+      <label>P_min % <input type="number" id="pMinPct" value="5" min="0" max="100" /></label>
+      <label>SLA % (time-based) <input type="number" id="slaPct" value="95" min="0" max="100" /></label>
+    </div>
+    <button id="runBtn">Run Calculation</button>
+  </div>
+
+  <pre id="output"></pre>
   <script src="./app.js"></script>
-  <script>
-    document.getElementById("output").textContent = `2 + 3 = ${add(2, 3)}`;
-  </script>
 </body>
 </html>
