@@ -132,7 +132,7 @@ The results are presented through several KPIs and charts:
     - `Time Availability (A_time %)` for the selected window.
     - `Value-Based Availability (A_dispatch %)`; the configured `P_min` is shown in the legend.
     - `(Optional) Price-Weighted Availability (A_econ %)` if price-weighting is enabled.
-    - **Headroom Cost (EUR)** and **Distance to Breach** (minutes of additional downtime until a 95% SLA would be breached).
+    - **Headroom Cost (EUR)** and **Distance to Breach** (minutes of additional downtime until a 95% time-based SLA would be breached). The SLA threshold compares `A_time` against the configured percentage.
 
 -   **Availability Timeline**: Ribbon view over time per battery with segments colored as *Available*, *Derated* (partial availability), and *Downtime*. Price or predicted power can be overlaid to highlight high-value periods.
 

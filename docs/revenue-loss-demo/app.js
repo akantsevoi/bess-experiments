@@ -184,6 +184,7 @@ function computeDiffRows(price5, pred5, act5, batteries) {
   return rows;
 }
 
+// sla: target time-based availability fraction (e.g., 0.95 for 95% A_time)
 function aggregateSummaries(diffRows, batteries, pMinFrac, sla) {
   const perMap = new Map();
   const bmap = new Map(batteries.map(b => [b.battery_id, b]));
@@ -643,7 +644,7 @@ async function runCalculation() {
     const pMinPct = Number(document.getElementById('pMinPct').value) || 5;
     const slaPct = Number(document.getElementById('slaPct').value) || 95;
     const pMinFrac = pMinPct / 100;
-    const sla = slaPct / 100;
+    const sla = slaPct / 100; // SLA threshold for time-based availability (A_time)
     const { perBattery, portfolio } = aggregateSummaries(diffRows, batteries, pMinFrac, sla);
     renderKPIs(portfolio);
     renderSummaryTable(perBattery);
