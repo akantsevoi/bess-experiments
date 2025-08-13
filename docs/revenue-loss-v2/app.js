@@ -495,24 +495,255 @@ function calculateUtilization(comparisonData, batteryMeta, totalTimeHours) {
 }
 
 /**
- * Calculate comprehensive key metrics
+ * Calculate time-based availability (A_time)
+ * @param {Array} comparisonData - Comparison data from revenue analysis
+ * @returns {Object} Time-based availability by battery
+ */
+function calculateTimeBasedAvailability(comparisonData) {
+  const availabilityByBattery = {};
+
+  // Group data by battery
+  const dataByBattery = {};
+  comparisonData.forEach(data => {
+    if (!dataByBattery[data.battery_id]) {
+      dataByBattery[data.battery_id] = [];
+    }
+    dataByBattery[data.battery_id].push(data);
+  });
+
+  // Calculate availability for each battery
+  Object.keys(dataByBattery).forEach(batteryId => {
+    const batteryData = dataByBattery[batteryId];
+    const totalSlices = batteryData.length;
+    const nonDowntimeSlices = batteryData.filter(data => data.act_mode !== 'DOWNTIME').length;
+
+    availabilityByBattery[batteryId] = {
+      battery_id: batteryId,
+      total_slices: totalSlices,
+      non_downtime_slices: nonDowntimeSlices,
+      downtime_slices: totalSlices - nonDowntimeSlices,
+      a_time_percent: totalSlices > 0 ? (nonDowntimeSlices / totalSlices) * 100 : 0
+    };
+  });
+
+  return availabilityByBattery;
+}
+
+/**
+ * Calculate value-based availability (A_dispatch)
+ * @param {Array} comparisonData - Comparison data from revenue analysis
+ * @param {Array} batteryMeta - Battery metadata
+ * @param {number} pMinPercent - Minimum power threshold percentage (default 5%)
+ * @returns {Object} Value-based availability by battery
+ */
+function calculateValueBasedAvailability(comparisonData, batteryMeta, pMinPercent = 5) {
+  const availabilityByBattery = {};
+
+  // Create battery metadata lookup
+  const batteryMap = new Map();
+  batteryMeta.forEach(battery => {
+    batteryMap.set(battery.battery_id, battery);
+  });
+
+  // Group data by battery
+  const dataByBattery = {};
+  comparisonData.forEach(data => {
+    if (!dataByBattery[data.battery_id]) {
+      dataByBattery[data.battery_id] = [];
+    }
+    dataByBattery[data.battery_id].push(data);
+  });
+
+  // Calculate availability for each battery
+  Object.keys(dataByBattery).forEach(batteryId => {
+    const battery = batteryMap.get(batteryId);
+    const batteryData = dataByBattery[batteryId];
+
+    if (!battery) {
+      availabilityByBattery[batteryId] = { error: 'Battery metadata not found' };
+      return;
+    }
+
+    const pMin = battery.power_kw * (pMinPercent / 100);
+
+    // Identify instructed slices
+    const instructedSlices = batteryData.filter(data =>
+      Math.abs(data.pred_power_kw || 0) >= pMin
+    );
+
+    // Calculate partial availability for each slice
+    let totalAvailability = 0;
+    instructedSlices.forEach(data => {
+      const predPowerAbs = Math.abs(data.pred_power_kw || 0);
+      const actPowerAbs = Math.abs(data.act_power_kw || 0);
+      const partialAvailability = predPowerAbs > 0 ? Math.min(1, actPowerAbs / predPowerAbs) : 1;
+      totalAvailability += partialAvailability;
+    });
+
+    availabilityByBattery[batteryId] = {
+      battery_id: batteryId,
+      rated_power_kw: battery.power_kw,
+      p_min_kw: pMin,
+      total_slices: batteryData.length,
+      instructed_slices: instructedSlices.length,
+      non_instructed_slices: batteryData.length - instructedSlices.length,
+      a_dispatch_percent: instructedSlices.length > 0 ? (totalAvailability / instructedSlices.length) * 100 : 100
+    };
+  });
+
+  return availabilityByBattery;
+}
+
+/**
+ * Calculate price-weighted availability (A_econ)
+ * @param {Array} comparisonData - Comparison data from revenue analysis
+ * @param {Array} batteryMeta - Battery metadata
+ * @param {number} pMinPercent - Minimum power threshold percentage (default 5%)
+ * @returns {Object} Price-weighted availability by battery
+ */
+function calculatePriceWeightedAvailability(comparisonData, batteryMeta, pMinPercent = 5) {
+  const availabilityByBattery = {};
+
+  // Create battery metadata lookup
+  const batteryMap = new Map();
+  batteryMeta.forEach(battery => {
+    batteryMap.set(battery.battery_id, battery);
+  });
+
+  // Group data by battery
+  const dataByBattery = {};
+  comparisonData.forEach(data => {
+    if (!dataByBattery[data.battery_id]) {
+      dataByBattery[data.battery_id] = [];
+    }
+    dataByBattery[data.battery_id].push(data);
+  });
+
+  // Calculate availability for each battery
+  Object.keys(dataByBattery).forEach(batteryId => {
+    const battery = batteryMap.get(batteryId);
+    const batteryData = dataByBattery[batteryId];
+
+    if (!battery) {
+      availabilityByBattery[batteryId] = { error: 'Battery metadata not found' };
+      return;
+    }
+
+    const pMin = battery.power_kw * (pMinPercent / 100);
+
+    // Calculate weighted availability
+    let totalWeightedAvailability = 0;
+    let totalWeight = 0;
+
+    batteryData.forEach(data => {
+      const predPowerAbs = Math.abs(data.pred_power_kw || 0);
+      const actPowerAbs = Math.abs(data.act_power_kw || 0);
+      const price = data.price_eur_mwh || 0;
+
+      // Weight per slice: price * abs(pred_power_kw)
+      const weight = price * predPowerAbs;
+
+      if (weight > 0) {
+        // Partial availability
+        const partialAvailability = predPowerAbs > 0 ? Math.min(1, actPowerAbs / predPowerAbs) : 1;
+
+        totalWeightedAvailability += partialAvailability * weight;
+        totalWeight += weight;
+      }
+    });
+
+    availabilityByBattery[batteryId] = {
+      battery_id: batteryId,
+      rated_power_kw: battery.power_kw,
+      p_min_kw: pMin,
+      total_weight: totalWeight,
+      a_econ_percent: totalWeight > 0 ? (totalWeightedAvailability / totalWeight) * 100 : 100
+    };
+  });
+
+  return availabilityByBattery;
+}
+
+/**
+ * Calculate headroom cost (revenue impact during non-downtime periods when SLA is met)
+ * @param {Array} comparisonData - Comparison data from revenue analysis
+ * @param {Object} timeBasedAvailability - Time-based availability data by battery
+ * @param {number} slaTargetPercent - SLA target percentage (default 95%)
+ * @returns {Object} Headroom cost analysis
+ */
+function calculateHeadroomCost(comparisonData, timeBasedAvailability, slaTargetPercent = 95) {
+  // Group data by battery
+  const dataByBattery = {};
+  comparisonData.forEach(data => {
+    if (!dataByBattery[data.battery_id]) {
+      dataByBattery[data.battery_id] = [];
+    }
+    dataByBattery[data.battery_id].push(data);
+  });
+
+  const headroomCostByBattery = {};
+
+  Object.keys(dataByBattery).forEach(batteryId => {
+    const batteryData = dataByBattery[batteryId];
+    const batteryAvailability = timeBasedAvailability[batteryId];
+
+    let headroomCost = 0;
+    let qualifyingSlices = 0;
+
+    // Only calculate headroom cost if the battery's overall A_time meets SLA target
+    if (batteryAvailability && batteryAvailability.a_time_percent >= slaTargetPercent) {
+      batteryData.forEach(data => {
+        // Skip downtime slices
+        if (data.act_mode === 'DOWNTIME') return;
+
+        // Include all non-downtime slices in headroom cost when SLA is met
+        const revenueDiff = (data.rev_pred_eur || 0) - (data.rev_act_eur || 0);
+        headroomCost += revenueDiff;
+        qualifyingSlices++;
+      });
+    }
+
+    headroomCostByBattery[batteryId] = {
+      battery_id: batteryId,
+      headroom_cost_eur: headroomCost,
+      qualifying_slices: qualifyingSlices,
+      total_non_downtime_slices: batteryData.filter(d => d.act_mode !== 'DOWNTIME').length,
+      battery_a_time_percent: batteryAvailability?.a_time_percent || 0,
+      sla_target_percent: slaTargetPercent,
+      sla_met: batteryAvailability?.a_time_percent >= slaTargetPercent
+    };
+  });
+
+  return headroomCostByBattery;
+}
+
+/**
+ * Calculate comprehensive key metrics including availability metrics
  * @param {Object} revenueAnalysis - Revenue analysis data
  * @param {Array} batteryMeta - Battery metadata
  * @param {Date} startDate - Analysis start date
  * @param {Date} endDate - Analysis end date
+ * @param {number} pMinPercent - Minimum power threshold percentage (default 5%)
+ * @param {number} slaTargetPercent - SLA target percentage (default 95%)
  * @returns {Object} Object containing all key metrics
  */
-function calculateKeyMetrics(revenueAnalysis, batteryMeta, startDate, endDate) {
+function calculateKeyMetrics(revenueAnalysis, batteryMeta, startDate, endDate, pMinPercent = 5, slaTargetPercent = 95) {
   const { comparisonData, summary } = revenueAnalysis;
 
   // Calculate total analysis time in hours
   const totalTimeHours = (endDate - startDate) / (1000 * 60 * 60);
 
-  // Calculate key metrics
+  // Calculate existing metrics
   const totalRevenueLoss = summary.totalRevenueLoss;
   const downtimeLoss = calculateDowntimeLoss(comparisonData);
   const deviationLoss = calculateDeviationLoss(totalRevenueLoss, downtimeLoss);
   const utilization = calculateUtilization(comparisonData, batteryMeta, totalTimeHours);
+
+  // Calculate new availability metrics
+  const timeBasedAvailability = calculateTimeBasedAvailability(comparisonData);
+  const valueBasedAvailability = calculateValueBasedAvailability(comparisonData, batteryMeta, pMinPercent);
+  const priceWeightedAvailability = calculatePriceWeightedAvailability(comparisonData, batteryMeta, pMinPercent);
+  const headroomCost = calculateHeadroomCost(comparisonData, timeBasedAvailability, slaTargetPercent);
 
   // Calculate overall utilization across all batteries
   const overallUtilization = Object.values(utilization).reduce((acc, battery) => {
@@ -525,6 +756,17 @@ function calculateKeyMetrics(revenueAnalysis, batteryMeta, startDate, endDate) {
 
   const overallUtilizationPercent = overallUtilization.totalPotentialEnergy > 0
     ? (overallUtilization.totalActualEnergy / overallUtilization.totalPotentialEnergy) * 100
+    : 0;
+
+  // Calculate overall availability metrics
+  const overallTimeAvailability = Object.values(timeBasedAvailability).reduce((acc, battery) => {
+    acc.totalSlices += battery.total_slices;
+    acc.nonDowntimeSlices += battery.non_downtime_slices;
+    return acc;
+  }, { totalSlices: 0, nonDowntimeSlices: 0 });
+
+  const overallTimeAvailabilityPercent = overallTimeAvailability.totalSlices > 0
+    ? (overallTimeAvailability.nonDowntimeSlices / overallTimeAvailability.totalSlices) * 100
     : 0;
 
   return {
@@ -541,12 +783,32 @@ function calculateKeyMetrics(revenueAnalysis, batteryMeta, startDate, endDate) {
       total_actual_energy_dispatched_kwh: overallUtilization.totalActualEnergy,
       total_potential_energy_throughput_kwh: overallUtilization.totalPotentialEnergy
     },
+    availability: {
+      time_based: {
+        by_battery: timeBasedAvailability,
+        overall_a_time_percent: overallTimeAvailabilityPercent
+      },
+      value_based: {
+        by_battery: valueBasedAvailability,
+        p_min_percent: pMinPercent
+      },
+      price_weighted: {
+        by_battery: priceWeightedAvailability
+      },
+      headroom_cost: {
+        by_battery: headroomCost,
+        total_headroom_cost_eur: Object.values(headroomCost).reduce((sum, battery) => sum + battery.headroom_cost_eur, 0),
+        sla_target_percent: slaTargetPercent
+      }
+    },
     analysisMetadata: {
       analysis_start: startDate.toISOString(),
       analysis_end: endDate.toISOString(),
       analysis_duration_hours: totalTimeHours,
       total_intervals: comparisonData.length,
-      batteries_analyzed: Object.keys(utilization).length
+      batteries_analyzed: Object.keys(utilization).length,
+      p_min_percent: pMinPercent,
+      sla_target_percent: slaTargetPercent
     }
   };
 }
@@ -696,8 +958,12 @@ async function runCalculation() {
     // Calculate revenue analysis
     const revenueAnalysis = calculateRevenueAnalysis(standardizedData);
 
+    // Get configuration parameters from UI
+    const pMinPct = parseFloat(document.getElementById('pMinPct')?.value || 5);
+    const slaPct = parseFloat(document.getElementById('slaPct')?.value || 95);
+
     // Calculate key metrics
-    const keyMetrics = calculateKeyMetrics(revenueAnalysis, standardizedData.batteryMeta, startDate, endDate);
+    const keyMetrics = calculateKeyMetrics(revenueAnalysis, standardizedData.batteryMeta, startDate, endDate, pMinPct, slaPct);
 
     // Display results
     const output = `=== Revenue Loss Analysis Complete ===
@@ -728,10 +994,27 @@ Utilization:
   • Total Actual Energy Dispatched: ${keyMetrics.utilization.total_actual_energy_dispatched_kwh.toFixed(2)} kWh
   • Total Potential Energy Throughput: ${keyMetrics.utilization.total_potential_energy_throughput_kwh.toFixed(2)} kWh
 
-Battery-Specific Utilization:
-${Object.values(keyMetrics.utilization.by_battery).map(battery =>
-  `  • ${battery.battery_id}: ${battery.utilization_percent?.toFixed(1) || 'N/A'}% (${battery.rated_power_kw} kW rated)`
-).join('\n')}
+Availability Metrics:
+  • Overall Time-Based Availability (A_time): ${keyMetrics.availability.time_based.overall_a_time_percent.toFixed(1)}%
+  • P_min Threshold: ${keyMetrics.analysisMetadata.p_min_percent}% of rated power
+  • SLA Target: ${keyMetrics.analysisMetadata.sla_target_percent}%
+  • Total Headroom Cost: €${keyMetrics.availability.headroom_cost.total_headroom_cost_eur.toFixed(2)}
+
+Battery-Specific Metrics:
+${Object.keys(keyMetrics.availability.time_based.by_battery).map(batteryId => {
+  const timeAvail = keyMetrics.availability.time_based.by_battery[batteryId];
+  const valueAvail = keyMetrics.availability.value_based.by_battery[batteryId];
+  const priceAvail = keyMetrics.availability.price_weighted.by_battery[batteryId];
+  const headroom = keyMetrics.availability.headroom_cost.by_battery[batteryId];
+  const util = keyMetrics.utilization.by_battery[batteryId];
+
+  return `  • ${batteryId}:
+    - Utilization: ${util?.utilization_percent?.toFixed(1) || 'N/A'}% (${util?.rated_power_kw || 'N/A'} kW rated)
+    - A_time: ${timeAvail.a_time_percent.toFixed(1)}% (${timeAvail.downtime_slices}/${timeAvail.total_slices} downtime slices)
+    - A_dispatch: ${valueAvail.a_dispatch_percent?.toFixed(1) || 'N/A'}% (${valueAvail.instructed_slices || 0} instructed slices)
+    - A_econ: ${priceAvail.a_econ_percent?.toFixed(1) || 'N/A'}% (price-weighted)
+    - Headroom Cost: €${headroom.headroom_cost_eur?.toFixed(2) || '0.00'}`;
+}).join('\n')}
 
 === Sample Revenue Comparison Data (first 3 intervals) ===
 ${JSON.stringify(revenueAnalysis.comparisonData.slice(0, 3), null, 2)}
@@ -776,6 +1059,10 @@ if (typeof module !== 'undefined') {
     calculateDowntimeLoss,
     calculateDeviationLoss,
     calculateUtilization,
+    calculateTimeBasedAvailability,
+    calculateValueBasedAvailability,
+    calculatePriceWeightedAvailability,
+    calculateHeadroomCost,
     calculateKeyMetrics
   };
 }

@@ -27,8 +27,9 @@
       <small style="color: #666;">Time range will be automatically detected from input files</small>
     </div>
     <div class="input-group">
-      <label>P_min % <input type="number" id="pMinPct" value="5" min="0" max="100" /></label>
-      <label>SLA % (time-based) <input type="number" id="slaPct" value="95" min="0" max="100" /></label>
+      <label>P_min % <input type="number" id="pMinPct" value="5" min="0" max="100" step="0.1" /></label>
+      <label>SLA % (time-based) <input type="number" id="slaPct" value="95" min="0" max="100" step="0.1" /></label>
+      <small style="color: #666;">P_min: Minimum power threshold for instructed slices. SLA: Target availability for headroom cost calculation.</small>
     </div>
     <button id="runBtn">Run Calculation</button>
   </div>

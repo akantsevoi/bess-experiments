@@ -80,6 +80,33 @@ These formulas are applied to both predicted and actual data to get `rev_pred_eu
     The percentage of the battery's potential energy throughput that was actually used.
     `Utilization % = (Total Actual Energy Dispatched / (Rated Power * Time)) * 100`
 
+### 2.4. Availability Metrics (time-based and value-based)
+
+Availability is computed on the same 5-minute intervals.
+
+-   **Time-Based Availability (`A_time`)**
+    Fraction of time the battery is not in `DOWNTIME`:
+    `A_time = (Number of non-DOWNTIME slices) / (Total slices in period)`
+    *Note*: Partial derates still count as “available” here; only explicit `DOWNTIME` marks unavailability.
+
+-   **Value-Based Availability (`A_dispatch`)**
+    Evaluates availability only when the battery was expected to operate (charge or discharge), using the predicted schedule:
+    - Define an “instructed”(that will be taken into calculation, so we don't count slices with very low charge/discharge) slice when `abs(pred_power_kw) >= P_min`. (`P_min` is configurable; default is **5% of battery power rating**.)
+    - For instructed slices, compute partial availability:
+      `a(t) = min(1, abs(act_power_kw) / abs(pred_power_kw))`
+    - For non-instructed slices, set `a(t) = 1` (they do not penalize the score).
+    - Dispatch-weighted availability (restricted to instructed slices):
+      `A_dispatch = (Σ a(t) over instructed slices) / (Number of instructed slices)`
+
+-   **Price-Weighted Availability (`A_econ`)**
+    Weigh availability by the economic importance of each slice:
+    - Weight per slice: `w(t) = price_eur_mwh(t) * abs(pred_power_kw(t))`
+    - `A_econ = (Σ a(t) * w(t)) / (Σ w(t))`
+
+-   **Headroom Cost (informational)**
+    Net revenue impact of deviations while the time-based SLA is satisfied; under-charging yields negative values (savings):
+    `Headroom Cost (EUR) = Σ (rev_pred_eur − rev_act_eur)` over non-DOWNTIME slices where the rolling/windowed `A_time` remains ≥ the SLA target.
+
 # Development
 
 Follow instructions [AGENTS.md](./AGENTS.md)

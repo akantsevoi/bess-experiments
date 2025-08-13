@@ -18,6 +18,10 @@ const {
   calculateDowntimeLoss,
   calculateDeviationLoss,
   calculateUtilization,
+  calculateTimeBasedAvailability,
+  calculateValueBasedAvailability,
+  calculatePriceWeightedAvailability,
+  calculateHeadroomCost,
   calculateKeyMetrics
 } = require('./app.js');
 const fs = require('fs');
@@ -508,5 +512,213 @@ async function test(name, fn) {
     assert.strictEqual(Math.round(keyMetrics.analysisMetadata.analysis_duration_hours * 100) / 100, 0.17); // 10 minutes
     assert.strictEqual(keyMetrics.analysisMetadata.total_intervals, 2);
     assert.strictEqual(keyMetrics.analysisMetadata.batteries_analyzed, 1);
+  });
+
+  await test('calculateTimeBasedAvailability computes A_time correctly', async () => {
+    const comparisonData = [
+      { battery_id: 'b-001', act_mode: 'DISCHARGE' },
+      { battery_id: 'b-001', act_mode: 'DOWNTIME' },
+      { battery_id: 'b-001', act_mode: 'CHARGE' },
+      { battery_id: 'b-001', act_mode: 'DOWNTIME' },
+      { battery_id: 'b-002', act_mode: 'DISCHARGE' },
+      { battery_id: 'b-002', act_mode: 'DISCHARGE' }
+    ];
+
+    const result = calculateTimeBasedAvailability(comparisonData);
+
+    // b-001: 2 non-downtime out of 4 total = 50%
+    assert.strictEqual(result['b-001'].total_slices, 4);
+    assert.strictEqual(result['b-001'].non_downtime_slices, 2);
+    assert.strictEqual(result['b-001'].downtime_slices, 2);
+    assert.strictEqual(result['b-001'].a_time_percent, 50);
+
+    // b-002: 2 non-downtime out of 2 total = 100%
+    assert.strictEqual(result['b-002'].total_slices, 2);
+    assert.strictEqual(result['b-002'].non_downtime_slices, 2);
+    assert.strictEqual(result['b-002'].downtime_slices, 0);
+    assert.strictEqual(result['b-002'].a_time_percent, 100);
+  });
+
+  await test('calculateValueBasedAvailability computes A_dispatch correctly', async () => {
+    const comparisonData = [
+      {
+        battery_id: 'b-001',
+        pred_power_kw: 1000, // Above P_min (50 kW for 1000 kW battery at 5%)
+        act_power_kw: 800    // 80% availability
+      },
+      {
+        battery_id: 'b-001',
+        pred_power_kw: 30,   // Below P_min (non-instructed)
+        act_power_kw: 0
+      },
+      {
+        battery_id: 'b-001',
+        pred_power_kw: -600, // Above P_min (charging)
+        act_power_kw: -600   // 100% availability
+      }
+    ];
+
+    const batteryMeta = [
+      { battery_id: 'b-001', power_kw: 1000, capacity_kwh: 2000 }
+    ];
+
+    const result = calculateValueBasedAvailability(comparisonData, batteryMeta, 5);
+
+    // Only 2 instructed slices (1000 kW and -600 kW)
+    // Availability: (0.8 + 1.0) / 2 = 0.9 = 90%
+    assert.strictEqual(result['b-001'].total_slices, 3);
+    assert.strictEqual(result['b-001'].instructed_slices, 2);
+    assert.strictEqual(result['b-001'].non_instructed_slices, 1);
+    assert.strictEqual(result['b-001'].p_min_kw, 50);
+    assert.strictEqual(result['b-001'].a_dispatch_percent, 90);
+  });
+
+  await test('calculatePriceWeightedAvailability computes A_econ correctly', async () => {
+    const comparisonData = [
+      {
+        battery_id: 'b-001',
+        pred_power_kw: 1000,
+        act_power_kw: 800,    // 80% availability
+        price_eur_mwh: 100    // High price period
+      },
+      {
+        battery_id: 'b-001',
+        pred_power_kw: 1000,
+        act_power_kw: 1000,   // 100% availability
+        price_eur_mwh: 50     // Lower price period
+      }
+    ];
+
+    const batteryMeta = [
+      { battery_id: 'b-001', power_kw: 1000, capacity_kwh: 2000 }
+    ];
+
+    const result = calculatePriceWeightedAvailability(comparisonData, batteryMeta, 5);
+
+    // Weight 1: 100 * 1000 = 100,000, availability = 0.8
+    // Weight 2: 50 * 1000 = 50,000, availability = 1.0
+    // Weighted availability: (0.8 * 100,000 + 1.0 * 50,000) / (100,000 + 50,000)
+    // = (80,000 + 50,000) / 150,000 = 130,000 / 150,000 = 0.867 = 86.7%
+    assert.strictEqual(result['b-001'].total_weight, 150000);
+    assert.strictEqual(Math.round(result['b-001'].a_econ_percent * 10) / 10, 86.7);
+  });
+
+  await test('calculateHeadroomCost computes cost only when SLA is met', async () => {
+    const comparisonData = [
+      {
+        battery_id: 'b-001',
+        ts: '2024-01-01T10:00:00Z',
+        act_mode: 'DISCHARGE',
+        rev_pred_eur: 10,
+        rev_act_eur: 8
+      },
+      {
+        battery_id: 'b-001',
+        ts: '2024-01-01T10:05:00Z',
+        act_mode: 'DISCHARGE',
+        rev_pred_eur: 5,
+        rev_act_eur: 6
+      },
+      {
+        battery_id: 'b-001',
+        ts: '2024-01-01T10:10:00Z',
+        act_mode: 'DOWNTIME', // This should be excluded
+        rev_pred_eur: 3,
+        rev_act_eur: 0
+      }
+    ];
+
+    // Test case 1: SLA is met (96% > 95%)
+    const timeBasedAvailabilityMet = {
+      'b-001': {
+        battery_id: 'b-001',
+        total_slices: 3,
+        non_downtime_slices: 2,
+        downtime_slices: 1,
+        a_time_percent: 66.67 // 2/3 = 66.67% - below 95% SLA
+      }
+    };
+
+    const resultSlaNotMet = calculateHeadroomCost(comparisonData, timeBasedAvailabilityMet, 95);
+
+    // SLA not met, so headroom cost should be 0
+    assert.strictEqual(resultSlaNotMet['b-001'].headroom_cost_eur, 0);
+    assert.strictEqual(resultSlaNotMet['b-001'].qualifying_slices, 0);
+    assert.strictEqual(resultSlaNotMet['b-001'].sla_met, false);
+
+    // Test case 2: SLA is met
+    const timeBasedAvailabilityNotMet = {
+      'b-001': {
+        battery_id: 'b-001',
+        total_slices: 3,
+        non_downtime_slices: 3,
+        downtime_slices: 0,
+        a_time_percent: 100 // 100% - above 95% SLA
+      }
+    };
+
+    const resultSlaMet = calculateHeadroomCost(comparisonData, timeBasedAvailabilityNotMet, 95);
+
+    // SLA met, so headroom cost = (10-8) + (5-6) = 2 + (-1) = 1
+    assert.strictEqual(resultSlaMet['b-001'].headroom_cost_eur, 1);
+    assert.strictEqual(resultSlaMet['b-001'].qualifying_slices, 2);
+    assert.strictEqual(resultSlaMet['b-001'].sla_met, true);
+  });
+
+  await test('calculateKeyMetrics includes all availability metrics', async () => {
+    const revenueAnalysis = {
+      comparisonData: [
+        {
+          battery_id: 'b-001',
+          ts: '2024-01-01T10:00:00Z',
+          act_mode: 'DISCHARGE',
+          act_energy_kwh: 50,
+          pred_power_kw: 1000,
+          act_power_kw: 800,
+          price_eur_mwh: 100,
+          rev_pred_eur: 10,
+          rev_act_eur: 8,
+          revenue_loss_eur: 2
+        },
+        {
+          battery_id: 'b-001',
+          ts: '2024-01-01T10:05:00Z',
+          act_mode: 'DOWNTIME',
+          act_energy_kwh: 0,
+          pred_power_kw: 1000,
+          act_power_kw: 0,
+          price_eur_mwh: 80,
+          rev_pred_eur: 5,
+          rev_act_eur: 0,
+          revenue_loss_eur: 5
+        }
+      ],
+      summary: {
+        totalRevenueLoss: 7
+      }
+    };
+
+    const batteryMeta = [
+      { battery_id: 'b-001', power_kw: 1000, capacity_kwh: 2000 }
+    ];
+
+    const startDate = new Date('2024-01-01T10:00:00Z');
+    const endDate = new Date('2024-01-01T10:10:00Z');
+
+    const keyMetrics = calculateKeyMetrics(revenueAnalysis, batteryMeta, startDate, endDate, 5, 95);
+
+    // Check that all availability metrics are present
+    assert.ok(keyMetrics.availability.time_based);
+    assert.ok(keyMetrics.availability.value_based);
+    assert.ok(keyMetrics.availability.price_weighted);
+    assert.ok(keyMetrics.availability.headroom_cost);
+
+    // Check time-based availability: 1 non-downtime out of 2 = 50%
+    assert.strictEqual(keyMetrics.availability.time_based.by_battery['b-001'].a_time_percent, 50);
+    assert.strictEqual(keyMetrics.availability.time_based.overall_a_time_percent, 50);
+
+    // Check configuration parameters
+    assert.strictEqual(keyMetrics.analysisMetadata.p_min_percent, 5);
+    assert.strictEqual(keyMetrics.analysisMetadata.sla_target_percent, 95);
   });
 })();
