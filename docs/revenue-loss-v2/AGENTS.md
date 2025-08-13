@@ -16,5 +16,6 @@
     - `index.html`: The main HTML file for the application.
     - `app.js`: Contains the JavaScript logic for the application.
     - `app.test.js`: Contains unit tests for `app.js`.
-    - `styles.css`: Styles 
+    - `styles.css`: Styles
+- **Test Files:** Sample input data for both manual UI testing and automated unit tests is provided in the `files/` directory. Use these files when writing tests or demonstrating the UI.
 - **Quality**: make sure that test pass on each change by running `node app.test.js`
