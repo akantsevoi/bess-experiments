@@ -64,6 +64,22 @@ For each discretization interval `t` (default: 5 minutes):
 
 These formulas are applied to both predicted and actual data to get `rev_pred_eur`(Revenue predicted EUR) and `rev_act_eur`(Revenue actual EUR) for each slice.
 
+### 2.3. Key Metrics
+
+-   **Revenue Loss**:
+    `Loss (EUR) = Predicted Revenue - Actual Revenue`
+
+-   **Downtime Loss**:
+    A subset of the total loss, calculated as the predicted revenue during periods where the battery was in `DOWNTIME`.
+
+-   **Deviation Loss**:
+    The portion of the loss that is not due to downtime.
+    `Deviation Loss = Total Loss - Downtime Loss`
+
+-   **Utilization**:
+    The percentage of the battery's potential energy throughput that was actually used.
+    `Utilization % = (Total Actual Energy Dispatched / (Rated Power * Time)) * 100`
+
 # Development
 
 Follow instructions [AGENTS.md](./AGENTS.md)

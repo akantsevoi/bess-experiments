@@ -413,6 +413,145 @@ function calculateActualRevenue(standardizedData) {
 }
 
 /**
+ * Calculate downtime loss - predicted revenue during DOWNTIME periods
+ * @param {Array} comparisonData - Comparison data from revenue analysis
+ * @returns {number} Total downtime loss in EUR
+ */
+function calculateDowntimeLoss(comparisonData) {
+  return comparisonData
+    .filter(c => c.act_mode === 'DOWNTIME' && c.rev_pred_eur !== null)
+    .reduce((sum, c) => sum + c.rev_pred_eur, 0);
+}
+
+/**
+ * Calculate deviation loss - loss not due to downtime
+ * @param {number} totalLoss - Total revenue loss
+ * @param {number} downtimeLoss - Downtime loss
+ * @returns {number} Deviation loss in EUR
+ */
+function calculateDeviationLoss(totalLoss, downtimeLoss) {
+  return totalLoss - downtimeLoss;
+}
+
+/**
+ * Calculate battery utilization percentage
+ * @param {Array} comparisonData - Comparison data from revenue analysis
+ * @param {Array} batteryMeta - Battery metadata
+ * @param {number} totalTimeHours - Total analysis time in hours
+ * @returns {Object} Utilization data by battery
+ */
+function calculateUtilization(comparisonData, batteryMeta, totalTimeHours) {
+  const utilizationByBattery = {};
+
+  // Create battery metadata lookup
+  const batteryMap = new Map();
+  batteryMeta.forEach(battery => {
+    batteryMap.set(battery.battery_id, battery);
+  });
+
+  // Group comparison data by battery
+  const dataByBattery = {};
+  comparisonData.forEach(data => {
+    if (!dataByBattery[data.battery_id]) {
+      dataByBattery[data.battery_id] = [];
+    }
+    dataByBattery[data.battery_id].push(data);
+  });
+
+  // Calculate utilization for each battery
+  Object.keys(dataByBattery).forEach(batteryId => {
+    const battery = batteryMap.get(batteryId);
+    const batteryData = dataByBattery[batteryId];
+
+    if (!battery) {
+      utilizationByBattery[batteryId] = { error: 'Battery metadata not found' };
+      return;
+    }
+
+    // Calculate total actual energy dispatched (absolute value)
+    const totalActualEnergyDispatched = batteryData
+      .reduce((sum, data) => sum + Math.abs(data.act_energy_kwh || 0), 0);
+
+    // Calculate potential energy throughput (rated power * time)
+    const potentialEnergyThroughput = battery.power_kw * totalTimeHours;
+
+    // Calculate utilization percentage
+    const utilizationPercent = potentialEnergyThroughput > 0
+      ? (totalActualEnergyDispatched / potentialEnergyThroughput) * 100
+      : 0;
+
+    utilizationByBattery[batteryId] = {
+      battery_id: batteryId,
+      rated_power_kw: battery.power_kw,
+      capacity_kwh: battery.capacity_kwh,
+      total_actual_energy_dispatched_kwh: totalActualEnergyDispatched,
+      potential_energy_throughput_kwh: potentialEnergyThroughput,
+      utilization_percent: utilizationPercent,
+      analysis_time_hours: totalTimeHours
+    };
+  });
+
+  return utilizationByBattery;
+}
+
+/**
+ * Calculate comprehensive key metrics
+ * @param {Object} revenueAnalysis - Revenue analysis data
+ * @param {Array} batteryMeta - Battery metadata
+ * @param {Date} startDate - Analysis start date
+ * @param {Date} endDate - Analysis end date
+ * @returns {Object} Object containing all key metrics
+ */
+function calculateKeyMetrics(revenueAnalysis, batteryMeta, startDate, endDate) {
+  const { comparisonData, summary } = revenueAnalysis;
+
+  // Calculate total analysis time in hours
+  const totalTimeHours = (endDate - startDate) / (1000 * 60 * 60);
+
+  // Calculate key metrics
+  const totalRevenueLoss = summary.totalRevenueLoss;
+  const downtimeLoss = calculateDowntimeLoss(comparisonData);
+  const deviationLoss = calculateDeviationLoss(totalRevenueLoss, downtimeLoss);
+  const utilization = calculateUtilization(comparisonData, batteryMeta, totalTimeHours);
+
+  // Calculate overall utilization across all batteries
+  const overallUtilization = Object.values(utilization).reduce((acc, battery) => {
+    if (battery.utilization_percent !== undefined) {
+      acc.totalActualEnergy += battery.total_actual_energy_dispatched_kwh;
+      acc.totalPotentialEnergy += battery.potential_energy_throughput_kwh;
+    }
+    return acc;
+  }, { totalActualEnergy: 0, totalPotentialEnergy: 0 });
+
+  const overallUtilizationPercent = overallUtilization.totalPotentialEnergy > 0
+    ? (overallUtilization.totalActualEnergy / overallUtilization.totalPotentialEnergy) * 100
+    : 0;
+
+  return {
+    revenueLoss: {
+      total_loss_eur: totalRevenueLoss,
+      downtime_loss_eur: downtimeLoss,
+      deviation_loss_eur: deviationLoss,
+      downtime_loss_percent: totalRevenueLoss !== 0 ? (downtimeLoss / Math.abs(totalRevenueLoss)) * 100 : 0,
+      deviation_loss_percent: totalRevenueLoss !== 0 ? (deviationLoss / Math.abs(totalRevenueLoss)) * 100 : 0
+    },
+    utilization: {
+      by_battery: utilization,
+      overall_utilization_percent: overallUtilizationPercent,
+      total_actual_energy_dispatched_kwh: overallUtilization.totalActualEnergy,
+      total_potential_energy_throughput_kwh: overallUtilization.totalPotentialEnergy
+    },
+    analysisMetadata: {
+      analysis_start: startDate.toISOString(),
+      analysis_end: endDate.toISOString(),
+      analysis_duration_hours: totalTimeHours,
+      total_intervals: comparisonData.length,
+      batteries_analyzed: Object.keys(utilization).length
+    }
+  };
+}
+
+/**
  * Calculate both predicted and actual revenue with comparison
  * @param {Object} standardizedData - Standardized input data
  * @returns {Object} Object containing predicted revenue, actual revenue, and comparison data
@@ -557,11 +696,15 @@ async function runCalculation() {
     // Calculate revenue analysis
     const revenueAnalysis = calculateRevenueAnalysis(standardizedData);
 
+    // Calculate key metrics
+    const keyMetrics = calculateKeyMetrics(revenueAnalysis, standardizedData.batteryMeta, startDate, endDate);
+
     // Display results
     const output = `=== Revenue Loss Analysis Complete ===
 Analysis Period: ${startDate.toISOString()} to ${endDate.toISOString()}
 (Time range automatically detected from input files)
 Discretization Interval: ${DISCRETIZATION_INTERVAL_MIN} minutes
+Analysis Duration: ${keyMetrics.analysisMetadata.analysis_duration_hours.toFixed(2)} hours
 
 === Data Summary ===
 Battery Metadata: ${standardizedData.batteryMeta.length} batteries
@@ -574,14 +717,24 @@ Total Predicted Revenue: €${revenueAnalysis.summary.totalPredictedRevenue.toFi
 Total Actual Revenue: €${revenueAnalysis.summary.totalActualRevenue.toFixed(2)}
 Total Revenue Loss: €${revenueAnalysis.summary.totalRevenueLoss.toFixed(2)}
 
-=== Sample Revenue Comparison Data (first 5 intervals) ===
-${JSON.stringify(revenueAnalysis.comparisonData.slice(0, 5), null, 2)}
+=== Key Metrics ===
+Revenue Loss Breakdown:
+  • Total Loss: €${keyMetrics.revenueLoss.total_loss_eur.toFixed(2)}
+  • Downtime Loss: €${keyMetrics.revenueLoss.downtime_loss_eur.toFixed(2)} (${keyMetrics.revenueLoss.downtime_loss_percent.toFixed(1)}%)
+  • Deviation Loss: €${keyMetrics.revenueLoss.deviation_loss_eur.toFixed(2)} (${keyMetrics.revenueLoss.deviation_loss_percent.toFixed(1)}%)
 
-=== Sample Predicted Revenue Data (first 3 intervals) ===
-${JSON.stringify(revenueAnalysis.predictedRevenue.slice(0, 3), null, 2)}
+Utilization:
+  • Overall Utilization: ${keyMetrics.utilization.overall_utilization_percent.toFixed(1)}%
+  • Total Actual Energy Dispatched: ${keyMetrics.utilization.total_actual_energy_dispatched_kwh.toFixed(2)} kWh
+  • Total Potential Energy Throughput: ${keyMetrics.utilization.total_potential_energy_throughput_kwh.toFixed(2)} kWh
 
-=== Sample Actual Revenue Data (first 3 intervals) ===
-${JSON.stringify(revenueAnalysis.actualRevenue.slice(0, 3), null, 2)}
+Battery-Specific Utilization:
+${Object.values(keyMetrics.utilization.by_battery).map(battery =>
+  `  • ${battery.battery_id}: ${battery.utilization_percent?.toFixed(1) || 'N/A'}% (${battery.rated_power_kw} kW rated)`
+).join('\n')}
+
+=== Sample Revenue Comparison Data (first 3 intervals) ===
+${JSON.stringify(revenueAnalysis.comparisonData.slice(0, 3), null, 2)}
 `;
 
     document.getElementById('output').textContent = output;
@@ -619,6 +772,10 @@ if (typeof module !== 'undefined') {
     calculateRevenue,
     calculatePredictedRevenue,
     calculateActualRevenue,
-    calculateRevenueAnalysis
+    calculateRevenueAnalysis,
+    calculateDowntimeLoss,
+    calculateDeviationLoss,
+    calculateUtilization,
+    calculateKeyMetrics
   };
 }

@@ -14,7 +14,11 @@ const {
   calculateRevenue,
   calculatePredictedRevenue,
   calculateActualRevenue,
-  calculateRevenueAnalysis
+  calculateRevenueAnalysis,
+  calculateDowntimeLoss,
+  calculateDeviationLoss,
+  calculateUtilization,
+  calculateKeyMetrics
 } = require('./app.js');
 const fs = require('fs');
 const path = require('path');
@@ -374,5 +378,135 @@ async function test(name, fn) {
     assert.strictEqual(Math.round(result.summary.totalPredictedRevenue * 100) / 100, 8.33);
     assert.strictEqual(result.summary.totalActualRevenue, 7.5);
     assert.strictEqual(Math.round(result.summary.totalRevenueLoss * 100) / 100, 0.83);
+  });
+
+  await test('calculateDowntimeLoss identifies downtime periods correctly', async () => {
+    const comparisonData = [
+      {
+        battery_id: 'b-001',
+        ts: '2024-01-01T10:00:00Z',
+        act_mode: 'DISCHARGE',
+        rev_pred_eur: 10,
+        rev_act_eur: 8
+      },
+      {
+        battery_id: 'b-001',
+        ts: '2024-01-01T10:05:00Z',
+        act_mode: 'DOWNTIME',
+        rev_pred_eur: 5,
+        rev_act_eur: 0
+      },
+      {
+        battery_id: 'b-001',
+        ts: '2024-01-01T10:10:00Z',
+        act_mode: 'DOWNTIME',
+        rev_pred_eur: 3,
+        rev_act_eur: 0
+      }
+    ];
+
+    const downtimeLoss = calculateDowntimeLoss(comparisonData);
+    assert.strictEqual(downtimeLoss, 8); // 5 + 3 from downtime periods
+  });
+
+  await test('calculateDeviationLoss calculates non-downtime loss', async () => {
+    const totalLoss = 10;
+    const downtimeLoss = 6;
+    const deviationLoss = calculateDeviationLoss(totalLoss, downtimeLoss);
+    assert.strictEqual(deviationLoss, 4);
+  });
+
+  await test('calculateUtilization computes battery utilization correctly', async () => {
+    const comparisonData = [
+      {
+        battery_id: 'b-001',
+        act_energy_kwh: 50, // 5 minutes at 600 kW
+        interval_min: 5
+      },
+      {
+        battery_id: 'b-001',
+        act_energy_kwh: -25, // 5 minutes at -300 kW (charging)
+        interval_min: 5
+      },
+      {
+        battery_id: 'b-002',
+        act_energy_kwh: 100, // 5 minutes at 1200 kW
+        interval_min: 5
+      }
+    ];
+
+    const batteryMeta = [
+      { battery_id: 'b-001', power_kw: 1000, capacity_kwh: 2000 },
+      { battery_id: 'b-002', power_kw: 1500, capacity_kwh: 3000 }
+    ];
+
+    const totalTimeHours = 1; // 1 hour analysis
+    const utilization = calculateUtilization(comparisonData, batteryMeta, totalTimeHours);
+
+    // b-001: Total actual energy = |50| + |-25| = 75 kWh
+    // Potential throughput = 1000 kW * 1 hour = 1000 kWh
+    // Utilization = 75/1000 = 7.5%
+    assert.strictEqual(utilization['b-001'].total_actual_energy_dispatched_kwh, 75);
+    assert.strictEqual(utilization['b-001'].potential_energy_throughput_kwh, 1000);
+    assert.strictEqual(utilization['b-001'].utilization_percent, 7.5);
+
+    // b-002: Total actual energy = |100| = 100 kWh
+    // Potential throughput = 1500 kW * 1 hour = 1500 kWh
+    // Utilization = 100/1500 = 6.67%
+    assert.strictEqual(utilization['b-002'].total_actual_energy_dispatched_kwh, 100);
+    assert.strictEqual(utilization['b-002'].potential_energy_throughput_kwh, 1500);
+    assert.strictEqual(Math.round(utilization['b-002'].utilization_percent * 100) / 100, 6.67);
+  });
+
+  await test('calculateKeyMetrics provides comprehensive analysis', async () => {
+    const revenueAnalysis = {
+      comparisonData: [
+        {
+          battery_id: 'b-001',
+          ts: '2024-01-01T10:00:00Z',
+          act_mode: 'DISCHARGE',
+          act_energy_kwh: 50,
+          rev_pred_eur: 10,
+          rev_act_eur: 8,
+          revenue_loss_eur: 2
+        },
+        {
+          battery_id: 'b-001',
+          ts: '2024-01-01T10:05:00Z',
+          act_mode: 'DOWNTIME',
+          act_energy_kwh: 0,
+          rev_pred_eur: 5,
+          rev_act_eur: 0,
+          revenue_loss_eur: 5
+        }
+      ],
+      summary: {
+        totalRevenueLoss: 7
+      }
+    };
+
+    const batteryMeta = [
+      { battery_id: 'b-001', power_kw: 1000, capacity_kwh: 2000 }
+    ];
+
+    const startDate = new Date('2024-01-01T10:00:00Z');
+    const endDate = new Date('2024-01-01T10:10:00Z'); // 10 minutes = 1/6 hour
+
+    const keyMetrics = calculateKeyMetrics(revenueAnalysis, batteryMeta, startDate, endDate);
+
+    // Check revenue loss breakdown
+    assert.strictEqual(keyMetrics.revenueLoss.total_loss_eur, 7);
+    assert.strictEqual(keyMetrics.revenueLoss.downtime_loss_eur, 5);
+    assert.strictEqual(keyMetrics.revenueLoss.deviation_loss_eur, 2);
+    assert.strictEqual(Math.round(keyMetrics.revenueLoss.downtime_loss_percent * 10) / 10, 71.4); // 5/7 * 100
+
+    // Check utilization
+    assert.ok(keyMetrics.utilization.by_battery['b-001']);
+    assert.strictEqual(keyMetrics.utilization.by_battery['b-001'].total_actual_energy_dispatched_kwh, 50);
+
+    // Check analysis metadata
+    assert.strictEqual(Math.round(keyMetrics.analysisMetadata.analysis_duration_hours * 100) / 100, 0.17); // 10 minutes
+    assert.strictEqual(keyMetrics.analysisMetadata.total_intervals, 2);
+    assert.strictEqual(keyMetrics.analysisMetadata.batteries_analyzed, 1);
   });
 })();
