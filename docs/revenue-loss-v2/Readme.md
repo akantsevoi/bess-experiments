@@ -52,6 +52,18 @@ The core of the analysis is to compare the predicted revenue with the actual rev
 -   **Predicted Schedule**: The schedule blocks are "exploded" into a series of discretization intervals with the specified power.
 -   **Actual Events**: If multiple events occur within a discretization interval bucket, their power is averaged. If no event occurs, it's considered `DOWNTIME`.
 
+### 2.2. Core Formulas
+
+For each discretization interval `t` (default: 5 minutes):
+
+-   **Energy (kWh)**:
+    `Energy (kWh) = Power (kW) * (t / 60) hours`
+
+-   **Revenue (EUR)**:
+    `Revenue (EUR) = Energy (kWh) * Price (EUR/kWh)`
+
+These formulas are applied to both predicted and actual data to get `rev_pred_eur`(Revenue predicted EUR) and `rev_act_eur`(Revenue actual EUR) for each slice.
+
 # Development
 
 Follow instructions [AGENTS.md](./AGENTS.md)

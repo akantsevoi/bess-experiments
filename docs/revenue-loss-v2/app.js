@@ -317,6 +317,169 @@ function determineAnalysisTimeRange(rawData) {
 }
 
 /**
+ * Calculate energy from power and time interval
+ * @param {number} powerKw - Power in kilowatts
+ * @param {number} intervalMin - Time interval in minutes
+ * @returns {number} Energy in kilowatt-hours
+ */
+function calculateEnergy(powerKw, intervalMin = DISCRETIZATION_INTERVAL_MIN) {
+  return powerKw * (intervalMin / 60);
+}
+
+/**
+ * Calculate revenue from energy and price
+ * @param {number} energyKwh - Energy in kilowatt-hours
+ * @param {number} priceEurMwh - Price in EUR per megawatt-hour
+ * @returns {number} Revenue in EUR
+ */
+function calculateRevenue(energyKwh, priceEurMwh) {
+  if (priceEurMwh === null || priceEurMwh === undefined) {
+    return null; // Cannot calculate revenue without price data
+  }
+  // Convert price from EUR/MWh to EUR/kWh (divide by 1000)
+  const priceEurKwh = priceEurMwh / 1000;
+  return energyKwh * priceEurKwh;
+}
+
+/**
+ * Calculate predicted revenue for each interval
+ * @param {Array} standardizedData - Standardized input data
+ * @returns {Array} Array of predicted revenue calculations
+ */
+function calculatePredictedRevenue(standardizedData) {
+  const { priceData, predictedSchedule } = standardizedData;
+  const revenueData = [];
+
+  // Create a price lookup map by timestamp
+  const priceMap = new Map();
+  priceData.forEach(price => {
+    priceMap.set(price.ts, price.price_eur_mwh);
+  });
+
+  predictedSchedule.forEach(schedule => {
+    const price = priceMap.get(schedule.ts);
+    const energy = calculateEnergy(schedule.power_kw, schedule.interval_min);
+    const revenue = calculateRevenue(energy, price);
+
+    revenueData.push({
+      battery_id: schedule.battery_id,
+      ts: schedule.ts,
+      mode: schedule.mode,
+      power_kw: schedule.power_kw,
+      energy_kwh: energy,
+      price_eur_mwh: price,
+      rev_pred_eur: revenue,
+      interval_min: schedule.interval_min
+    });
+  });
+
+  return revenueData;
+}
+
+/**
+ * Calculate actual revenue for each interval
+ * @param {Array} standardizedData - Standardized input data
+ * @returns {Array} Array of actual revenue calculations
+ */
+function calculateActualRevenue(standardizedData) {
+  const { priceData, actualEvents } = standardizedData;
+  const revenueData = [];
+
+  // Create a price lookup map by timestamp
+  const priceMap = new Map();
+  priceData.forEach(price => {
+    priceMap.set(price.ts, price.price_eur_mwh);
+  });
+
+  actualEvents.forEach(event => {
+    const price = priceMap.get(event.ts);
+    const energy = calculateEnergy(event.power_kw, event.interval_min);
+    const revenue = calculateRevenue(energy, price);
+
+    revenueData.push({
+      battery_id: event.battery_id,
+      ts: event.ts,
+      mode: event.mode,
+      power_kw: event.power_kw,
+      energy_kwh: energy,
+      price_eur_mwh: price,
+      rev_act_eur: revenue,
+      soc_pct: event.soc_pct,
+      interval_min: event.interval_min
+    });
+  });
+
+  return revenueData;
+}
+
+/**
+ * Calculate both predicted and actual revenue with comparison
+ * @param {Object} standardizedData - Standardized input data
+ * @returns {Object} Object containing predicted revenue, actual revenue, and comparison data
+ */
+function calculateRevenueAnalysis(standardizedData) {
+  const predictedRevenue = calculatePredictedRevenue(standardizedData);
+  const actualRevenue = calculateActualRevenue(standardizedData);
+
+  // Create comparison data by matching timestamps and battery IDs
+  const comparisonData = [];
+  const actualMap = new Map();
+
+  // Create lookup map for actual revenue data
+  actualRevenue.forEach(actual => {
+    const key = `${actual.battery_id}_${actual.ts}`;
+    actualMap.set(key, actual);
+  });
+
+  // Match predicted with actual data
+  predictedRevenue.forEach(predicted => {
+    const key = `${predicted.battery_id}_${predicted.ts}`;
+    const actual = actualMap.get(key);
+
+    const revenueLoss = (predicted.rev_pred_eur !== null && actual?.rev_act_eur !== null)
+      ? predicted.rev_pred_eur - actual.rev_act_eur
+      : null;
+
+    comparisonData.push({
+      battery_id: predicted.battery_id,
+      ts: predicted.ts,
+      // Predicted data
+      pred_mode: predicted.mode,
+      pred_power_kw: predicted.power_kw,
+      pred_energy_kwh: predicted.energy_kwh,
+      rev_pred_eur: predicted.rev_pred_eur,
+      // Actual data
+      act_mode: actual?.mode || 'NO_DATA',
+      act_power_kw: actual?.power_kw || 0,
+      act_energy_kwh: actual?.energy_kwh || 0,
+      rev_act_eur: actual?.rev_act_eur || null,
+      soc_pct: actual?.soc_pct || null,
+      // Analysis
+      revenue_loss_eur: revenueLoss,
+      price_eur_mwh: predicted.price_eur_mwh,
+      interval_min: predicted.interval_min
+    });
+  });
+
+  return {
+    predictedRevenue,
+    actualRevenue,
+    comparisonData,
+    summary: {
+      totalPredictedRevenue: predictedRevenue
+        .filter(p => p.rev_pred_eur !== null)
+        .reduce((sum, p) => sum + p.rev_pred_eur, 0),
+      totalActualRevenue: actualRevenue
+        .filter(a => a.rev_act_eur !== null)
+        .reduce((sum, a) => sum + a.rev_act_eur, 0),
+      totalRevenueLoss: comparisonData
+        .filter(c => c.revenue_loss_eur !== null)
+        .reduce((sum, c) => sum + c.revenue_loss_eur, 0)
+    }
+  };
+}
+
+/**
  * Validate and standardize all input data
  * @param {Object} rawData - Object containing all raw input data
  * @param {Date} startDate - Analysis start date
@@ -388,29 +551,37 @@ async function runCalculation() {
       endTs.value = endDate.toISOString().slice(0, 16); // Format for datetime-local input
     }
 
-    // Standardize data to 5-minute intervals
+    // Standardize data to discretization intervals
     const standardizedData = standardizeInputData(rawData, startDate, endDate);
 
+    // Calculate revenue analysis
+    const revenueAnalysis = calculateRevenueAnalysis(standardizedData);
+
     // Display results
-    const output = `=== Data Standardization Complete ===
+    const output = `=== Revenue Loss Analysis Complete ===
 Analysis Period: ${startDate.toISOString()} to ${endDate.toISOString()}
 (Time range automatically detected from input files)
+Discretization Interval: ${DISCRETIZATION_INTERVAL_MIN} minutes
 
+=== Data Summary ===
 Battery Metadata: ${standardizedData.batteryMeta.length} batteries
 Price Data: ${standardizedData.priceData.length} ${DISCRETIZATION_INTERVAL_MIN}-minute intervals
 Predicted Schedule: ${standardizedData.predictedSchedule.length} ${DISCRETIZATION_INTERVAL_MIN}-minute intervals
 Actual Events: ${standardizedData.actualEvents.length} ${DISCRETIZATION_INTERVAL_MIN}-minute intervals
 
-=== Sample Standardized Data ===
+=== Revenue Analysis Summary ===
+Total Predicted Revenue: €${revenueAnalysis.summary.totalPredictedRevenue.toFixed(2)}
+Total Actual Revenue: €${revenueAnalysis.summary.totalActualRevenue.toFixed(2)}
+Total Revenue Loss: €${revenueAnalysis.summary.totalRevenueLoss.toFixed(2)}
 
-Price Data (first 3 intervals):
-${JSON.stringify(standardizedData.priceData.slice(0, 3), null, 2)}
+=== Sample Revenue Comparison Data (first 5 intervals) ===
+${JSON.stringify(revenueAnalysis.comparisonData.slice(0, 5), null, 2)}
 
-Predicted Schedule (first 3 intervals):
-${JSON.stringify(standardizedData.predictedSchedule.slice(0, 3), null, 2)}
+=== Sample Predicted Revenue Data (first 3 intervals) ===
+${JSON.stringify(revenueAnalysis.predictedRevenue.slice(0, 3), null, 2)}
 
-Actual Events (first 3 intervals):
-${JSON.stringify(standardizedData.actualEvents.slice(0, 3), null, 2)}
+=== Sample Actual Revenue Data (first 3 intervals) ===
+${JSON.stringify(revenueAnalysis.actualRevenue.slice(0, 3), null, 2)}
 `;
 
     document.getElementById('output').textContent = output;
@@ -443,6 +614,11 @@ if (typeof module !== 'undefined') {
     standardizePredictedSchedule,
     standardizeActualEvents,
     determineAnalysisTimeRange,
-    standardizeInputData
+    standardizeInputData,
+    calculateEnergy,
+    calculateRevenue,
+    calculatePredictedRevenue,
+    calculateActualRevenue,
+    calculateRevenueAnalysis
   };
 }

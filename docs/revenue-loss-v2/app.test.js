@@ -9,7 +9,12 @@ const {
   standardizePredictedSchedule,
   standardizeActualEvents,
   determineAnalysisTimeRange,
-  standardizeInputData
+  standardizeInputData,
+  calculateEnergy,
+  calculateRevenue,
+  calculatePredictedRevenue,
+  calculateActualRevenue,
+  calculateRevenueAnalysis
 } = require('./app.js');
 const fs = require('fs');
 const path = require('path');
@@ -225,5 +230,149 @@ async function test(name, fn) {
     assert.ok(result.actualEvents);
     assert.strictEqual(result.analysisStartDate, start);
     assert.strictEqual(result.analysisEndDate, end);
+  });
+
+  await test('calculateEnergy converts power to energy correctly', async () => {
+    // Test with default 5-minute interval
+    assert.strictEqual(calculateEnergy(1000), 1000 * (5/60)); // 83.33 kWh
+    assert.strictEqual(calculateEnergy(-500), -500 * (5/60)); // -41.67 kWh
+
+    // Test with custom interval
+    assert.strictEqual(calculateEnergy(1000, 15), 1000 * (15/60)); // 250 kWh
+    assert.strictEqual(calculateEnergy(600, 10), 600 * (10/60)); // 100 kWh
+  });
+
+  await test('calculateRevenue converts energy and price to revenue', async () => {
+    // Test normal calculation: 100 kWh * 50 EUR/MWh = 100 * 0.05 = 5 EUR
+    assert.strictEqual(calculateRevenue(100, 50), 5);
+
+    // Test with negative energy (charging): -50 kWh * 30 EUR/MWh = -50 * 0.03 = -1.5 EUR
+    assert.strictEqual(calculateRevenue(-50, 30), -1.5);
+
+    // Test with null price
+    assert.strictEqual(calculateRevenue(100, null), null);
+    assert.strictEqual(calculateRevenue(100, undefined), null);
+  });
+
+  await test('calculatePredictedRevenue processes schedule data correctly', async () => {
+    const standardizedData = {
+      priceData: [
+        { ts: '2024-01-01T10:00:00Z', price_eur_mwh: 60, interval_min: 5 },
+        { ts: '2024-01-01T10:05:00Z', price_eur_mwh: 80, interval_min: 5 }
+      ],
+      predictedSchedule: [
+        {
+          battery_id: 'b-001',
+          ts: '2024-01-01T10:00:00Z',
+          mode: 'DISCHARGE',
+          power_kw: 1000,
+          interval_min: 5
+        },
+        {
+          battery_id: 'b-001',
+          ts: '2024-01-01T10:05:00Z',
+          mode: 'CHARGE',
+          power_kw: -800,
+          interval_min: 5
+        }
+      ]
+    };
+
+    const result = calculatePredictedRevenue(standardizedData);
+
+    assert.strictEqual(result.length, 2);
+
+    // First interval: 1000 kW * (5/60) h * 60 EUR/MWh = 83.33 kWh * 0.06 EUR/kWh = 5 EUR
+    assert.strictEqual(result[0].battery_id, 'b-001');
+    assert.strictEqual(result[0].power_kw, 1000);
+    assert.strictEqual(result[0].energy_kwh, 1000 * (5/60));
+    assert.strictEqual(Math.round(result[0].rev_pred_eur * 100) / 100, 5);
+
+    // Second interval: -800 kW * (5/60) h * 80 EUR/MWh = -66.67 kWh * 0.08 EUR/kWh = -5.33 EUR
+    assert.strictEqual(result[1].battery_id, 'b-001');
+    assert.strictEqual(result[1].power_kw, -800);
+    assert.strictEqual(result[1].energy_kwh, -800 * (5/60));
+    assert.strictEqual(Math.round(result[1].rev_pred_eur * 100) / 100, -5.33);
+  });
+
+  await test('calculateActualRevenue processes events data correctly', async () => {
+    const standardizedData = {
+      priceData: [
+        { ts: '2024-01-01T10:00:00Z', price_eur_mwh: 60, interval_min: 5 }
+      ],
+      actualEvents: [
+        {
+          battery_id: 'b-001',
+          ts: '2024-01-01T10:00:00Z',
+          mode: 'DISCHARGE',
+          power_kw: 950,
+          soc_pct: 75,
+          interval_min: 5
+        }
+      ]
+    };
+
+    const result = calculateActualRevenue(standardizedData);
+
+    assert.strictEqual(result.length, 1);
+    assert.strictEqual(result[0].battery_id, 'b-001');
+    assert.strictEqual(result[0].power_kw, 950);
+    assert.strictEqual(result[0].energy_kwh, 950 * (5/60));
+    assert.strictEqual(result[0].rev_act_eur, 950 * (5/60) * 0.06); // 4.75 EUR
+    assert.strictEqual(result[0].soc_pct, 75);
+  });
+
+  await test('calculateRevenueAnalysis provides complete comparison', async () => {
+    const standardizedData = {
+      priceData: [
+        { ts: '2024-01-01T10:00:00Z', price_eur_mwh: 100, interval_min: 5 }
+      ],
+      predictedSchedule: [
+        {
+          battery_id: 'b-001',
+          ts: '2024-01-01T10:00:00Z',
+          mode: 'DISCHARGE',
+          power_kw: 1000,
+          interval_min: 5
+        }
+      ],
+      actualEvents: [
+        {
+          battery_id: 'b-001',
+          ts: '2024-01-01T10:00:00Z',
+          mode: 'DISCHARGE',
+          power_kw: 900,
+          soc_pct: 80,
+          interval_min: 5
+        }
+      ]
+    };
+
+    const result = calculateRevenueAnalysis(standardizedData);
+
+    assert.ok(result.predictedRevenue);
+    assert.ok(result.actualRevenue);
+    assert.ok(result.comparisonData);
+    assert.ok(result.summary);
+
+    // Check comparison data
+    assert.strictEqual(result.comparisonData.length, 1);
+    const comparison = result.comparisonData[0];
+
+    assert.strictEqual(comparison.battery_id, 'b-001');
+    assert.strictEqual(comparison.pred_power_kw, 1000);
+    assert.strictEqual(comparison.act_power_kw, 900);
+
+    // Predicted: 1000 * (5/60) * 0.1 = 8.33 EUR
+    // Actual: 900 * (5/60) * 0.1 = 7.5 EUR
+    // Loss: 8.33 - 7.5 = 0.83 EUR
+    assert.strictEqual(Math.round(comparison.rev_pred_eur * 100) / 100, 8.33);
+    assert.strictEqual(comparison.rev_act_eur, 7.5);
+    assert.strictEqual(Math.round(comparison.revenue_loss_eur * 100) / 100, 0.83);
+
+    // Check summary
+    assert.strictEqual(Math.round(result.summary.totalPredictedRevenue * 100) / 100, 8.33);
+    assert.strictEqual(result.summary.totalActualRevenue, 7.5);
+    assert.strictEqual(Math.round(result.summary.totalRevenueLoss * 100) / 100, 0.83);
   });
 })();
