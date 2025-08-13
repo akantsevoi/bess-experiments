@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BESS Revenue-Loss V2</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <h1>BESS Revenue-Loss V2</h1>
@@ -34,6 +35,8 @@
     <button id="runBtn">Run Calculation</button>
   </div>
 
+  <div id="metrics"></div>
+  <canvas id="revenueChart" width="400" height="200"></canvas>
   <pre id="output"></pre>
   <script src="./app.js"></script>
 </body>
