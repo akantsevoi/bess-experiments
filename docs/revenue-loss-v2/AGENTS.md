@@ -19,6 +19,7 @@
     - `styles.css`: Styles
 - **Test Files:** Sample input data for both manual UI testing and automated unit tests is provided in the `files/` directory. Use these files when writing tests or demonstrating the UI.
 - **Quality**: while writing the code run and upate unit tests to keep the quality high
+- **Data points**: use and update information in [Readme#Input data](./Readme.md#1-input-data) section that contains definition of
 
 ## Run tests
 `node app.test.js`
