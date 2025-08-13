@@ -914,6 +914,111 @@ function standardizeInputData(rawData, startDate, endDate) {
   };
 }
 
+/**
+ * Aggregate comparison data into chart-friendly arrays
+ * @param {Array} comparisonData - Revenue comparison per interval and battery
+ * @returns {{labels: Array<string>, predicted: Array<number>, actual: Array<number>}}
+ */
+function prepareChartData(comparisonData) {
+  const agg = {};
+  comparisonData.forEach(item => {
+    if (!agg[item.ts]) {
+      agg[item.ts] = { pred: 0, act: 0 };
+    }
+    agg[item.ts].pred += item.rev_pred_eur || 0;
+    agg[item.ts].act += item.rev_act_eur || 0;
+  });
+
+  const labels = Object.keys(agg).sort();
+  const predicted = labels.map(ts => agg[ts].pred);
+  const actual = labels.map(ts => agg[ts].act);
+
+  return { labels, predicted, actual };
+}
+
+let performanceChartInstance = null;
+
+/**
+ * Render revenue performance chart using Chart.js
+ * @param {Array} comparisonData - Revenue comparison data
+ */
+function renderPerformanceChart(comparisonData) {
+  if (typeof window === 'undefined' || typeof Chart === 'undefined') {
+    return;
+  }
+  const { labels, predicted, actual } = prepareChartData(comparisonData);
+  const ctx = document.getElementById('performanceChart');
+  if (!ctx) return;
+  if (performanceChartInstance) {
+    performanceChartInstance.destroy();
+  }
+  performanceChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Predicted Revenue',
+          data: predicted,
+          borderColor: 'blue',
+          stepped: true,
+          fill: false
+        },
+        {
+          label: 'Actual Revenue',
+          data: actual,
+          borderColor: 'green',
+          stepped: true,
+          fill: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
+/**
+ * Display summary metrics in HTML
+ * @param {Object} revenueAnalysis - Revenue analysis results
+ * @param {Object} keyMetrics - Calculated key metrics
+ */
+function displaySummary(revenueAnalysis, keyMetrics) {
+  if (typeof window === 'undefined') return;
+  const container = document.getElementById('summary');
+  if (!container) return;
+  container.innerHTML = `
+    <h2>Revenue Analysis Summary</h2>
+    <p>Total Predicted Revenue: €${revenueAnalysis.summary.totalPredictedRevenue.toFixed(2)}</p>
+    <p>Total Actual Revenue: €${revenueAnalysis.summary.totalActualRevenue.toFixed(2)}</p>
+    <p>Total Revenue Loss: €${revenueAnalysis.summary.totalRevenueLoss.toFixed(2)}</p>
+    <h2>Key Metrics</h2>
+    <ul>
+      <li>Total Loss: €${keyMetrics.revenueLoss.total_loss_eur.toFixed(2)}</li>
+      <li>Downtime Loss: €${keyMetrics.revenueLoss.downtime_loss_eur.toFixed(2)} (${keyMetrics.revenueLoss.downtime_loss_percent.toFixed(1)}%)</li>
+      <li>Deviation Loss: €${keyMetrics.revenueLoss.deviation_loss_eur.toFixed(2)} (${keyMetrics.revenueLoss.deviation_loss_percent.toFixed(1)}%)</li>
+    </ul>
+    <h3>Utilization</h3>
+    <ul>
+      <li>Overall Utilization: ${keyMetrics.utilization.overall_utilization_percent.toFixed(1)}%</li>
+      <li>Total Actual Energy Dispatched: ${keyMetrics.utilization.total_actual_energy_dispatched_kwh.toFixed(2)} kWh</li>
+      <li>Total Potential Energy Throughput: ${keyMetrics.utilization.total_potential_energy_throughput_kwh.toFixed(2)} kWh</li>
+    </ul>
+    <h3>Availability Metrics</h3>
+    <ul>
+      <li>Overall Time-Based Availability (A_time): ${keyMetrics.availability.time_based.overall_a_time_percent.toFixed(1)}%</li>
+      <li>P_min Threshold: ${keyMetrics.analysisMetadata.p_min_percent}% of rated power</li>
+      <li>SLA Target: ${keyMetrics.analysisMetadata.sla_target_percent}%</li>
+      <li>Total Headroom Cost: €${keyMetrics.availability.headroom_cost.total_headroom_cost_eur.toFixed(2)}</li>
+    </ul>`;
+}
+
 async function runCalculation() {
   try {
     const priceFile = document.getElementById('priceFile').files[0];
@@ -965,7 +1070,11 @@ async function runCalculation() {
     // Calculate key metrics
     const keyMetrics = calculateKeyMetrics(revenueAnalysis, standardizedData.batteryMeta, startDate, endDate, pMinPct, slaPct);
 
-    // Display results
+    // Display summary metrics and charts in the UI
+    displaySummary(revenueAnalysis, keyMetrics);
+    renderPerformanceChart(revenueAnalysis.comparisonData);
+
+    // Display results in text block for debugging/reference
     const output = `=== Revenue Loss Analysis Complete ===
 Analysis Period: ${startDate.toISOString()} to ${endDate.toISOString()}
 (Time range automatically detected from input files)
@@ -1063,6 +1172,7 @@ if (typeof module !== 'undefined') {
     calculateValueBasedAvailability,
     calculatePriceWeightedAvailability,
     calculateHeadroomCost,
-    calculateKeyMetrics
+    calculateKeyMetrics,
+    prepareChartData
   };
 }
