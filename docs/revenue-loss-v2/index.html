@@ -22,8 +22,9 @@
       <label>Actual Events File <input type="file" id="actFile" accept=".json,.csv" /></label>
     </div>
     <div class="input-group">
-      <label>Start <input type="datetime-local" id="startTs" /></label>
-      <label>End <input type="datetime-local" id="endTs" /></label>
+      <label>Start <input type="datetime-local" id="startTs" placeholder="Auto-detected from files" /></label>
+      <label>End <input type="datetime-local" id="endTs" placeholder="Auto-detected from files" /></label>
+      <small style="color: #666;">Time range will be automatically detected from input files</small>
     </div>
     <div class="input-group">
       <label>P_min % <input type="number" id="pMinPct" value="5" min="0" max="100" /></label>

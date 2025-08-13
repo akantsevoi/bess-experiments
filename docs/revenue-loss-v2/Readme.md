@@ -42,6 +42,16 @@ The recorded real-world performance of each battery.
 -   `power_kw` (number): The measured power.
 -   `soc_pct` (number): The measured state of charge as a percentage.
 
+## 2. Calculations
+
+The core of the analysis is to compare the predicted revenue with the actual revenue and quantify the loss. All data is standardized to **configurable discretization intervals** (default: 5 minutes).
+
+### 2.1. Data Standardization
+
+-   **Price Data**: Prices are upsampled from their original interval (e.g., 15 minutes) to discretization intervals, assuming the price is constant within its original interval.
+-   **Predicted Schedule**: The schedule blocks are "exploded" into a series of discretization intervals with the specified power.
+-   **Actual Events**: If multiple events occur within a discretization interval bucket, their power is averaged. If no event occurs, it's considered `DOWNTIME`.
+
 # Development
 
 Follow instructions [AGENTS.md](./AGENTS.md)
