@@ -22,7 +22,8 @@ const {
   calculateValueBasedAvailability,
   calculatePriceWeightedAvailability,
   calculateHeadroomCost,
-  calculateKeyMetrics
+  calculateKeyMetrics,
+  prepareChartData
 } = require('./app.js');
 const fs = require('fs');
 const path = require('path');
@@ -720,5 +721,21 @@ async function test(name, fn) {
     // Check configuration parameters
     assert.strictEqual(keyMetrics.analysisMetadata.p_min_percent, 5);
     assert.strictEqual(keyMetrics.analysisMetadata.sla_target_percent, 95);
+  });
+
+  await test('prepareChartData aggregates revenues by timestamp', async () => {
+    const comparisonData = [
+      { ts: '2024-01-01T10:00:00Z', rev_pred_eur: 10, rev_act_eur: 8 },
+      { ts: '2024-01-01T10:05:00Z', rev_pred_eur: 5, rev_act_eur: 6 },
+      { ts: '2024-01-01T10:00:00Z', rev_pred_eur: 3, rev_act_eur: 2 }
+    ];
+
+    const result = prepareChartData(comparisonData);
+    assert.deepStrictEqual(result.labels, [
+      '2024-01-01T10:00:00Z',
+      '2024-01-01T10:05:00Z'
+    ]);
+    assert.deepStrictEqual(result.predicted, [13, 5]);
+    assert.deepStrictEqual(result.actual, [10, 6]);
   });
 })();
