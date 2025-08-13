@@ -1,11 +1,47 @@
-# Revenue Loss V2
+# BESS Revenue Loss Analysis Specification
 
-This version mirrors the original demo inputs and, for now, simply prints
-the contents of any uploaded files when **Run Calculation** is clicked.
+This document outlines the data inputs, calculations, and visualizations for the BESS (Battery Energy Storage System) revenue loss analysis tool.
 
-## Test run
+## 1. Input Data
 
-Run the unit tests with:
+The tool requires four JSON or CSV files as input(ex check in fiels folder):
 
-`node app.test.js`
+### 1.1. Battery Metadata (`battery_meta.json`)
 
+Contains the specifications for each battery in the portfolio.
+
+-   `battery_id` (string): Unique identifier for the battery.
+-   `capacity_kwh` (number): Total energy capacity of the battery in kilowatt-hours.
+-   `power_kw` (number): Maximum charge/discharge power in kilowatts.
+
+### 1.2. Price Data (`price_15min.json`)
+
+Contains the electricity market prices.
+
+-   `ts` (string): Timestamp for the start of the price interval (ISO 8601 format).
+-   `price_eur_mwh` (number): Price of electricity in Euros per megawatt-hour.
+-   `interval_min` (number): The duration of the price interval in minutes (e.g., 15).
+
+### 1.3. Predicted Schedule (`pred_schedule.json`)
+
+The planned operational schedule for each battery, determined by an optimization model.
+
+-   `battery_id` (string): The battery this schedule applies to.
+-   `start_ts` (string): Start timestamp for the operational block.
+-   `end_ts` (string): End timestamp for the operational block.
+-   `mode` (string): mode ∈ {CHARGE, DISCHARGE, IDLE}.
+-   `power_kw` (number): The power to be used. Negative for charging, positive for discharging.
+
+### 1.4. Actual Events (`actual_events_5min.json`)
+
+The recorded real-world performance of each battery.
+
+-   `battery_id` (string): The battery the event belongs to.
+-   `ts` (string): Timestamp of the measurement.
+-   `mode` (string): The recorded operational mode ∈ {CHARGE, DISCHARGE, IDLE, DOWNTIME}. 
+-   `power_kw` (number): The measured power.
+-   `soc_pct` (number): The measured state of charge as a percentage.
+
+# Development
+
+Follow instructions [AGENTS.md](./AGENTS.md)

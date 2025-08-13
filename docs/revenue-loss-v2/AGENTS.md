@@ -18,4 +18,7 @@
     - `app.test.js`: Contains unit tests for `app.js`.
     - `styles.css`: Styles
 - **Test Files:** Sample input data for both manual UI testing and automated unit tests is provided in the `files/` directory. Use these files when writing tests or demonstrating the UI.
-- **Quality**: make sure that test pass on each change by running `node app.test.js`
+- **Quality**: while writing the code run and upate unit tests to keep the quality high
+
+## Run tests
+`node app.test.js`
