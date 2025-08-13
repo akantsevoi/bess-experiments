@@ -881,6 +881,72 @@ function calculateRevenueAnalysis(standardizedData) {
 }
 
 /**
+ * Prepare data arrays for revenue performance chart
+ * @param {Array} comparisonData - Comparison data from revenue analysis
+ * @returns {Object} Object with labels, predicted and actual revenue arrays
+ */
+function prepareRevenueChartData(comparisonData) {
+  const labels = comparisonData.map(c => c.ts);
+  const predicted = comparisonData.map(c => c.rev_pred_eur || 0);
+  const actual = comparisonData.map(c => c.rev_act_eur || 0);
+  return { labels, predicted, actual };
+}
+
+function renderRevenueChart(chartData) {
+  const canvas = document.getElementById('revenueChart');
+  if (!canvas || typeof Chart === 'undefined') return;
+  const ctx = canvas.getContext('2d');
+  if (window.revenueChart) {
+    window.revenueChart.destroy();
+  }
+  window.revenueChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: chartData.labels,
+      datasets: [
+        {
+          label: 'Predicted Revenue',
+          data: chartData.predicted,
+          borderColor: 'blue',
+          fill: false,
+          stepped: true
+        },
+        {
+          label: 'Actual Revenue',
+          data: chartData.actual,
+          borderColor: 'green',
+          fill: false,
+          stepped: true
+        }
+      ]
+    },
+    options: {
+      scales: {
+        x: { title: { display: true, text: 'Timestamp' } },
+        y: { title: { display: true, text: 'Revenue (EUR)' } }
+      }
+    }
+  });
+}
+
+function renderMetrics(revenueAnalysis, keyMetrics) {
+  const container = document.getElementById('metrics');
+  if (!container) return;
+  container.innerHTML = `
+    <h2>Key Metrics</h2>
+    <ul>
+      <li>Total Predicted Revenue: €${revenueAnalysis.summary.totalPredictedRevenue.toFixed(2)}</li>
+      <li>Total Actual Revenue: €${revenueAnalysis.summary.totalActualRevenue.toFixed(2)}</li>
+      <li>Total Revenue Loss: €${revenueAnalysis.summary.totalRevenueLoss.toFixed(2)}</li>
+      <li>Downtime Loss: €${keyMetrics.revenueLoss.downtime_loss_eur.toFixed(2)}</li>
+      <li>Deviation Loss: €${keyMetrics.revenueLoss.deviation_loss_eur.toFixed(2)}</li>
+      <li>Overall Utilization: ${keyMetrics.utilization.overall_utilization_percent.toFixed(1)}%</li>
+      <li>Overall A_time: ${keyMetrics.availability.time_based.overall_a_time_percent.toFixed(1)}%</li>
+    </ul>
+  `;
+}
+
+/**
  * Validate and standardize all input data
  * @param {Object} rawData - Object containing all raw input data
  * @param {Date} startDate - Analysis start date
@@ -1019,7 +1085,9 @@ ${Object.keys(keyMetrics.availability.time_based.by_battery).map(batteryId => {
 === Sample Revenue Comparison Data (first 3 intervals) ===
 ${JSON.stringify(revenueAnalysis.comparisonData.slice(0, 3), null, 2)}
 `;
-
+    renderMetrics(revenueAnalysis, keyMetrics);
+    const chartData = prepareRevenueChartData(revenueAnalysis.comparisonData);
+    renderRevenueChart(chartData);
     document.getElementById('output').textContent = output;
 
   } catch (error) {
@@ -1063,6 +1131,7 @@ if (typeof module !== 'undefined') {
     calculateValueBasedAvailability,
     calculatePriceWeightedAvailability,
     calculateHeadroomCost,
-    calculateKeyMetrics
+    calculateKeyMetrics,
+    prepareRevenueChartData
   };
 }
