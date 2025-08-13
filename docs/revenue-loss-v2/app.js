@@ -1257,8 +1257,12 @@ function createAvailabilityChart(availability) {
   });
 }
 
+// Global variable to store chart instance and data
+let powerChartInstance = null;
+let powerChartData = null;
+
 /**
- * Create power performance time series chart
+ * Create power performance time series chart with battery selector
  */
 function createPowerChart(comparisonData) {
   try {
@@ -1269,102 +1273,200 @@ function createPowerChart(comparisonData) {
       return;
     }
 
-    // Group data by battery and sample every N points for performance
-    const sampleRate = Math.max(1, Math.floor(comparisonData.length / 500)); // Max 500 points per battery
-    const batteryData = {};
+    // Store data globally for selector functionality
+    powerChartData = comparisonData;
 
-    comparisonData.forEach((data, index) => {
-      if (index % sampleRate === 0 && data.ts) {
-        if (!batteryData[data.battery_id]) {
-          batteryData[data.battery_id] = { predicted: [], actual: [], timestamps: [] };
-        }
-        batteryData[data.battery_id].predicted.push(data.pred_power_kw || 0);
-        batteryData[data.battery_id].actual.push(data.act_power_kw || 0);
-        batteryData[data.battery_id].timestamps.push(data.ts);
-      }
-    });
+    // Populate battery selector
+    populateBatterySelector(comparisonData);
 
-  const datasets = [];
-  const colors = ['#007bff', '#28a745', '#dc3545', '#ffc107'];
-  let colorIndex = 0;
-
-  Object.keys(batteryData).forEach(batteryId => {
-    const color = colors[colorIndex % colors.length];
-
-    datasets.push({
-      label: `${batteryId} Predicted`,
-      data: batteryData[batteryId].timestamps.map((ts, i) => ({
-        x: ts,
-        y: batteryData[batteryId].predicted[i]
-      })),
-      borderColor: color,
-      backgroundColor: color + '20',
-      borderWidth: 2,
-      fill: false,
-      tension: 0.1
-    });
-
-    datasets.push({
-      label: `${batteryId} Actual`,
-      data: batteryData[batteryId].timestamps.map((ts, i) => ({
-        x: ts,
-        y: batteryData[batteryId].actual[i]
-      })),
-      borderColor: color,
-      backgroundColor: color + '40',
-      borderWidth: 1,
-      borderDash: [5, 5],
-      fill: false,
-      tension: 0.1
-    });
-
-    colorIndex++;
-  });
-
-  new Chart(ctx, {
-    type: 'line',
-    data: { datasets },
-    options: {
-      responsive: true,
-      interaction: {
-        intersect: false,
-        mode: 'index'
-      },
-      plugins: {
-        legend: { position: 'top' },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              return `${context.dataset.label}: ${context.parsed.y.toFixed(1)} kW`;
-            }
-          }
-        }
-      },
-      scales: {
-        x: {
-          type: 'time',
-          time: {
-            displayFormats: {
-              hour: 'MMM dd HH:mm'
-            }
-          },
-          title: { display: true, text: 'Time' }
-        },
-        y: {
-          title: { display: true, text: 'Power (kW)' },
-          ticks: {
-            callback: function(value) {
-              return value.toFixed(0) + ' kW';
-            }
-          }
-        }
-      }
-    }
-  });
+    // Create initial chart (overall view)
+    updatePowerChart('overall');
 
   } catch (error) {
     console.error('Error creating power chart:', error);
   }
+}
+
+/**
+ * Populate the battery selector dropdown
+ */
+function populateBatterySelector(comparisonData) {
+  const selector = document.getElementById('batterySelector');
+  if (!selector) return;
+
+  // Get unique battery IDs
+  const batteryIds = [...new Set(comparisonData.map(d => d.battery_id))].sort();
+
+  // Clear existing options except "Overall"
+  selector.innerHTML = '<option value="overall">Overall (All Batteries)</option>';
+
+  // Add individual battery options
+  batteryIds.forEach(batteryId => {
+    const option = document.createElement('option');
+    option.value = batteryId;
+    option.textContent = `${batteryId} (Individual)`;
+    selector.appendChild(option);
+  });
+
+  // Add event listener for selector changes
+  selector.removeEventListener('change', handleBatterySelection); // Remove existing listener
+  selector.addEventListener('change', handleBatterySelection);
+}
+
+/**
+ * Handle battery selector change
+ */
+function handleBatterySelection(event) {
+  const selectedBattery = event.target.value;
+  updatePowerChart(selectedBattery);
+}
+
+/**
+ * Update power chart based on selected battery
+ */
+function updatePowerChart(selectedBattery) {
+  try {
+    const ctx = document.getElementById('powerChart').getContext('2d');
+
+    // Destroy existing chart if it exists
+    if (powerChartInstance) {
+      powerChartInstance.destroy();
+    }
+
+    let datasets = [];
+
+    if (selectedBattery === 'overall') {
+      // Create overall aggregated view
+      datasets = createOverallPowerDatasets(powerChartData);
+    } else {
+      // Create individual battery view
+      datasets = createIndividualBatteryDatasets(powerChartData, selectedBattery);
+    }
+
+    powerChartInstance = new Chart(ctx, {
+      type: 'line',
+      data: { datasets },
+      options: {
+        responsive: true,
+        interaction: {
+          intersect: false,
+          mode: 'index'
+        },
+        plugins: {
+          legend: { position: 'top' },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return `${context.dataset.label}: ${context.parsed.y.toFixed(1)} kW`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            type: 'time',
+            time: {
+              displayFormats: {
+                hour: 'MMM dd HH:mm'
+              }
+            },
+            title: { display: true, text: 'Time' }
+          },
+          y: {
+            title: { display: true, text: 'Power (kW)' },
+            ticks: {
+              callback: function(value) {
+                return value.toFixed(0) + ' kW';
+              }
+            }
+          }
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error('Error updating power chart:', error);
+  }
+}
+
+/**
+ * Create datasets for overall aggregated view
+ */
+function createOverallPowerDatasets(comparisonData) {
+  // Sample data for performance
+  const sampleRate = Math.max(1, Math.floor(comparisonData.length / 1000));
+
+  // Aggregate by timestamp (sum across all batteries)
+  const timeAggregated = {};
+  comparisonData.forEach((data, index) => {
+    if (index % sampleRate === 0 && data.ts) {
+      if (!timeAggregated[data.ts]) {
+        timeAggregated[data.ts] = {
+          timestamp: data.ts,
+          predicted: 0,
+          actual: 0
+        };
+      }
+      timeAggregated[data.ts].predicted += data.pred_power_kw || 0;
+      timeAggregated[data.ts].actual += data.act_power_kw || 0;
+    }
+  });
+
+  const sortedData = Object.values(timeAggregated).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+  return [
+    {
+      label: 'Total Predicted Power',
+      data: sortedData.map(d => ({ x: d.timestamp, y: d.predicted })),
+      borderColor: '#007bff',
+      backgroundColor: '#007bff20',
+      borderWidth: 3,
+      fill: false,
+      tension: 0.1
+    },
+    {
+      label: 'Total Actual Power',
+      data: sortedData.map(d => ({ x: d.timestamp, y: d.actual })),
+      borderColor: '#28a745',
+      backgroundColor: '#28a74520',
+      borderWidth: 3,
+      borderDash: [5, 5],
+      fill: false,
+      tension: 0.1
+    }
+  ];
+}
+
+/**
+ * Create datasets for individual battery view
+ */
+function createIndividualBatteryDatasets(comparisonData, batteryId) {
+  // Filter data for selected battery and sample for performance
+  const batteryData = comparisonData.filter(d => d.battery_id === batteryId);
+  const sampleRate = Math.max(1, Math.floor(batteryData.length / 500));
+  const sampledData = batteryData.filter((_, index) => index % sampleRate === 0 && batteryData[index].ts);
+
+  return [
+    {
+      label: `${batteryId} Predicted Power`,
+      data: sampledData.map(d => ({ x: d.ts, y: d.pred_power_kw || 0 })),
+      borderColor: '#007bff',
+      backgroundColor: '#007bff20',
+      borderWidth: 2,
+      fill: false,
+      tension: 0.1
+    },
+    {
+      label: `${batteryId} Actual Power`,
+      data: sampledData.map(d => ({ x: d.ts, y: d.act_power_kw || 0 })),
+      borderColor: '#28a745',
+      backgroundColor: '#28a74520',
+      borderWidth: 2,
+      borderDash: [5, 5],
+      fill: false,
+      tension: 0.1
+    }
+  ];
 }
 
 /**

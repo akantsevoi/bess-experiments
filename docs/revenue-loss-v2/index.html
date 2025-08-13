@@ -171,7 +171,15 @@
         <h3>📈 Performance Time Series</h3>
         <div class="chart-grid">
           <div class="chart-item chart-full-width">
-            <h4>Power Performance Over Time</h4>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <h4 style="margin: 0;">Power Performance Over Time</h4>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <label for="batterySelector" style="font-weight: bold; color: #555;">View:</label>
+                <select id="batterySelector" style="padding: 5px 10px; border: 1px solid #ddd; border-radius: 4px; background: white;">
+                  <option value="overall">Overall (All Batteries)</option>
+                </select>
+              </div>
+            </div>
             <canvas id="powerChart" class="performance-chart"></canvas>
           </div>
           <div class="chart-item chart-full-width">
