@@ -1022,6 +1022,9 @@ ${JSON.stringify(revenueAnalysis.comparisonData.slice(0, 3), null, 2)}
 
     document.getElementById('output').textContent = output;
 
+    // Create visualizations
+    createVisualizations(revenueAnalysis, keyMetrics, standardizedData);
+
   } catch (error) {
     document.getElementById('output').textContent = `Error: ${error.message}`;
     console.error('Calculation error:', error);
@@ -1032,6 +1035,574 @@ function setup() {
   const runBtn = document.getElementById('runBtn');
   if (runBtn) {
     runBtn.addEventListener('click', runCalculation);
+  }
+}
+
+/**
+ * Create all visualizations
+ * @param {Object} revenueAnalysis - Revenue analysis data
+ * @param {Object} keyMetrics - Key metrics data
+ * @param {Object} standardizedData - Standardized input data
+ */
+function createVisualizations(revenueAnalysis, keyMetrics, standardizedData) {
+  try {
+    // Show charts container
+    document.getElementById('chartsContainer').style.display = 'block';
+
+    // Create high-level metric charts
+    console.log('Creating high-level metric charts...');
+    createRevenueChart(revenueAnalysis.summary);
+    createLossBreakdownChart(keyMetrics.revenueLoss);
+    createUtilizationChart(keyMetrics.utilization);
+    createAvailabilityChart(keyMetrics.availability);
+
+    // Create performance time series charts
+    console.log('Creating performance time series charts...');
+    console.log('Comparison data length:', revenueAnalysis.comparisonData.length);
+    console.log('Price data length:', standardizedData.priceData.length);
+
+    createPowerChart(revenueAnalysis.comparisonData);
+    createRevenueTimeChart(revenueAnalysis.comparisonData);
+    createPriceAvailabilityChart(revenueAnalysis.comparisonData, standardizedData.priceData);
+
+    console.log('All charts created successfully');
+  } catch (error) {
+    console.error('Error creating visualizations:', error);
+    // Show error message to user
+    const errorDiv = document.createElement('div');
+    errorDiv.style.color = 'red';
+    errorDiv.style.padding = '10px';
+    errorDiv.style.border = '1px solid red';
+    errorDiv.style.borderRadius = '4px';
+    errorDiv.style.margin = '10px 0';
+    errorDiv.innerHTML = `<strong>Visualization Error:</strong> ${error.message}`;
+    document.getElementById('chartsContainer').prepend(errorDiv);
+  }
+}
+
+/**
+ * Create revenue analysis bar chart
+ */
+function createRevenueChart(summary) {
+  const ctx = document.getElementById('revenueChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Predicted Revenue', 'Actual Revenue', 'Revenue Loss'],
+      datasets: [{
+        data: [
+          summary.totalPredictedRevenue,
+          summary.totalActualRevenue,
+          summary.totalRevenueLoss
+        ],
+        backgroundColor: ['#28a745', '#17a2b8', '#dc3545'],
+        borderColor: ['#1e7e34', '#117a8b', '#bd2130'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `€${context.parsed.y.toFixed(2)}`;
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return '€' + value.toFixed(0);
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+/**
+ * Create revenue loss breakdown pie chart
+ */
+function createLossBreakdownChart(revenueLoss) {
+  const ctx = document.getElementById('lossBreakdownChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Downtime Loss', 'Deviation Loss'],
+      datasets: [{
+        data: [revenueLoss.downtime_loss_eur, revenueLoss.deviation_loss_eur],
+        backgroundColor: ['#ffc107', '#fd7e14'],
+        borderColor: ['#e0a800', '#e8590c'],
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom' },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const percentage = ((context.parsed / revenueLoss.total_loss_eur) * 100).toFixed(1);
+              return `${context.label}: €${context.parsed.toFixed(2)} (${percentage}%)`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+/**
+ * Create battery utilization horizontal bar chart
+ */
+function createUtilizationChart(utilization) {
+  const batteries = Object.values(utilization.by_battery);
+  const ctx = document.getElementById('utilizationChart').getContext('2d');
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: batteries.map(b => `${b.battery_id}\n(${b.rated_power_kw} kW)`),
+      datasets: [{
+        label: 'Utilization %',
+        data: batteries.map(b => b.utilization_percent),
+        backgroundColor: '#6f42c1',
+        borderColor: '#5a32a3',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${context.parsed.x.toFixed(1)}%`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          max: 100,
+          ticks: {
+            callback: function(value) {
+              return value + '%';
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+/**
+ * Create availability metrics radar chart
+ */
+function createAvailabilityChart(availability) {
+  const batteries = Object.keys(availability.time_based.by_battery);
+  const ctx = document.getElementById('availabilityChart').getContext('2d');
+
+  const datasets = batteries.map((batteryId, index) => {
+    const colors = ['#007bff', '#28a745', '#dc3545', '#ffc107'];
+    const color = colors[index % colors.length];
+
+    return {
+      label: batteryId,
+      data: [
+        availability.time_based.by_battery[batteryId].a_time_percent,
+        availability.value_based.by_battery[batteryId].a_dispatch_percent || 0,
+        availability.price_weighted.by_battery[batteryId].a_econ_percent || 0
+      ],
+      backgroundColor: color + '20',
+      borderColor: color,
+      borderWidth: 2,
+      pointBackgroundColor: color
+    };
+  });
+
+  new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['A_time (%)', 'A_dispatch (%)', 'A_econ (%)'],
+      datasets: datasets
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom' }
+      },
+      scales: {
+        r: {
+          beginAtZero: true,
+          max: 100,
+          ticks: {
+            callback: function(value) {
+              return value + '%';
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+/**
+ * Create power performance time series chart
+ */
+function createPowerChart(comparisonData) {
+  try {
+    const ctx = document.getElementById('powerChart').getContext('2d');
+
+    if (!comparisonData || comparisonData.length === 0) {
+      console.warn('No comparison data available for power chart');
+      return;
+    }
+
+    // Group data by battery and sample every N points for performance
+    const sampleRate = Math.max(1, Math.floor(comparisonData.length / 500)); // Max 500 points per battery
+    const batteryData = {};
+
+    comparisonData.forEach((data, index) => {
+      if (index % sampleRate === 0 && data.ts) {
+        if (!batteryData[data.battery_id]) {
+          batteryData[data.battery_id] = { predicted: [], actual: [], timestamps: [] };
+        }
+        batteryData[data.battery_id].predicted.push(data.pred_power_kw || 0);
+        batteryData[data.battery_id].actual.push(data.act_power_kw || 0);
+        batteryData[data.battery_id].timestamps.push(data.ts);
+      }
+    });
+
+  const datasets = [];
+  const colors = ['#007bff', '#28a745', '#dc3545', '#ffc107'];
+  let colorIndex = 0;
+
+  Object.keys(batteryData).forEach(batteryId => {
+    const color = colors[colorIndex % colors.length];
+
+    datasets.push({
+      label: `${batteryId} Predicted`,
+      data: batteryData[batteryId].timestamps.map((ts, i) => ({
+        x: ts,
+        y: batteryData[batteryId].predicted[i]
+      })),
+      borderColor: color,
+      backgroundColor: color + '20',
+      borderWidth: 2,
+      fill: false,
+      tension: 0.1
+    });
+
+    datasets.push({
+      label: `${batteryId} Actual`,
+      data: batteryData[batteryId].timestamps.map((ts, i) => ({
+        x: ts,
+        y: batteryData[batteryId].actual[i]
+      })),
+      borderColor: color,
+      backgroundColor: color + '40',
+      borderWidth: 1,
+      borderDash: [5, 5],
+      fill: false,
+      tension: 0.1
+    });
+
+    colorIndex++;
+  });
+
+  new Chart(ctx, {
+    type: 'line',
+    data: { datasets },
+    options: {
+      responsive: true,
+      interaction: {
+        intersect: false,
+        mode: 'index'
+      },
+      plugins: {
+        legend: { position: 'top' },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${context.dataset.label}: ${context.parsed.y.toFixed(1)} kW`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          type: 'time',
+          time: {
+            displayFormats: {
+              hour: 'MMM dd HH:mm'
+            }
+          },
+          title: { display: true, text: 'Time' }
+        },
+        y: {
+          title: { display: true, text: 'Power (kW)' },
+          ticks: {
+            callback: function(value) {
+              return value.toFixed(0) + ' kW';
+            }
+          }
+        }
+      }
+    }
+  });
+
+  } catch (error) {
+    console.error('Error creating power chart:', error);
+  }
+}
+
+/**
+ * Create revenue performance time series chart
+ */
+function createRevenueTimeChart(comparisonData) {
+  try {
+    const ctx = document.getElementById('revenueTimeChart').getContext('2d');
+
+    if (!comparisonData || comparisonData.length === 0) {
+      console.warn('No comparison data available for revenue time chart');
+      return;
+    }
+
+    // Sample data for performance
+    const sampleRate = Math.max(1, Math.floor(comparisonData.length / 500));
+    const sampledData = comparisonData.filter((_, index) => index % sampleRate === 0);
+
+    // Aggregate by time (sum across all batteries for each timestamp)
+    const timeAggregated = {};
+    sampledData.forEach(data => {
+      const ts = data.ts;
+      if (ts && !timeAggregated[ts]) {
+        timeAggregated[ts] = {
+          timestamp: ts,
+          predicted: 0,
+          actual: 0,
+          loss: 0
+        };
+      }
+      if (ts) {
+        timeAggregated[ts].predicted += data.rev_pred_eur || 0;
+        timeAggregated[ts].actual += data.rev_act_eur || 0;
+        timeAggregated[ts].loss += data.revenue_loss_eur || 0;
+      }
+    });
+
+  const sortedData = Object.values(timeAggregated).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      datasets: [
+        {
+          label: 'Predicted Revenue',
+          data: sortedData.map(d => ({ x: d.timestamp, y: d.predicted })),
+          borderColor: '#28a745',
+          backgroundColor: '#28a74520',
+          borderWidth: 2,
+          fill: false,
+          tension: 0.1
+        },
+        {
+          label: 'Actual Revenue',
+          data: sortedData.map(d => ({ x: d.timestamp, y: d.actual })),
+          borderColor: '#17a2b8',
+          backgroundColor: '#17a2b820',
+          borderWidth: 2,
+          fill: false,
+          tension: 0.1
+        },
+        {
+          label: 'Revenue Loss',
+          data: sortedData.map(d => ({ x: d.timestamp, y: d.loss })),
+          borderColor: '#dc3545',
+          backgroundColor: '#dc354520',
+          borderWidth: 2,
+          fill: false,
+          tension: 0.1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: {
+        intersect: false,
+        mode: 'index'
+      },
+      plugins: {
+        legend: { position: 'top' },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${context.dataset.label}: €${context.parsed.y.toFixed(2)}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          type: 'time',
+          time: {
+            displayFormats: {
+              hour: 'MMM dd HH:mm'
+            }
+          },
+          title: { display: true, text: 'Time' }
+        },
+        y: {
+          title: { display: true, text: 'Revenue (EUR)' },
+          ticks: {
+            callback: function(value) {
+              return '€' + value.toFixed(1);
+            }
+          }
+        }
+      }
+    }
+  });
+
+  } catch (error) {
+    console.error('Error creating revenue time chart:', error);
+  }
+}
+
+/**
+ * Create price and availability time series chart
+ */
+function createPriceAvailabilityChart(comparisonData, priceData) {
+  try {
+    const ctx = document.getElementById('priceAvailabilityChart').getContext('2d');
+
+    if (!comparisonData || comparisonData.length === 0 || !priceData || priceData.length === 0) {
+      console.warn('No data available for price availability chart');
+      return;
+    }
+
+    // Sample data for performance
+    const sampleRate = Math.max(1, Math.floor(priceData.length / 500));
+    const sampledPrices = priceData.filter((_, index) => index % sampleRate === 0 && priceData[index].price_eur_mwh !== null);
+
+    // Calculate rolling availability (time-based) for each timestamp
+    const windowSize = Math.max(1, Math.floor(comparisonData.length / 50)); // Rolling window
+    const availabilityData = [];
+
+    for (let i = 0; i < comparisonData.length; i += sampleRate) {
+      if (comparisonData[i] && comparisonData[i].ts) {
+        const windowStart = Math.max(0, i - windowSize);
+        const windowEnd = Math.min(comparisonData.length, i + windowSize);
+        const windowData = comparisonData.slice(windowStart, windowEnd);
+
+        const nonDowntime = windowData.filter(d => d.act_mode !== 'DOWNTIME').length;
+        const availability = windowData.length > 0 ? (nonDowntime / windowData.length) * 100 : 0;
+
+        availabilityData.push({
+          x: comparisonData[i].ts,
+          y: availability
+        });
+      }
+    }
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      datasets: [
+        {
+          label: 'Price (EUR/MWh)',
+          data: sampledPrices.map(p => ({ x: p.ts, y: p.price_eur_mwh })),
+          borderColor: '#ffc107',
+          backgroundColor: '#ffc10720',
+          borderWidth: 2,
+          fill: false,
+          tension: 0.1,
+          yAxisID: 'y'
+        },
+        {
+          label: 'Rolling Availability (%)',
+          data: availabilityData,
+          borderColor: '#6f42c1',
+          backgroundColor: '#6f42c120',
+          borderWidth: 2,
+          fill: false,
+          tension: 0.1,
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: {
+        intersect: false,
+        mode: 'index'
+      },
+      plugins: {
+        legend: { position: 'top' },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              if (context.dataset.label.includes('Price')) {
+                return `${context.dataset.label}: €${context.parsed.y.toFixed(1)}/MWh`;
+              } else {
+                return `${context.dataset.label}: ${context.parsed.y.toFixed(1)}%`;
+              }
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          type: 'time',
+          time: {
+            displayFormats: {
+              hour: 'MMM dd HH:mm'
+            }
+          },
+          title: { display: true, text: 'Time' }
+        },
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          title: { display: true, text: 'Price (EUR/MWh)' },
+          ticks: {
+            callback: function(value) {
+              return '€' + value.toFixed(0);
+            }
+          }
+        },
+        y1: {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          title: { display: true, text: 'Availability (%)' },
+          grid: {
+            drawOnChartArea: false,
+          },
+          ticks: {
+            callback: function(value) {
+              return value.toFixed(0) + '%';
+            }
+          }
+        }
+      }
+    }
+  });
+
+  } catch (error) {
+    console.error('Error creating price availability chart:', error);
   }
 }
 
