@@ -230,6 +230,15 @@ The project detail page (`project.html`) renders the same charts/tables as `docs
 - Renderer: `docs/control-room/js/revenue_static.js` adapts the demo’s logic to compute 5‑minute slices, compare predicted vs actual, and render charts.
 - Chart libs: Chart.js + Luxon + annotation plugin via CDN (same as the demo).
 
+### Pre-generated vs. On-load Generation
+
+- This repo includes pre-generated weekly datasets for all projects at `docs/control-room/data/static/revenue-<PROJECT_ID>.json`.
+- When the page is opened over HTTP(S) (e.g., with a local server), the project page tries to load the matching JSON and uses it as-is (no generation at load time).
+- When opened from `file://`, browsers typically block `fetch` of local JSON; in that case the page falls back to embedded JS datasets. The embedded scripts are guarded to avoid overwriting preloaded data and can be removed if you always serve over HTTP.
+- To serve locally, from `docs/control-room` run: `python3 -m http.server 8000` and open `http://localhost:8000/project.html?projectId=P-001`.
+
+Static JSON files were generated via `docs/control-room/scripts/pregenerate_revenue.py`. Re-run the script if you tweak generation logic and want to refresh the snapshots.
+
 Displayed views (same as demo):
 - KPI summary (predicted/actual revenue, loss, downtime loss, utilization, availability, headroom, distance to breach).
 - Per‑battery daily summary table and per‑slice diff table.

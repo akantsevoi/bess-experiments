@@ -55,3 +55,10 @@ tbody tr:hover { background: #f9fafb; cursor: pointer; }
 .table-container table {
   border: 0; /* avoid double border inside container */
 }
+
+/* Heatmaps/timelines can overflow horizontally on 7-day windows */
+.heatmap {
+  overflow: hidden; /* fit width */
+}
+.heatmap table { table-layout: fixed; width: 100%; }
+.heatmap th, .heatmap td { padding: 4px; }

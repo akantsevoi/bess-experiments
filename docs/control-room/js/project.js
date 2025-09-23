@@ -85,7 +85,7 @@
     return;
   }
   renderHeader(project);
-  renderRevenue(project);
+  // Do not render static revenue KPIs/daily table from project metadata,
+  // weekly charts/tables are computed from hardcoded datasets in revenue_static.js
   renderBmsErrors(project);
 })();
-

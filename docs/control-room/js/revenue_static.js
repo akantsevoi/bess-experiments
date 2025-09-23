@@ -370,22 +370,41 @@
     var m = buildHeatmapMatrix(lastDiffRows, metric);
     var matrix = m.matrix, hourList = m.hourList, batteries = m.batteries, maxVal = m.maxVal;
     var container = document.getElementById('heatmap'); container.innerHTML = '';
-    var table = document.createElement('table');
-    var head = document.createElement('tr');
-    head.appendChild(document.createElement('th'));
-    for (var i = 0; i < hourList.length; i++) {
-      var th = document.createElement('th'); th.textContent = new Date(hourList[i]).toLocaleTimeString('sv-SE', { timeZone: 'Europe/Stockholm', day: '2-digit', hour: '2-digit' }); head.appendChild(th);
-    }
-    table.appendChild(head);
+    // Build unique days
+    var daySet = new Set(hourList.map(function (h) { return h.slice(0, 10); }));
+    var days = Array.from(daySet).sort();
     var sel = document.getElementById('batterySelect');
-    for (var bi = 0; bi < batteries.length; bi++) {
-      var b = batteries[bi]; var tr = document.createElement('tr'); var th2 = document.createElement('th'); th2.textContent = b; tr.appendChild(th2); var mm = matrix.get(b);
-      for (var hi = 0; hi < hourList.length; hi++) {
-        var hkey = hourList[hi]; var td = document.createElement('td'); var cell = mm.get(hkey); var val = cell ? cell.value : 0; var intensity = maxVal ? val / maxVal : 0; td.style.backgroundColor = 'rgba(255,0,0,' + intensity + ')'; if (cell && cell.downtime) { var d = document.createElement('div'); d.style.width = '10px'; d.style.height = '10px'; d.style.margin = 'auto'; d.style.transform = 'rotate(45deg)'; d.style.background = 'white'; td.appendChild(d); } td.addEventListener('click', (function (bb, start) { return function () { if (sel) { sel.value = bb; renderCumChart(bb, { start: new Date(start), end: new Date(new Date(start).getTime() + 3600000) }); } }; })(b, hkey)); tr.appendChild(td);
+    for (var di = 0; di < days.length; di++) {
+      var day = days[di];
+      var dayDiv = document.createElement('div');
+      var title = document.createElement('div'); title.className = 'muted'; title.textContent = 'Day ' + day; dayDiv.appendChild(title);
+      var table = document.createElement('table');
+      var head = document.createElement('tr');
+      head.appendChild(document.createElement('th'));
+      for (var h = 0; h < 24; h++) {
+        var th = document.createElement('th'); th.textContent = (h < 10 ? '0' + h : '' + h);
+        head.appendChild(th);
       }
-      table.appendChild(tr);
+      table.appendChild(head);
+      for (var bi = 0; bi < batteries.length; bi++) {
+        var b = batteries[bi]; var tr = document.createElement('tr'); var th2 = document.createElement('th'); th2.textContent = b; tr.appendChild(th2);
+        var mm = matrix.get(b);
+        for (var h2 = 0; h2 < 24; h2++) {
+          var hourKey = new Date(day + 'T' + (h2 < 10 ? '0' + h2 : h2) + ':00:00Z').toISOString();
+          var td = document.createElement('td');
+          var cell = mm.get(hourKey);
+          var val = cell ? cell.value : 0;
+          var intensity = maxVal ? val / maxVal : 0;
+          td.style.backgroundColor = 'rgba(255,0,0,' + intensity + ')';
+          if (cell && cell.downtime) { var dmark = document.createElement('div'); dmark.style.width='10px'; dmark.style.height='10px'; dmark.style.margin='auto'; dmark.style.transform='rotate(45deg)'; dmark.style.background='white'; td.appendChild(dmark); }
+          td.addEventListener('click', (function (bb, startIso) { return function () { if (sel) { sel.value = bb; renderCumChart(bb, { start: new Date(startIso), end: new Date(new Date(startIso).getTime()+3600000) }); } }; })(b, hourKey));
+          tr.appendChild(td);
+        }
+        table.appendChild(tr);
+      }
+      dayDiv.appendChild(table);
+      container.appendChild(dayDiv);
     }
-    container.appendChild(table);
   }
 
   function buildAvailabilityMatrix(diffRows, batteries, pMinFrac) {
@@ -410,28 +429,50 @@
     var bm = buildAvailabilityMatrix(diffRows, batteries, pMinFrac);
     var matrix = bm.matrix, hourList = bm.hourList, ids = bm.batteries;
     var container = document.getElementById('availTimeline'); container.innerHTML = '';
-    var table = document.createElement('table');
-    var head = document.createElement('tr'); head.appendChild(document.createElement('th'));
-    for (var i = 0; i < hourList.length; i++) { var th = document.createElement('th'); th.textContent = new Date(hourList[i]).toLocaleTimeString('sv-SE', { timeZone: 'Europe/Stockholm', day: '2-digit', hour: '2-digit' }); head.appendChild(th); }
-    table.appendChild(head);
+    var daySet = new Set(hourList.map(function (h) { return h.slice(0, 10); }));
+    var days = Array.from(daySet).sort();
     var sel = document.getElementById('batterySelect');
-    for (var bi = 0; bi < ids.length; bi++) {
-      var b = ids[bi]; var tr = document.createElement('tr'); var th2 = document.createElement('th'); th2.textContent = b; tr.appendChild(th2); var m = matrix.get(b);
-      for (var hi = 0; hi < hourList.length; hi++) { var hkey = hourList[hi]; var td = document.createElement('td'); var cell = m.get(hkey); var status = cell && cell.status ? cell.status : 'available'; if (status === 'downtime') td.style.backgroundColor = 'rgba(244,67,54,0.7)'; else if (status === 'derated') td.style.backgroundColor = 'rgba(255,235,59,0.7)'; else td.style.backgroundColor = 'rgba(76,175,80,0.7)'; td.addEventListener('click', (function (bb, start) { return function () { if (sel) { sel.value = bb; renderCumChart(bb, { start: new Date(start), end: new Date(new Date(start).getTime() + 3600000) }); } }; })(b, hkey)); tr.appendChild(td); }
-      table.appendChild(tr);
+    for (var di = 0; di < days.length; di++) {
+      var day = days[di];
+      var dayDiv = document.createElement('div');
+      var title = document.createElement('div'); title.className = 'muted'; title.textContent = 'Day ' + day; dayDiv.appendChild(title);
+      var table = document.createElement('table');
+      var head = document.createElement('tr'); head.appendChild(document.createElement('th'));
+      for (var h = 0; h < 24; h++) { var th = document.createElement('th'); th.textContent = (h<10?'0'+h:h); head.appendChild(th); }
+      table.appendChild(head);
+      for (var bi = 0; bi < ids.length; bi++) {
+        var b = ids[bi]; var tr = document.createElement('tr'); var th2 = document.createElement('th'); th2.textContent = b; tr.appendChild(th2); var m = matrix.get(b);
+        for (var h2 = 0; h2 < 24; h2++) {
+          var hourKey = new Date(day + 'T' + (h2 < 10 ? '0' + h2 : h2) + ':00:00Z').toISOString();
+          var td = document.createElement('td'); var cell = m.get(hourKey); var status = cell && cell.status ? cell.status : 'available'; if (status === 'downtime') td.style.backgroundColor = 'rgba(244,67,54,0.7)'; else if (status === 'derated') td.style.backgroundColor = 'rgba(255,235,59,0.7)'; else td.style.backgroundColor = 'rgba(76,175,80,0.7)'; td.addEventListener('click', (function (bb, startIso) { return function () { if (sel) { sel.value = bb; renderCumChart(bb, { start: new Date(startIso), end: new Date(new Date(startIso).getTime() + 3600000) }); } }; })(b, hourKey)); tr.appendChild(td);
+        }
+        table.appendChild(tr);
+      }
+      dayDiv.appendChild(table);
+      container.appendChild(dayDiv);
     }
-    container.appendChild(table);
   }
 
-  function initFromStatic() {
+  async function initFromStatic() {
     var qid = window.Util.qs('projectId', 'P-001');
     var all = window.revenueData || {};
     var rd = all[qid];
+    // Prefer pre-generated JSON when running via HTTP(S)
+    if (!rd && location.protocol !== 'file:') {
+      try {
+        var resp = await fetch('data/static/revenue-' + qid + '.json', { cache:'no-store' });
+        if (resp.ok) {
+          rd = await resp.json();
+          window.revenueData = window.revenueData || {}; window.revenueData[qid] = rd;
+        }
+      } catch (e) { console.warn('Failed to load static JSON for', qid, e); }
+    }
     if (!rd) {
+      // Fallback to embedded data (or any available) if static JSON not available
       var keys = Object.keys(all);
       if (!keys.length) { console.warn('No hardcoded revenue data available'); return; }
-      console.warn('No hardcoded revenue data for project', qid, '— falling back to', keys[0]);
-      rd = all[keys[0]];
+      if (!all[qid]) console.warn('No hardcoded revenue data for project', qid, '— falling back to', keys[0]);
+      rd = all[qid] || all[keys[0]];
     }
     var price5 = stepFillPriceTo5(rd.price, rd.window);
     var pred5 = explodePredTo5(rd.pred, rd.batteries).filter(function (r) { var t = toDate(r.slice_ts); return t >= toDate(rd.window.start) && t < toDate(rd.window.end); });
@@ -460,7 +501,9 @@
 
     var sel = document.getElementById('batterySelect');
     sel.innerHTML = '<option value="">All</option>' + rd.batteries.map(function (b) { return '<option value="' + b.battery_id + '">' + b.battery_id + '</option>'; }).join('');
-    sel.addEventListener('change', function () { renderCumChart(sel.value || null); });
+    // ensure full-week range always applied
+    var chartRange = { start: new Date(rd.window.start), end: new Date(rd.window.end) };
+    sel.addEventListener('change', function () { renderCumChart(sel.value || null, chartRange); });
 
     if (typeof Chart === 'undefined') {
       var notice = document.createElement('p'); notice.className = 'muted'; notice.textContent = 'Charts unavailable (Chart.js not loaded). Tables are shown instead.'; var res = document.getElementById('results'); res.insertBefore(notice, res.firstChild); return;
@@ -468,7 +511,7 @@
 
     cumulativeSeries = { ALL: buildCumulativeSeries(diffRows, null) };
     for (var bi = 0; bi < rd.batteries.length; bi++) { var b = rd.batteries[bi]; cumulativeSeries[b.battery_id] = buildCumulativeSeries(diffRows, b.battery_id); }
-    renderCumChart(null);
+    renderCumChart(null, chartRange);
 
     var met = document.getElementById('heatmapMetric');
     function rerenderHeatmap() { renderHeatmap(met.value, diffRows); }
@@ -481,4 +524,3 @@
   if (window.ChartAnnotation) Chart.register(window.ChartAnnotation);
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initFromStatic); else initFromStatic();
 })();
-
