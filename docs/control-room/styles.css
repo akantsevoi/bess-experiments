@@ -1,0 +1,57 @@
+:root {
+  --bg: #f8fafc;        /* light background */
+  --panel: #ffffff;     /* cards/panels */
+  --text: #1f2937;      /* primary text */
+  --muted: #6b7280;     /* secondary text */
+  --brand: #2563eb;     /* accents */
+  --ok: #16a34a;
+  --warn: #f59e0b;
+  --bad: #dc2626;
+  --border: #e5e7eb;    /* light border */
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, sans-serif; color: var(--text); background: var(--bg); }
+
+.app { display: grid; grid-template-columns: 1fr 5fr; min-height: 100vh; }
+.sidebar { background: var(--panel); border-right: 1px solid var(--border); padding: 16px; }
+.brand { font-weight: 700; color: var(--brand); margin-bottom: 16px; }
+.tabs { display: flex; flex-direction: column; gap: 8px; }
+.tab { text-align: left; background: #f3f4f6; color: var(--text); padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; text-decoration: none; }
+.tab[disabled] { opacity: 0.5; cursor: not-allowed; }
+.tab.active { outline: 2px solid var(--brand); }
+
+.content { padding: 16px 24px; }
+.view { display: none; }
+.view.active { display: block; }
+
+.top-strip { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
+.kpi { background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 6px; }
+.kpi .label { color: var(--muted); font-size: 12px; }
+.kpi .value { font-size: 18px; font-weight: 600; }
+
+table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--border); }
+th, td { border-bottom: 1px solid var(--border); padding: 8px 10px; text-align: left; color: var(--text); }
+thead th { position: sticky; top: 0; background: #f3f4f6; z-index: 1; }
+tbody tr:hover { background: #f9fafb; cursor: pointer; }
+
+.badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12px; }
+.badge.green { background: rgba(22,163,74,.12); color: var(--ok); }
+.badge.yellow { background: rgba(245,158,11,.12); color: var(--warn); }
+.badge.red { background: rgba(220,38,38,.12); color: var(--bad); }
+
+.kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px; }
+.section { margin-top: 16px; }
+
+.muted { color: var(--muted); }
+
+/* Scrollable large tables (e.g., Per Slice Diff) */
+.table-container {
+  max-height: calc(9 * 42px + 44px); /* ~9 rows + header */
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.table-container table {
+  border: 0; /* avoid double border inside container */
+}
