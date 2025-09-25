@@ -114,6 +114,19 @@
     await Promise.all(tasks);
   }
 
+  async function loadPortfolioMeta(){
+    try {
+      const viaHttp = (typeof location !== 'undefined' && location.protocol !== 'file:');
+      if (!viaHttp) return; // avoid fetch errors on file://
+      const resp = await fetch('data/static/portfolio.json', { cache: 'no-store' });
+      if (resp.ok){
+        const jd = await resp.json();
+        if (jd && jd.portfolioSummary) window.portfolioSummary = jd.portfolioSummary;
+        if (jd && Array.isArray(jd.assetPortfolio)) window.assetPortfolio = jd.assetPortfolio;
+      }
+    } catch (e) { /* ignore */ }
+  }
+
   async function renderSlaProjectsTable(){
     const mount = document.getElementById('slaTable');
     if (!mount){ return; }
@@ -133,6 +146,12 @@
       if (s && typeof s.targetPct === 'number') return s.targetPct;
       return 88.0;
     }
+    function getSohTargetPct(){
+      const s = window.portfolioSummary && window.portfolioSummary.slaMetrics && window.portfolioSummary.slaMetrics.stateOfHealthRetention;
+      if (s && typeof s.target === 'string'){ const m = String(s.target).match(/([0-9]+(?:\.[0-9]+)?)/); if (m) return Number(m[1]); }
+      if (s && typeof s.targetPct === 'number') return s.targetPct;
+      return 70.0;
+    }
     function rteStatus(rte, target, buffer){
       if (typeof rte !== 'number' || !isFinite(rte)) return null;
       if (rte < target) return 'red';
@@ -140,14 +159,33 @@
       return 'green';
     }
     const targetRte = getRteTargetPct();
+    const targetSoh = getSohTargetPct();
+
+    function computeProjectSoh(project){
+      const bats = (project && project.batteries) ? project.batteries : [];
+      let baseSum = 0, latestSum = 0, count = 0;
+      for (const b of bats){
+        const soh = b && b.soh;
+        if (!soh || !soh.baseline || !Array.isArray(soh.tests) || !soh.tests.length) continue;
+        const base = Number(soh.baseline.usable_kwh);
+        const latest = soh.tests.slice().sort((a,b)=> new Date(a.ts)-new Date(b.ts)).slice(-1)[0];
+        const latestVal = Number(latest && latest.usable_kwh);
+        if (!isFinite(base) || base <= 0 || !isFinite(latestVal) || latestVal <= 0) continue;
+        baseSum += base;
+        latestSum += latestVal;
+        count++;
+      }
+      if (baseSum <= 0 || count === 0) return null;
+      return (latestSum / baseSum) * 100;
+    }
 
     let html = '<div class="table-container"><table><thead><tr>'+
-      '<th>Project</th><th>Time Availability</th><th>Dispatch Availability</th><th>RTE</th><th>Targets</th>'+
+      '<th>Project</th><th>Time Availability</th><th>Dispatch Availability</th><th>RTE</th><th>SoH</th><th>Targets</th>'+
       '</tr></thead><tbody>';
     for (const p of projects){
       const rev = revenue[p.projectId];
       if (!rev){
-        html += `<tr data-id="${p.projectId}"><td>${p.name}</td><td colspan="4"><span class="muted">No dataset available</span></td></tr>`;
+        html += `<tr data-id="${p.projectId}"><td>${p.name}</td><td colspan="5"><span class="muted">No dataset available</span></td></tr>`;
         continue;
       }
       const m = computeProjectSla(rev, fallbackTarget);
@@ -155,12 +193,17 @@
       const rteStr = (typeof m.rte_pct === 'number') ? m.rte_pct.toFixed(1) + '%' : '—';
       const status = rteStatus(m.rte_pct, targetRte, 5);
       const rteBadge = status ? `<span class="badge ${status}">${status==='green'?'ok':(status==='yellow'?'warn':'risk')}</span>` : '';
+      const sohPct = computeProjectSoh(p);
+      const sohStatus = rteStatus(sohPct, targetSoh, 5);
+      const sohStr = (typeof sohPct === 'number') ? sohPct.toFixed(1) + '%' : '—';
+      const sohBadge = sohStatus ? `<span class="badge ${sohStatus}">${sohStatus==='green'?'ok':(sohStatus==='yellow'?'warn':'risk')}</span>` : '';
       html += `<tr data-id="${p.projectId}">
         <td>${p.name}</td>
         <td>${m.a_time_pct.toFixed(1)}% (target ${m.sla_target_pct}%) ${timeOk ? '<span class="badge green">ok</span>' : '<span class="badge red">risk</span>'}</td>
         <td>${m.a_dispatch_pct.toFixed(1)}%</td>
         <td>${rteStr} ${rteBadge}</td>
-        <td>Time ≥${m.sla_target_pct}%, RTE ≥${targetRte}%</td>
+        <td>${sohStr} ${sohBadge}</td>
+        <td>Time ≥${m.sla_target_pct}%, RTE ≥${targetRte}%, SoH ≥${targetSoh}%</td>
       </tr>`;
     }
     html += '</tbody></table></div>';
@@ -248,8 +291,25 @@
   }
 
   // Init
+  async function loadProjectsMeta(){
+    try {
+      const viaHttp = (typeof location !== 'undefined' && location.protocol !== 'file:');
+      if (!viaHttp) return; // avoid fetch errors on file://
+      const resp = await fetch('data/static/projects.json', { cache: 'no-store' });
+      if (resp.ok){
+        const jd = await resp.json();
+        const arr = Array.isArray(jd) ? jd : (Array.isArray(jd.projects) ? jd.projects : []);
+        if (arr.length){
+          window.projects = arr;
+          window.getProjectById = id => arr.find(p => p.projectId === id) || null;
+        }
+      }
+    } catch (e) { /* ignore */ }
+  }
+
   (async function init(){
     try {
+      await Promise.all([loadPortfolioMeta(), loadProjectsMeta()]);
       const built = await rebuildOverviewFromStatic();
       renderTopStrip(built.summary);
       renderPortfolioTable(built.rows);

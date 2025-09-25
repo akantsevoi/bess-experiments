@@ -1,0 +1,246 @@
+{
+  "projects": [
+    {
+      "projectId": "P-001",
+      "name": "Hamburg BESS",
+      "location": { "city": "Hamburg", "country": "DE", "lat": 53.55, "lon": 10.0 },
+      "sizeMWh": 80,
+      "batteries": [
+        { "battery_id": "B1", "capacity_kwh": 20000, "power_kw": 5000, "supplier": "VendorX", "model": "VX-5000", "commissionedAt": "2024-04-01T00:00:00Z",
+          "soh": { "baseline": { "ts": "2024-04-05T00:00:00Z", "usable_kwh": 19000 },
+            "tests": [
+              { "ts": "2025-09-15T00:00:00Z", "usable_kwh": 18700 },
+              { "ts": "2025-09-16T00:00:00Z", "usable_kwh": 18690 },
+              { "ts": "2025-09-17T00:00:00Z", "usable_kwh": 18680 },
+              { "ts": "2025-09-18T00:00:00Z", "usable_kwh": 18670 },
+              { "ts": "2025-09-19T00:00:00Z", "usable_kwh": 18660 },
+              { "ts": "2025-09-20T00:00:00Z", "usable_kwh": 18655 },
+              { "ts": "2025-09-21T00:00:00Z", "usable_kwh": 18650 }
+            ] } },
+        { "battery_id": "B2", "capacity_kwh": 20000, "power_kw": 5000, "supplier": "VendorX", "model": "VX-5000", "commissionedAt": "2024-04-01T00:00:00Z",
+          "soh": { "baseline": { "ts": "2024-04-05T00:00:00Z", "usable_kwh": 18950 },
+            "tests": [
+              { "ts": "2025-09-15T00:00:00Z", "usable_kwh": 18660 },
+              { "ts": "2025-09-16T00:00:00Z", "usable_kwh": 18655 },
+              { "ts": "2025-09-17T00:00:00Z", "usable_kwh": 18650 },
+              { "ts": "2025-09-18T00:00:00Z", "usable_kwh": 18645 },
+              { "ts": "2025-09-19T00:00:00Z", "usable_kwh": 18640 },
+              { "ts": "2025-09-20T00:00:00Z", "usable_kwh": 18635 },
+              { "ts": "2025-09-21T00:00:00Z", "usable_kwh": 18630 }
+            ] } },
+        { "battery_id": "B3", "capacity_kwh": 20000, "power_kw": 5000, "supplier": "VendorX", "model": "VX-5000", "commissionedAt": "2024-04-01T00:00:00Z",
+          "soh": { "baseline": { "ts": "2024-04-05T00:00:00Z", "usable_kwh": 19100 },
+            "tests": [
+              { "ts": "2025-09-15T00:00:00Z", "usable_kwh": 18820 },
+              { "ts": "2025-09-16T00:00:00Z", "usable_kwh": 18810 },
+              { "ts": "2025-09-17T00:00:00Z", "usable_kwh": 18805 },
+              { "ts": "2025-09-18T00:00:00Z", "usable_kwh": 18800 },
+              { "ts": "2025-09-19T00:00:00Z", "usable_kwh": 18795 },
+              { "ts": "2025-09-20T00:00:00Z", "usable_kwh": 18790 },
+              { "ts": "2025-09-21T00:00:00Z", "usable_kwh": 18785 }
+            ] } },
+        { "battery_id": "B4", "capacity_kwh": 20000, "power_kw": 5000, "supplier": "VendorX", "model": "VX-5000", "commissionedAt": "2024-04-01T00:00:00Z",
+          "soh": { "baseline": { "ts": "2024-04-05T00:00:00Z", "usable_kwh": 18900 },
+            "tests": [
+              { "ts": "2025-09-15T00:00:00Z", "usable_kwh": 18620 },
+              { "ts": "2025-09-16T00:00:00Z", "usable_kwh": 18615 },
+              { "ts": "2025-09-17T00:00:00Z", "usable_kwh": 18610 },
+              { "ts": "2025-09-18T00:00:00Z", "usable_kwh": 18605 },
+              { "ts": "2025-09-19T00:00:00Z", "usable_kwh": 18600 },
+              { "ts": "2025-09-20T00:00:00Z", "usable_kwh": 18595 },
+              { "ts": "2025-09-21T00:00:00Z", "usable_kwh": 18590 }
+            ] } }
+      ],
+      "slaStatus": "green",
+      "uptimePct": 97.8,
+      "revenueLoss": {
+        "window": { "start": "2025-09-20T00:00:00Z", "end": "2025-09-22T00:00:00Z" },
+        "kpi": { "revPredEur": 12840.32, "revActEur": 12105.91, "lossEur": 734.41, "lossDowntimeEur": 420.0, "utilizationPct": 83.5, "timeAvailabilityPct": 98.2, "dispatchAvailabilityPct": 96.1, "priceWeightedAvailabilityPct": 95.4, "headroomCostEur": 210.55, "distanceToBreachMin": 320 },
+        "cumulative": [],
+        "dailyBreakdown": [
+          { "date": "2025-09-20", "revPredEur": 6400.12, "revActEur": 6100.01, "lossEur": 300.11, "lossDowntimeEur": 160.0, "utilizationPct": 82.3, "timeAvailabilityPct": 98.5, "dispatchAvailabilityPct": 96.8, "headroomCostEur": 90.21 },
+          { "date": "2025-09-21", "revPredEur": 6440.2, "revActEur": 6005.9, "lossEur": 434.3, "lossDowntimeEur": 260.0, "utilizationPct": 84.7, "timeAvailabilityPct": 97.9, "dispatchAvailabilityPct": 95.5, "headroomCostEur": 120.34 }
+        ],
+        "lossBreakdown": { "downtimeEur": 420.0, "deviationEur": 314.41 }
+      },
+      "errorsOpen": [
+        { "errorId": "E-123", "projectId": "P-001", "batteryId": "B1", "firstSeenAt": "2025-09-21T14:20:00Z", "status": "maintenance_scheduled", "severity": "critical", "title": "DC bus overvoltage", "actionHint": "Check inverter DC link and precharge circuit.", "manualUrl": "https://vendorx.com/manuals/vx5000.pdf", "manualPage": 132, "ticketId": "TCK-7789", "maintenance": { "scheduledAt": "2025-09-24T08:00:00Z", "durationMin": 120 } },
+        { "errorId": "E-456", "projectId": "P-001", "batteryId": "B3", "firstSeenAt": "2025-09-22T05:10:00Z", "status": "acknowledged", "severity": "medium", "title": "Cell temperature imbalance", "actionHint": "Run thermal calibration and inspect coolant loop.", "manualUrl": "https://vendorx.com/manuals/vx5000.pdf", "manualPage": 88, "ticketId": null, "maintenance": null }
+      ]
+    },
+    {
+      "projectId": "P-002",
+      "name": "Stockholm BESS",
+      "location": { "city": "Stockholm", "country": "SE", "lat": 59.33, "lon": 18.07 },
+      "sizeMWh": 80,
+      "batteries": [
+        { "battery_id": "S1", "capacity_kwh": 26000, "power_kw": 6000, "supplier": "NordCell", "model": "NC-6M", "commissionedAt": "2024-06-15T00:00:00Z",
+          "soh": { "baseline": { "ts": "2024-06-20T00:00:00Z", "usable_kwh": 24700 },
+            "tests": [
+              { "ts": "2025-09-15T00:00:00Z", "usable_kwh": 24390 },
+              { "ts": "2025-09-16T00:00:00Z", "usable_kwh": 24380 },
+              { "ts": "2025-09-17T00:00:00Z", "usable_kwh": 24375 },
+              { "ts": "2025-09-18T00:00:00Z", "usable_kwh": 24370 },
+              { "ts": "2025-09-19T00:00:00Z", "usable_kwh": 24360 },
+              { "ts": "2025-09-20T00:00:00Z", "usable_kwh": 24355 },
+              { "ts": "2025-09-21T00:00:00Z", "usable_kwh": 24350 }
+            ] } },
+        { "battery_id": "S2", "capacity_kwh": 26000, "power_kw": 6000, "supplier": "NordCell", "model": "NC-6M", "commissionedAt": "2024-06-15T00:00:00Z",
+          "soh": { "baseline": { "ts": "2024-06-20T00:00:00Z", "usable_kwh": 24650 },
+            "tests": [
+              { "ts": "2025-09-15T00:00:00Z", "usable_kwh": 24340 },
+              { "ts": "2025-09-16T00:00:00Z", "usable_kwh": 24335 },
+              { "ts": "2025-09-17T00:00:00Z", "usable_kwh": 24330 },
+              { "ts": "2025-09-18T00:00:00Z", "usable_kwh": 24325 },
+              { "ts": "2025-09-19T00:00:00Z", "usable_kwh": 24320 },
+              { "ts": "2025-09-20T00:00:00Z", "usable_kwh": 24315 },
+              { "ts": "2025-09-21T00:00:00Z", "usable_kwh": 24310 }
+            ] } },
+        { "battery_id": "S3", "capacity_kwh": 26000, "power_kw": 6000, "supplier": "NordCell", "model": "NC-6M", "commissionedAt": "2024-06-15T00:00:00Z",
+          "soh": { "baseline": { "ts": "2024-06-20T00:00:00Z", "usable_kwh": 24800 },
+            "tests": [
+              { "ts": "2025-09-15T00:00:00Z", "usable_kwh": 24520 },
+              { "ts": "2025-09-16T00:00:00Z", "usable_kwh": 24510 },
+              { "ts": "2025-09-17T00:00:00Z", "usable_kwh": 24505 },
+              { "ts": "2025-09-18T00:00:00Z", "usable_kwh": 24500 },
+              { "ts": "2025-09-19T00:00:00Z", "usable_kwh": 24495 },
+              { "ts": "2025-09-20T00:00:00Z", "usable_kwh": 24490 },
+              { "ts": "2025-09-21T00:00:00Z", "usable_kwh": 24485 }
+            ] } }
+      ],
+      "slaStatus": "yellow",
+      "uptimePct": 95.6,
+      "revenueLoss": {
+        "window": { "start": "2025-09-20T00:00:00Z", "end": "2025-09-22T00:00:00Z" },
+        "kpi": { "revPredEur": 10100.0, "revActEur": 9550.0, "lossEur": 550.0, "lossDowntimeEur": 380.0, "utilizationPct": 78.2, "timeAvailabilityPct": 95.2, "dispatchAvailabilityPct": 93.0, "priceWeightedAvailabilityPct": 92.2, "headroomCostEur": 140.1, "distanceToBreachMin": 80 },
+        "cumulative": [],
+        "dailyBreakdown": [
+          { "date": "2025-09-20", "revPredEur": 5050.0, "revActEur": 4800.0, "lossEur": 250.0, "lossDowntimeEur": 180.0, "utilizationPct": 77.8, "timeAvailabilityPct": 95.6, "dispatchAvailabilityPct": 93.2, "headroomCostEur": 70.0 },
+          { "date": "2025-09-21", "revPredEur": 5050.0, "revActEur": 4750.0, "lossEur": 300.0, "lossDowntimeEur": 200.0, "utilizationPct": 78.6, "timeAvailabilityPct": 94.8, "dispatchAvailabilityPct": 92.8, "headroomCostEur": 70.1 }
+        ],
+        "lossBreakdown": { "downtimeEur": 380.0, "deviationEur": 170.0 }
+      },
+      "errorsOpen": [
+        { "errorId": "E-789", "projectId": "P-002", "batteryId": "S2", "firstSeenAt": "2025-09-21T09:45:00Z", "status": "in_progress", "severity": "low", "title": "Sensor calibration drift", "actionHint": "Recalibrate SoC estimator and verify voltage taps.", "manualUrl": "https://nordcell.example/manuals/nc-6m.pdf", "manualPage": 54, "ticketId": "TCK-8899", "maintenance": { "scheduledAt": "2025-09-23T10:00:00Z", "durationMin": 45 } }
+      ]
+    },
+    {
+      "projectId": "P-003",
+      "name": "Berlin BESS",
+      "location": { "city": "Berlin", "country": "DE", "lat": 52.52, "lon": 13.4 },
+      "sizeMWh": 120,
+      "batteries": [
+        { "battery_id": "BL1", "capacity_kwh": 30000, "power_kw": 7000, "supplier": "GerStor", "model": "GS-7K", "commissionedAt": "2024-03-10T00:00:00Z",
+          "soh": { "baseline": { "ts": "2024-03-20T00:00:00Z", "usable_kwh": 28500 },
+            "tests": [
+              { "ts": "2025-09-15T00:00:00Z", "usable_kwh": 27900 },
+              { "ts": "2025-09-16T00:00:00Z", "usable_kwh": 27890 },
+              { "ts": "2025-09-17T00:00:00Z", "usable_kwh": 27880 },
+              { "ts": "2025-09-18T00:00:00Z", "usable_kwh": 27870 },
+              { "ts": "2025-09-19T00:00:00Z", "usable_kwh": 27860 },
+              { "ts": "2025-09-20T00:00:00Z", "usable_kwh": 27850 },
+              { "ts": "2025-09-21T00:00:00Z", "usable_kwh": 27840 }
+            ] } },
+        { "battery_id": "BL2", "capacity_kwh": 30000, "power_kw": 7000, "supplier": "GerStor", "model": "GS-7K", "commissionedAt": "2024-03-10T00:00:00Z",
+          "soh": { "baseline": { "ts": "2024-03-20T00:00:00Z", "usable_kwh": 28400 },
+            "tests": [
+              { "ts": "2025-09-15T00:00:00Z", "usable_kwh": 27820 },
+              { "ts": "2025-09-16T00:00:00Z", "usable_kwh": 27810 },
+              { "ts": "2025-09-17T00:00:00Z", "usable_kwh": 27800 },
+              { "ts": "2025-09-18T00:00:00Z", "usable_kwh": 27790 },
+              { "ts": "2025-09-19T00:00:00Z", "usable_kwh": 27780 },
+              { "ts": "2025-09-20T00:00:00Z", "usable_kwh": 27770 },
+              { "ts": "2025-09-21T00:00:00Z", "usable_kwh": 27760 }
+            ] } },
+        { "battery_id": "BL3", "capacity_kwh": 30000, "power_kw": 7000, "supplier": "GerStor", "model": "GS-7K", "commissionedAt": "2024-03-10T00:00:00Z",
+          "soh": { "baseline": { "ts": "2024-03-20T00:00:00Z", "usable_kwh": 28600 },
+            "tests": [
+              { "ts": "2025-09-15T00:00:00Z", "usable_kwh": 28010 },
+              { "ts": "2025-09-16T00:00:00Z", "usable_kwh": 28000 },
+              { "ts": "2025-09-17T00:00:00Z", "usable_kwh": 27995 },
+              { "ts": "2025-09-18T00:00:00Z", "usable_kwh": 27990 },
+              { "ts": "2025-09-19T00:00:00Z", "usable_kwh": 27980 },
+              { "ts": "2025-09-20T00:00:00Z", "usable_kwh": 27975 },
+              { "ts": "2025-09-21T00:00:00Z", "usable_kwh": 27970 }
+            ] } },
+        { "battery_id": "BL4", "capacity_kwh": 15000, "power_kw": 5000, "supplier": "GerStor", "model": "GS-5K", "commissionedAt": "2024-03-10T00:00:00Z",
+          "soh": { "baseline": { "ts": "2024-03-20T00:00:00Z", "usable_kwh": 14250 },
+            "tests": [
+              { "ts": "2025-09-15T00:00:00Z", "usable_kwh": 13980 },
+              { "ts": "2025-09-16T00:00:00Z", "usable_kwh": 13975 },
+              { "ts": "2025-09-17T00:00:00Z", "usable_kwh": 13970 },
+              { "ts": "2025-09-18T00:00:00Z", "usable_kwh": 13965 },
+              { "ts": "2025-09-19T00:00:00Z", "usable_kwh": 13960 },
+              { "ts": "2025-09-20T00:00:00Z", "usable_kwh": 13955 },
+              { "ts": "2025-09-21T00:00:00Z", "usable_kwh": 13950 }
+            ] } },
+        { "battery_id": "BL5", "capacity_kwh": 15000, "power_kw": 5000, "supplier": "GerStor", "model": "GS-5K", "commissionedAt": "2024-03-10T00:00:00Z",
+          "soh": { "baseline": { "ts": "2024-03-20T00:00:00Z", "usable_kwh": 14300 },
+            "tests": [
+              { "ts": "2025-09-15T00:00:00Z", "usable_kwh": 14020 },
+              { "ts": "2025-09-16T00:00:00Z", "usable_kwh": 14015 },
+              { "ts": "2025-09-17T00:00:00Z", "usable_kwh": 14010 },
+              { "ts": "2025-09-18T00:00:00Z", "usable_kwh": 14005 },
+              { "ts": "2025-09-19T00:00:00Z", "usable_kwh": 14000 },
+              { "ts": "2025-09-20T00:00:00Z", "usable_kwh": 13995 },
+              { "ts": "2025-09-21T00:00:00Z", "usable_kwh": 13990 }
+            ] } }
+      ],
+      "slaStatus": "red",
+      "uptimePct": 93.2,
+      "revenueLoss": {
+        "window": { "start": "2025-09-20T00:00:00Z", "end": "2025-09-21T00:00:00Z" },
+        "kpi": { "revPredEur": 14200.0, "revActEur": 13220.0, "lossEur": 980.0, "lossDowntimeEur": 680.0, "utilizationPct": 72.1, "timeAvailabilityPct": 93.2, "dispatchAvailabilityPct": 90.5, "priceWeightedAvailabilityPct": 90.0, "headroomCostEur": 180.25, "distanceToBreachMin": 0 },
+        "cumulative": [],
+        "dailyBreakdown": [
+          { "date": "2025-09-20", "revPredEur": 14200.0, "revActEur": 13220.0, "lossEur": 980.0, "lossDowntimeEur": 680.0, "utilizationPct": 72.1, "timeAvailabilityPct": 93.2, "dispatchAvailabilityPct": 90.5, "headroomCostEur": 180.25 }
+        ],
+        "lossBreakdown": { "downtimeEur": 680.0, "deviationEur": 300.0 }
+      },
+      "errorsOpen": [
+        { "errorId": "E-901", "projectId": "P-003", "batteryId": "BL2", "firstSeenAt": "2025-09-20T04:20:00Z", "status": "maintenance_scheduled", "severity": "critical", "title": "PCS overtemperature", "actionHint": "Inspect cooling fans and heat sinks; schedule replacement.", "manualUrl": "https://gerstor.example/manuals/gs-7k.pdf", "manualPage": 67, "ticketId": "TCK-9901", "maintenance": { "scheduledAt": "2025-09-23T07:00:00Z", "durationMin": 90 } }
+      ]
+    },
+    {
+      "projectId": "P-004",
+      "name": "Frankfurt BESS",
+      "location": { "city": "Frankfurt", "country": "DE", "lat": 50.11, "lon": 8.68 },
+      "sizeMWh": 60,
+      "batteries": [
+        { "battery_id": "FF1", "capacity_kwh": 15000, "power_kw": 4000, "supplier": "GerStor", "model": "GS-4K", "commissionedAt": "2024-05-01T00:00:00Z",
+          "soh": { "baseline": { "ts": "2024-05-10T00:00:00Z", "usable_kwh": 14250 },
+            "tests": [
+              { "ts": "2025-09-15T00:00:00Z", "usable_kwh": 14010 },
+              { "ts": "2025-09-16T00:00:00Z", "usable_kwh": 14005 },
+              { "ts": "2025-09-17T00:00:00Z", "usable_kwh": 14000 },
+              { "ts": "2025-09-18T00:00:00Z", "usable_kwh": 13995 },
+              { "ts": "2025-09-19T00:00:00Z", "usable_kwh": 13990 },
+              { "ts": "2025-09-20T00:00:00Z", "usable_kwh": 13985 },
+              { "ts": "2025-09-21T00:00:00Z", "usable_kwh": 13980 }
+            ] } },
+        { "battery_id": "FF2", "capacity_kwh": 15000, "power_kw": 4000, "supplier": "GerStor", "model": "GS-4K", "commissionedAt": "2024-05-01T00:00:00Z",
+          "soh": { "baseline": { "ts": "2024-05-10T00:00:00Z", "usable_kwh": 14200 },
+            "tests": [
+              { "ts": "2025-09-15T00:00:00Z", "usable_kwh": 13970 },
+              { "ts": "2025-09-16T00:00:00Z", "usable_kwh": 13965 },
+              { "ts": "2025-09-17T00:00:00Z", "usable_kwh": 13960 },
+              { "ts": "2025-09-18T00:00:00Z", "usable_kwh": 13955 },
+              { "ts": "2025-09-19T00:00:00Z", "usable_kwh": 13950 },
+              { "ts": "2025-09-20T00:00:00Z", "usable_kwh": 13945 },
+              { "ts": "2025-09-21T00:00:00Z", "usable_kwh": 13940 }
+            ] } }
+      ],
+      "slaStatus": "green",
+      "uptimePct": 98.1,
+      "revenueLoss": {
+        "window": { "start": "2025-09-20T00:00:00Z", "end": "2025-09-21T00:00:00Z" },
+        "kpi": { "revPredEur": 5400.0, "revActEur": 5290.0, "lossEur": 110.0, "lossDowntimeEur": 20.0, "utilizationPct": 86.0, "timeAvailabilityPct": 98.7, "dispatchAvailabilityPct": 97.2, "priceWeightedAvailabilityPct": 97.0, "headroomCostEur": 10.5, "distanceToBreachMin": 380 },
+        "cumulative": [],
+        "dailyBreakdown": [ { "date": "2025-09-20", "revPredEur": 5400.0, "revActEur": 5290.0, "lossEur": 110.0, "lossDowntimeEur": 20.0, "utilizationPct": 86.0, "timeAvailabilityPct": 98.7, "dispatchAvailabilityPct": 97.2, "headroomCostEur": 10.5 } ],
+        "lossBreakdown": { "downtimeEur": 20.0, "deviationEur": 90.0 }
+      },
+      "errorsOpen": []
+    }
+  ]
+}
+

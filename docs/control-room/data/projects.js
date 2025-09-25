@@ -6,10 +6,62 @@
     location: { city: 'Hamburg', country: 'DE', lat: 53.55, lon: 10.00 },
     sizeMWh: 80,
     batteries: [
-      { battery_id: 'B1', capacity_kwh: 20000, power_kw: 5000, supplier: 'VendorX', model: 'VX-5000', commissionedAt: '2024-04-01T00:00:00Z' },
-      { battery_id: 'B2', capacity_kwh: 20000, power_kw: 5000, supplier: 'VendorX', model: 'VX-5000', commissionedAt: '2024-04-01T00:00:00Z' },
-      { battery_id: 'B3', capacity_kwh: 20000, power_kw: 5000, supplier: 'VendorX', model: 'VX-5000', commissionedAt: '2024-04-01T00:00:00Z' },
-      { battery_id: 'B4', capacity_kwh: 20000, power_kw: 5000, supplier: 'VendorX', model: 'VX-5000', commissionedAt: '2024-04-01T00:00:00Z' }
+      { battery_id: 'B1', capacity_kwh: 20000, power_kw: 5000, supplier: 'VendorX', model: 'VX-5000', commissionedAt: '2024-04-01T00:00:00Z',
+        soh: {
+          baseline: { ts: '2024-04-05T00:00:00Z', usable_kwh: 19000 },
+          tests: [
+            { ts: '2025-09-15T00:00:00Z', usable_kwh: 18700 },
+            { ts: '2025-09-16T00:00:00Z', usable_kwh: 18690 },
+            { ts: '2025-09-17T00:00:00Z', usable_kwh: 18680 },
+            { ts: '2025-09-18T00:00:00Z', usable_kwh: 18670 },
+            { ts: '2025-09-19T00:00:00Z', usable_kwh: 18660 },
+            { ts: '2025-09-20T00:00:00Z', usable_kwh: 18655 },
+            { ts: '2025-09-21T00:00:00Z', usable_kwh: 18650 }
+          ]
+        }
+      },
+      { battery_id: 'B2', capacity_kwh: 20000, power_kw: 5000, supplier: 'VendorX', model: 'VX-5000', commissionedAt: '2024-04-01T00:00:00Z',
+        soh: {
+          baseline: { ts: '2024-04-05T00:00:00Z', usable_kwh: 18950 },
+          tests: [
+            { ts: '2025-09-15T00:00:00Z', usable_kwh: 18660 },
+            { ts: '2025-09-16T00:00:00Z', usable_kwh: 18655 },
+            { ts: '2025-09-17T00:00:00Z', usable_kwh: 18650 },
+            { ts: '2025-09-18T00:00:00Z', usable_kwh: 18645 },
+            { ts: '2025-09-19T00:00:00Z', usable_kwh: 18640 },
+            { ts: '2025-09-20T00:00:00Z', usable_kwh: 18635 },
+            { ts: '2025-09-21T00:00:00Z', usable_kwh: 18630 }
+          ]
+        }
+      },
+      { battery_id: 'B3', capacity_kwh: 20000, power_kw: 5000, supplier: 'VendorX', model: 'VX-5000', commissionedAt: '2024-04-01T00:00:00Z',
+        soh: {
+          baseline: { ts: '2024-04-05T00:00:00Z', usable_kwh: 19100 },
+          tests: [
+            { ts: '2025-09-15T00:00:00Z', usable_kwh: 18820 },
+            { ts: '2025-09-16T00:00:00Z', usable_kwh: 18810 },
+            { ts: '2025-09-17T00:00:00Z', usable_kwh: 18805 },
+            { ts: '2025-09-18T00:00:00Z', usable_kwh: 18800 },
+            { ts: '2025-09-19T00:00:00Z', usable_kwh: 18795 },
+            { ts: '2025-09-20T00:00:00Z', usable_kwh: 18790 },
+            { ts: '2025-09-21T00:00:00Z', usable_kwh: 18785 }
+          ]
+        }
+      },
+      { battery_id: 'B4', capacity_kwh: 20000, power_kw: 5000, supplier: 'VendorX', model: 'VX-5000', commissionedAt: '2024-04-01T00:00:00Z',
+        soh: {
+          baseline: { ts: '2024-04-05T00:00:00Z', usable_kwh: 18900 },
+          tests: [
+            { ts: '2025-09-15T00:00:00Z', usable_kwh: 18620 },
+            { ts: '2025-09-16T00:00:00Z', usable_kwh: 18615 },
+            { ts: '2025-09-17T00:00:00Z', usable_kwh: 18610 },
+            { ts: '2025-09-18T00:00:00Z', usable_kwh: 18605 },
+            { ts: '2025-09-19T00:00:00Z', usable_kwh: 18600 },
+            { ts: '2025-09-20T00:00:00Z', usable_kwh: 18595 },
+            { ts: '2025-09-21T00:00:00Z', usable_kwh: 18590 }
+          ]
+        }
+      }
     ],
     slaStatus: 'green',
     uptimePct: 97.8,
@@ -58,9 +110,48 @@
     location: { city: 'Stockholm', country: 'SE', lat: 59.33, lon: 18.07 },
     sizeMWh: 80,
     batteries: [
-      { battery_id: 'S1', capacity_kwh: 26000, power_kw: 6000, supplier: 'NordCell', model: 'NC-6M', commissionedAt: '2024-06-15T00:00:00Z' },
-      { battery_id: 'S2', capacity_kwh: 26000, power_kw: 6000, supplier: 'NordCell', model: 'NC-6M', commissionedAt: '2024-06-15T00:00:00Z' },
-      { battery_id: 'S3', capacity_kwh: 26000, power_kw: 6000, supplier: 'NordCell', model: 'NC-6M', commissionedAt: '2024-06-15T00:00:00Z' }
+      { battery_id: 'S1', capacity_kwh: 26000, power_kw: 6000, supplier: 'NordCell', model: 'NC-6M', commissionedAt: '2024-06-15T00:00:00Z',
+        soh: {
+          baseline: { ts: '2024-06-20T00:00:00Z', usable_kwh: 24700 },
+          tests: [
+            { ts: '2025-09-15T00:00:00Z', usable_kwh: 24390 },
+            { ts: '2025-09-16T00:00:00Z', usable_kwh: 24380 },
+            { ts: '2025-09-17T00:00:00Z', usable_kwh: 24375 },
+            { ts: '2025-09-18T00:00:00Z', usable_kwh: 24370 },
+            { ts: '2025-09-19T00:00:00Z', usable_kwh: 24360 },
+            { ts: '2025-09-20T00:00:00Z', usable_kwh: 24355 },
+            { ts: '2025-09-21T00:00:00Z', usable_kwh: 24350 }
+          ]
+        }
+      },
+      { battery_id: 'S2', capacity_kwh: 26000, power_kw: 6000, supplier: 'NordCell', model: 'NC-6M', commissionedAt: '2024-06-15T00:00:00Z',
+        soh: {
+          baseline: { ts: '2024-06-20T00:00:00Z', usable_kwh: 24650 },
+          tests: [
+            { ts: '2025-09-15T00:00:00Z', usable_kwh: 24340 },
+            { ts: '2025-09-16T00:00:00Z', usable_kwh: 24335 },
+            { ts: '2025-09-17T00:00:00Z', usable_kwh: 24330 },
+            { ts: '2025-09-18T00:00:00Z', usable_kwh: 24325 },
+            { ts: '2025-09-19T00:00:00Z', usable_kwh: 24320 },
+            { ts: '2025-09-20T00:00:00Z', usable_kwh: 24315 },
+            { ts: '2025-09-21T00:00:00Z', usable_kwh: 24310 }
+          ]
+        }
+      },
+      { battery_id: 'S3', capacity_kwh: 26000, power_kw: 6000, supplier: 'NordCell', model: 'NC-6M', commissionedAt: '2024-06-15T00:00:00Z',
+        soh: {
+          baseline: { ts: '2024-06-20T00:00:00Z', usable_kwh: 24800 },
+          tests: [
+            { ts: '2025-09-15T00:00:00Z', usable_kwh: 24520 },
+            { ts: '2025-09-16T00:00:00Z', usable_kwh: 24510 },
+            { ts: '2025-09-17T00:00:00Z', usable_kwh: 24505 },
+            { ts: '2025-09-18T00:00:00Z', usable_kwh: 24500 },
+            { ts: '2025-09-19T00:00:00Z', usable_kwh: 24495 },
+            { ts: '2025-09-20T00:00:00Z', usable_kwh: 24490 },
+            { ts: '2025-09-21T00:00:00Z', usable_kwh: 24485 }
+          ]
+        }
+      }
     ],
     slaStatus: 'yellow',
     uptimePct: 95.6,
@@ -102,11 +193,76 @@
     location: { city: 'Berlin', country: 'DE', lat: 52.52, lon: 13.40 },
     sizeMWh: 120,
     batteries: [
-      { battery_id: 'BL1', capacity_kwh: 30000, power_kw: 7000, supplier: 'GerStor', model: 'GS-7K', commissionedAt: '2024-03-10T00:00:00Z' },
-      { battery_id: 'BL2', capacity_kwh: 30000, power_kw: 7000, supplier: 'GerStor', model: 'GS-7K', commissionedAt: '2024-03-10T00:00:00Z' },
-      { battery_id: 'BL3', capacity_kwh: 30000, power_kw: 7000, supplier: 'GerStor', model: 'GS-7K', commissionedAt: '2024-03-10T00:00:00Z' },
-      { battery_id: 'BL4', capacity_kwh: 15000, power_kw: 5000, supplier: 'GerStor', model: 'GS-5K', commissionedAt: '2024-03-10T00:00:00Z' },
-      { battery_id: 'BL5', capacity_kwh: 15000, power_kw: 5000, supplier: 'GerStor', model: 'GS-5K', commissionedAt: '2024-03-10T00:00:00Z' }
+      { battery_id: 'BL1', capacity_kwh: 30000, power_kw: 7000, supplier: 'GerStor', model: 'GS-7K', commissionedAt: '2024-03-10T00:00:00Z',
+        soh: {
+          baseline: { ts: '2024-03-20T00:00:00Z', usable_kwh: 28500 },
+          tests: [
+            { ts: '2025-09-15T00:00:00Z', usable_kwh: 27900 },
+            { ts: '2025-09-16T00:00:00Z', usable_kwh: 27890 },
+            { ts: '2025-09-17T00:00:00Z', usable_kwh: 27880 },
+            { ts: '2025-09-18T00:00:00Z', usable_kwh: 27870 },
+            { ts: '2025-09-19T00:00:00Z', usable_kwh: 27860 },
+            { ts: '2025-09-20T00:00:00Z', usable_kwh: 27850 },
+            { ts: '2025-09-21T00:00:00Z', usable_kwh: 27840 }
+          ]
+        }
+      },
+      { battery_id: 'BL2', capacity_kwh: 30000, power_kw: 7000, supplier: 'GerStor', model: 'GS-7K', commissionedAt: '2024-03-10T00:00:00Z',
+        soh: {
+          baseline: { ts: '2024-03-20T00:00:00Z', usable_kwh: 28400 },
+          tests: [
+            { ts: '2025-09-15T00:00:00Z', usable_kwh: 27820 },
+            { ts: '2025-09-16T00:00:00Z', usable_kwh: 27810 },
+            { ts: '2025-09-17T00:00:00Z', usable_kwh: 27800 },
+            { ts: '2025-09-18T00:00:00Z', usable_kwh: 27790 },
+            { ts: '2025-09-19T00:00:00Z', usable_kwh: 27780 },
+            { ts: '2025-09-20T00:00:00Z', usable_kwh: 27770 },
+            { ts: '2025-09-21T00:00:00Z', usable_kwh: 27760 }
+          ]
+        }
+      },
+      { battery_id: 'BL3', capacity_kwh: 30000, power_kw: 7000, supplier: 'GerStor', model: 'GS-7K', commissionedAt: '2024-03-10T00:00:00Z',
+        soh: {
+          baseline: { ts: '2024-03-20T00:00:00Z', usable_kwh: 28600 },
+          tests: [
+            { ts: '2025-09-15T00:00:00Z', usable_kwh: 28010 },
+            { ts: '2025-09-16T00:00:00Z', usable_kwh: 28000 },
+            { ts: '2025-09-17T00:00:00Z', usable_kwh: 27995 },
+            { ts: '2025-09-18T00:00:00Z', usable_kwh: 27990 },
+            { ts: '2025-09-19T00:00:00Z', usable_kwh: 27980 },
+            { ts: '2025-09-20T00:00:00Z', usable_kwh: 27975 },
+            { ts: '2025-09-21T00:00:00Z', usable_kwh: 27970 }
+          ]
+        }
+      },
+      { battery_id: 'BL4', capacity_kwh: 15000, power_kw: 5000, supplier: 'GerStor', model: 'GS-5K', commissionedAt: '2024-03-10T00:00:00Z',
+        soh: {
+          baseline: { ts: '2024-03-20T00:00:00Z', usable_kwh: 14250 },
+          tests: [
+            { ts: '2025-09-15T00:00:00Z', usable_kwh: 13980 },
+            { ts: '2025-09-16T00:00:00Z', usable_kwh: 13975 },
+            { ts: '2025-09-17T00:00:00Z', usable_kwh: 13970 },
+            { ts: '2025-09-18T00:00:00Z', usable_kwh: 13965 },
+            { ts: '2025-09-19T00:00:00Z', usable_kwh: 13960 },
+            { ts: '2025-09-20T00:00:00Z', usable_kwh: 13955 },
+            { ts: '2025-09-21T00:00:00Z', usable_kwh: 13950 }
+          ]
+        }
+      },
+      { battery_id: 'BL5', capacity_kwh: 15000, power_kw: 5000, supplier: 'GerStor', model: 'GS-5K', commissionedAt: '2024-03-10T00:00:00Z',
+        soh: {
+          baseline: { ts: '2024-03-20T00:00:00Z', usable_kwh: 14300 },
+          tests: [
+            { ts: '2025-09-15T00:00:00Z', usable_kwh: 14020 },
+            { ts: '2025-09-16T00:00:00Z', usable_kwh: 14015 },
+            { ts: '2025-09-17T00:00:00Z', usable_kwh: 14010 },
+            { ts: '2025-09-18T00:00:00Z', usable_kwh: 14005 },
+            { ts: '2025-09-19T00:00:00Z', usable_kwh: 14000 },
+            { ts: '2025-09-20T00:00:00Z', usable_kwh: 13995 },
+            { ts: '2025-09-21T00:00:00Z', usable_kwh: 13990 }
+          ]
+        }
+      }
     ],
     slaStatus: 'red',
     uptimePct: 93.2,
@@ -147,8 +303,34 @@
     location: { city: 'Frankfurt', country: 'DE', lat: 50.11, lon: 8.68 },
     sizeMWh: 60,
     batteries: [
-      { battery_id: 'FF1', capacity_kwh: 15000, power_kw: 4000, supplier: 'GerStor', model: 'GS-4K', commissionedAt: '2024-05-01T00:00:00Z' },
-      { battery_id: 'FF2', capacity_kwh: 15000, power_kw: 4000, supplier: 'GerStor', model: 'GS-4K', commissionedAt: '2024-05-01T00:00:00Z' }
+      { battery_id: 'FF1', capacity_kwh: 15000, power_kw: 4000, supplier: 'GerStor', model: 'GS-4K', commissionedAt: '2024-05-01T00:00:00Z',
+        soh: {
+          baseline: { ts: '2024-05-10T00:00:00Z', usable_kwh: 14250 },
+          tests: [
+            { ts: '2025-09-15T00:00:00Z', usable_kwh: 14010 },
+            { ts: '2025-09-16T00:00:00Z', usable_kwh: 14005 },
+            { ts: '2025-09-17T00:00:00Z', usable_kwh: 14000 },
+            { ts: '2025-09-18T00:00:00Z', usable_kwh: 13995 },
+            { ts: '2025-09-19T00:00:00Z', usable_kwh: 13990 },
+            { ts: '2025-09-20T00:00:00Z', usable_kwh: 13985 },
+            { ts: '2025-09-21T00:00:00Z', usable_kwh: 13980 }
+          ]
+        }
+      },
+      { battery_id: 'FF2', capacity_kwh: 15000, power_kw: 4000, supplier: 'GerStor', model: 'GS-4K', commissionedAt: '2024-05-01T00:00:00Z',
+        soh: {
+          baseline: { ts: '2024-05-10T00:00:00Z', usable_kwh: 14200 },
+          tests: [
+            { ts: '2025-09-15T00:00:00Z', usable_kwh: 13970 },
+            { ts: '2025-09-16T00:00:00Z', usable_kwh: 13965 },
+            { ts: '2025-09-17T00:00:00Z', usable_kwh: 13960 },
+            { ts: '2025-09-18T00:00:00Z', usable_kwh: 13955 },
+            { ts: '2025-09-19T00:00:00Z', usable_kwh: 13950 },
+            { ts: '2025-09-20T00:00:00Z', usable_kwh: 13945 },
+            { ts: '2025-09-21T00:00:00Z', usable_kwh: 13940 }
+          ]
+        }
+      }
     ],
     slaStatus: 'green',
     uptimePct: 98.1,

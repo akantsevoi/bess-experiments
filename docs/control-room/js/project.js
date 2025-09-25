@@ -200,15 +200,48 @@
     }
   }
 
-  // Init
-  const id = qs('projectId', 'P-001');
-  const project = window.getProjectById ? window.getProjectById(id) : null;
-  if (!project){
-    document.querySelector('.content').innerHTML = `<p class="muted">Project not found: ${id}</p>`;
-    return;
+  async function loadProjectsMeta(){
+    try {
+      const viaHttp = (typeof location !== 'undefined' && location.protocol !== 'file:');
+      if (!viaHttp) return; // avoid fetch errors on file://
+      if (Array.isArray(window.projects) && window.projects.length) return;
+      const resp = await fetch('data/static/projects.json', { cache: 'no-store' });
+      if (resp.ok){
+        const jd = await resp.json();
+        const arr = Array.isArray(jd) ? jd : (Array.isArray(jd.projects) ? jd.projects : []);
+        if (arr.length){
+          window.projects = arr;
+          window.getProjectById = id => arr.find(p => p.projectId === id) || null;
+        }
+      }
+    } catch (e) { /* ignore */ }
   }
-  renderHeader(project);
-  // Do not render static revenue KPIs/daily table from project metadata,
-  // weekly charts/tables are computed from hardcoded datasets in revenue_static.js
-  renderBmsErrors(project);
+
+  async function loadPortfolioMeta(){
+    try {
+      const viaHttp = (typeof location !== 'undefined' && location.protocol !== 'file:');
+      if (!viaHttp) return; // avoid fetch errors on file://
+      if (window.portfolioSummary && window.assetPortfolio) return;
+      const resp = await fetch('data/static/portfolio.json', { cache: 'no-store' });
+      if (resp.ok){
+        const jd = await resp.json();
+        if (jd && jd.portfolioSummary) window.portfolioSummary = jd.portfolioSummary;
+        if (jd && Array.isArray(jd.assetPortfolio)) window.assetPortfolio = jd.assetPortfolio;
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  (async function init(){
+    await Promise.all([loadPortfolioMeta(), loadProjectsMeta()]);
+    const id = qs('projectId', 'P-001');
+    const project = window.getProjectById ? window.getProjectById(id) : (Array.isArray(window.projects) ? window.projects.find(p => p.projectId === id) : null);
+    if (!project){
+      document.querySelector('.content').innerHTML = `<p class="muted">Project not found: ${id}</p>`;
+      return;
+    }
+    renderHeader(project);
+    // Do not render static revenue KPIs/daily table from project metadata,
+    // weekly charts/tables are computed from hardcoded datasets in revenue_static.js
+    renderBmsErrors(project);
+  })();
 })();

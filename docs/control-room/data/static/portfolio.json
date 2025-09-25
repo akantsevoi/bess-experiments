@@ -1,0 +1,58 @@
+{
+  "portfolioSummary": {
+    "overallUptimePct": 96.4,
+    "slaConfig": {
+      "targetPct": 95,
+      "greenBufferPct": 2,
+      "yellowBufferPct": 1,
+      "window": { "start": "2025-09-01T00:00:00Z", "end": "2025-09-30T23:55:00Z" }
+    },
+    "totalProjects": 4,
+    "projectsByStatus": { "green": 2, "yellow": 1, "red": 1 },
+    "totalCapacityMWh": 340,
+    "lastUpdatedAt": "2025-09-25T00:00:00Z"
+  },
+  "assetPortfolio": [
+    {
+      "projectId": "P-001",
+      "name": "Hamburg BESS",
+      "slaStatus": "green",
+      "uptimePct": 97.8,
+      "lastMaintenanceAt": "2025-09-20T09:00:00Z",
+      "location": { "city": "Hamburg", "country": "DE", "lat": 53.55, "lon": 10.0 },
+      "sizeMWh": 80,
+      "batteryCount": 4
+    },
+    {
+      "projectId": "P-002",
+      "name": "Stockholm BESS",
+      "slaStatus": "yellow",
+      "uptimePct": 95.6,
+      "lastMaintenanceAt": "2025-09-18T12:00:00Z",
+      "location": { "city": "Stockholm", "country": "SE", "lat": 59.33, "lon": 18.07 },
+      "sizeMWh": 80,
+      "batteryCount": 3
+    },
+    {
+      "projectId": "P-003",
+      "name": "Berlin BESS",
+      "slaStatus": "red",
+      "uptimePct": 93.2,
+      "lastMaintenanceAt": "2025-09-15T11:30:00Z",
+      "location": { "city": "Berlin", "country": "DE", "lat": 52.52, "lon": 13.40 },
+      "sizeMWh": 120,
+      "batteryCount": 5
+    },
+    {
+      "projectId": "P-004",
+      "name": "Frankfurt BESS",
+      "slaStatus": "green",
+      "uptimePct": 98.1,
+      "lastMaintenanceAt": "2025-09-22T08:30:00Z",
+      "location": { "city": "Frankfurt", "country": "DE", "lat": 50.11, "lon": 8.68 },
+      "sizeMWh": 60,
+      "batteryCount": 2
+    }
+  ]
+}
+
