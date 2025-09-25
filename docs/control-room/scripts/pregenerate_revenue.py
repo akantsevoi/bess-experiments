@@ -31,6 +31,49 @@ def gen_week(start_str, end_str, batteries, price_fn, pred_fn, actual_fn):
         'slaPct': 95
     }
 
+# --- Helpers to enforce energy plausibility on actuals ---
+def _rebalance_energy(actual_rows, dt_min=5):
+    """
+    Ensure that, per battery, weekly discharged energy does not exceed charged energy.
+    Scales discharge or charge magnitudes down uniformly to match the smaller side.
+    """
+    from collections import defaultdict
+    dt_h = dt_min / 60.0
+    totals = defaultdict(lambda: {'chg': 0.0, 'dis': 0.0})
+    for r in actual_rows:
+        p = float(r.get('power_kw', 0) or 0)
+        if r.get('mode') == 'DOWNTIME' or p == 0:
+            continue
+        e = p * dt_h
+        if e > 0:
+            totals[r['battery_id']]['dis'] += e
+        elif e < 0:
+            totals[r['battery_id']]['chg'] += (-e)
+    # Compute scale factors
+    scale = { bid: {'pos': 1.0, 'neg': 1.0} for bid in totals.keys() }
+    for bid, t in totals.items():
+        chg, dis = t['chg'], t['dis']
+        if dis > chg and dis > 0:
+            scale[bid]['pos'] = max(chg / dis, 0.0)
+        elif chg > dis and chg > 0:
+            scale[bid]['neg'] = max(dis / chg, 0.0)
+    if not scale:
+        return actual_rows
+    # Apply scaling
+    out = []
+    for r in actual_rows:
+        p = float(r.get('power_kw', 0) or 0)
+        if r.get('mode') != 'DOWNTIME' and p != 0:
+            s = scale.get(r['battery_id'], {'pos':1.0,'neg':1.0})
+            if p > 0:
+                p = p * s['pos']
+            else:
+                p = p * s['neg']
+            r = dict(r)
+            r['power_kw'] = int(round(p))
+        out.append(r)
+    return out
+
 def write(name, obj):
     path = os.path.join(OUT_DIR, f'revenue-{name}.json')
     with open(path, 'w') as f:
@@ -122,7 +165,8 @@ def actual1(start,end,bats,pred):
             power = 0 if mode=='IDLE' else int(round(p['power_kw']*derate))
             rows.append({ 'battery_id':b['battery_id'], 'ts': iso(t), 'mode': mode, 'power_kw': power, 'soc_pct':50 })
         t += dt.timedelta(minutes=5)
-    return rows
+    # Rebalance energy per battery to avoid impossible RTE (>100%)
+    return _rebalance_energy(rows, dt_min=5)
 write('P-001', gen_week(START, END, bat1, price1, pred1, actual1))
 
 # P-002 Stockholm
@@ -144,6 +188,8 @@ def pred2(start,end,bats):
             { 'battery_id':'S1', 'start_ts': f'{yyyy}T{hour_jitter(16,f"P002:S1:{yyyy}:d"):02d}:00:00Z', 'end_ts': f'{yyyy}T{hour_jitter(22,f"P002:S1:{yyyy}:d_end"):02d}:00:00Z', 'mode':'DISCHARGE', 'power_kw': int(4000 + rand01(f"P002:S1:{yyyy}:dp")*600) },
             { 'battery_id':'S2', 'start_ts': f'{yyyy}T{hour_jitter(0,f"P002:S2:{yyyy}:c"):02d}:00:00Z', 'end_ts': f'{yyyy}T{hour_jitter(6,f"P002:S2:{yyyy}:c_end"):02d}:00:00Z', 'mode':'CHARGE', 'power_kw': -int(3300 + rand01(f"P002:S2:{yyyy}:cp")*500) },
             { 'battery_id':'S2', 'start_ts': f'{yyyy}T{hour_jitter(17,f"P002:S2:{yyyy}:d"):02d}:00:00Z', 'end_ts': f'{yyyy}T{hour_jitter(21,f"P002:S2:{yyyy}:d_end"):02d}:00:00Z', 'mode':'DISCHARGE', 'power_kw': int(3400 + rand01(f"P002:S2:{yyyy}:dp")*500) },
+            # Add missing nightly charge for S3 to avoid net discharge only
+            { 'battery_id':'S3', 'start_ts': f'{yyyy}T{hour_jitter(1,f"P002:S3:{yyyy}:c"):02d}:00:00Z', 'end_ts': f'{yyyy}T{hour_jitter(3,f"P002:S3:{yyyy}:c_end"):02d}:00:00Z', 'mode':'CHARGE', 'power_kw': -int(2000 + rand01(f"P002:S3:{yyyy}:cp")*400) },
             { 'battery_id':'S3', 'start_ts': f'{yyyy}T{hour_jitter(18,f"P002:S3:{yyyy}:d"):02d}:00:00Z', 'end_ts': f'{yyyy}T{hour_jitter(20,f"P002:S3:{yyyy}:d_end"):02d}:00:00Z', 'mode':'DISCHARGE', 'power_kw': int(2300 + rand01(f"P002:S3:{yyyy}:dp")*500) },
         ]
         d += dt.timedelta(days=1)
@@ -177,7 +223,7 @@ def actual2(start,end,bats,pred):
                 p=pred_at(b['battery_id'],t); mode=p['mode']; der=0.88 + jitter(f"P002:{b['battery_id']}:{t.strftime('%Y-%m-%dT%H')}", 0.06); power=0 if mode=='IDLE' else int(round(p['power_kw']*der))
                 out.append({ 'battery_id':b['battery_id'], 'ts':iso(t), 'mode':mode, 'power_kw':power, 'soc_pct':60 })
         t += dt.timedelta(minutes=5)
-    return out
+    return _rebalance_energy(out, dt_min=5)
 write('P-002', gen_week(START, END, bat2, price2, pred2, actual2))
 
 # P-003 Berlin (red)
@@ -231,7 +277,7 @@ def actual3(start,end,bats,pred):
                 p=pred_at(b['battery_id'],t); mode=p['mode']; der=0.8 + jitter(f"P003:{b['battery_id']}:{t.strftime('%Y-%m-%dT%H')}", 0.08); power=0 if mode=='IDLE' else int(round(p['power_kw']*der))
                 rows.append({ 'battery_id':b['battery_id'], 'ts':iso(t), 'mode':mode, 'power_kw':power, 'soc_pct':55 })
         t += dt.timedelta(minutes=5)
-    return rows
+    return _rebalance_energy(rows, dt_min=5)
 write('P-003', gen_week(START, END, bat3, price3, pred3, actual3))
 
 # P-004 Frankfurt (green)
@@ -283,5 +329,5 @@ def actual4(start,end,bats,pred):
                 p=pred_at(b['battery_id'],t); mode=p['mode']; der=0.95 + jitter(f"P004:{b['battery_id']}:{t.strftime('%Y-%m-%dT%H')}", 0.03); power=0 if mode=='IDLE' else int(round(p['power_kw']*der))
                 rows.append({ 'battery_id':b['battery_id'], 'ts':iso(t), 'mode':mode, 'power_kw':power, 'soc_pct':65 })
         t += dt.timedelta(minutes=5)
-    return rows
+    return _rebalance_energy(rows, dt_min=5)
 write('P-004', gen_week(START, END, bat4, price4, pred4, actual4))

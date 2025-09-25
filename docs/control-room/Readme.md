@@ -25,6 +25,9 @@ when click on "overview battery projects" -> "assetportfolio" -> "table item"
 Open a page dedicated for this particular battery project. With the sections:
 - revenue loss part
 	- details are in `docs/revenue-loss-demo` but in short: compares potential revenue with actual revenue and makes breakdown for the revenue loss reason: {downtime|misprediction|etc.}
+- SLA metrics
+	- per-battery Time Availability (A_time), Dispatch Availability (A_dispatch), and Round-Trip Efficiency (RTE) computed from the same datasets used for revenue analysis
+	- policy cards show targets and penalties for RTE and SoH retention (RTE target ≥88% quarterly; SoH target ≥70% at contract end-of-life, ≤2.5%/yr linear degradation)
 - errors from BMS(battery management system). Only not solved once
 	- date when error came
 	- status: {maintenance scheduled|}
@@ -205,6 +208,15 @@ const bmsErrors = [
   }
 ];
 ```
+
+## Utilities
+
+- Energy totals from static datasets
+  - Script: `docs/control-room/tools/calc_energy.js`
+  - Usage:
+    - `node docs/control-room/tools/calc_energy.js docs/control-room/data/static/revenue-P-001.json`
+    - Optional: `--interval <minutes>` to force a sample interval when it cannot be inferred (default 5).
+  - Output: total charge and total discharge (kWh) per battery and project totals, computed from actual 5‑minute series.
 
 ### Optional UI Meta
 - `Tab`

@@ -14,6 +14,24 @@ This project implements an optimization system for scheduling maintenance window
 - **Extensible Architecture**: Easy to add new cost components and constraints
 - **Multiple Examples**: Demonstrates different scenarios and use cases
 
+## Control Room (docs/control-room)
+
+An interactive, static demo UI for portfolio monitoring lives under `docs/control-room`. The portfolio overview now includes an SLA Metrics section at the bottom of the page showing portfolio-level SLA policies:
+
+- Time-Based Availability: Target derived from `SLA Target` (e.g., ≥95%). Measurement: fraction of non-downtime intervals within window. Displays current portfolio uptime.
+- Round-Trip Efficiency (RTE):
+  - Target: ≥88.0% measured quarterly
+  - Measurement: Total Energy Discharged ÷ Total Energy Charged × 100%
+  - Testing: Quarterly efficiency tests using standardized protocols
+  - Penalty: $5,000 per quarter if <85%, $10,000 if <80%
+- State of Health (SoH) Retention:
+  - Target: ≥70% of initial capacity at contract end-of-life
+  - Measurement: Annual capacity testing vs. nameplate capacity
+  - Guarantee: Linear degradation not exceeding 2.5% annually
+  - Penalty: Pro-rated capacity replacement cost for premature degradation
+
+Open `docs/control-room/index.html` in a browser to view the dashboard.
+
 ## Installation
 
 ### Prerequisites

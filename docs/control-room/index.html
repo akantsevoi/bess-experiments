@@ -11,8 +11,8 @@
       <aside class="sidebar">
         <div class="brand">Control Room</div>
         <nav class="tabs">
-          <button class="tab active" data-tab="overview">Overview Battery Projects</button>
-          <button class="tab" disabled>— more tabs later —</button>
+          <button type="button" class="tab active" data-tab="overview">Overview Battery Projects</button>
+          <button type="button" class="tab" data-tab="sla">SLA Metrics</button>
         </nav>
       </aside>
       <main class="content">
@@ -23,15 +23,27 @@
             <div id="portfolioTable"></div>
           </section>
         </section>
+        <section id="sla" class="view">
+          <header class="top-strip" id="topStripSla"></header>
+          <section>
+            <h2>Portfolio SLA Metrics</h2>
+            <div id="slaTable"></div>
+          </section>
+        </section>
       </main>
     </div>
 
     <!-- Data -->
     <script src="data/portfolio.js"></script>
     <script src="data/projects.js"></script>
+    <!-- Revenue datasets used for computing SLA metrics per project -->
+    <script src="data/revenue-P-001.js"></script>
+    <script src="data/revenue-P-002.js"></script>
+    <script src="data/revenue-P-003.js"></script>
+    <script src="data/revenue-P-004.js"></script>
     <!-- Logic -->
     <script src="js/util.js"></script>
+    <script src="js/energy_utils.js"></script>
     <script src="js/main.js"></script>
   </body>
   </html>
-
