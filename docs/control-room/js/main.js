@@ -21,14 +21,18 @@
     const mount = document.getElementById('portfolioTable');
     if (!rows?.length){ mount.innerHTML = '<p class="muted">No projects</p>'; return; }
     let html = '<table><thead><tr>'+
-      '<th>Name</th><th>SLA</th><th>Uptime</th><th>Last Maintenance</th><th>Location</th><th>Size (MWh)</th>'+
+      '<th>Name</th><th>Revenue (Pred / Act, Loss) EUR</th><th>Last Maintenance</th><th>Location</th><th>Size (MWh)</th>'+
       '</tr></thead><tbody>';
     for (const r of rows){
       const loc = `${r.location.city}, ${r.location.country}`;
+      const revPred = (typeof r.rev_pred_eur === 'number') ? (r.rev_pred_eur).toFixed(2) : '—';
+      const revAct = (typeof r.rev_act_eur === 'number') ? (r.rev_act_eur).toFixed(2) : '—';
+      const lossNum = (typeof r.loss_eur === 'number') ? r.loss_eur : null;
+      const lossClass = (lossNum == null) ? '' : (lossNum > 0 ? 'text-red' : (lossNum < 0 ? 'text-green' : ''));
+      const loss = (lossNum == null) ? '—' : `<span class="${lossClass}">${lossNum.toFixed(2)}</span>`;
       html += `<tr data-id="${r.projectId}">
         <td>${r.name}</td>
-        <td>${badge(r.slaStatus)}</td>
-        <td>${formatPct(r.uptimePct)}</td>
+        <td>${revPred} / ${revAct} (${loss})</td>
         <td>${r.lastMaintenanceAt ? formatDate(r.lastMaintenanceAt) : '-'}</td>
         <td>${loc}</td>
         <td>${r.sizeMWh}</td>
@@ -217,6 +221,50 @@
     });
   }
 
+  // Revenue summary aligned with revenue_static.js logic (simplified for totals)
+  function computeProjectRevenue(rev){
+    try {
+      const start = new Date(rev.window.start); const end = new Date(rev.window.end);
+      // Build 5-min price map
+      const pricePts = (rev.price || []).map(r => ({ ts: new Date(r.ts), price_eur_mwh: Number(r.price_eur_mwh), interval: Number(r.interval_min || 60) }));
+      pricePts.sort((a,b)=> a.ts - b.ts);
+      const price5 = [];
+      if (pricePts.length === 0) return null;
+      let idx = 0; let cur = pricePts[0].price_eur_mwh;
+      for (let t = new Date(start); t < end; t = new Date(t.getTime() + 5*60000)){
+        while (idx + 1 < pricePts.length && t >= pricePts[idx + 1].ts) { idx++; cur = pricePts[idx].price_eur_mwh; }
+        price5.push({ slice_ts: t.toISOString(), price_eur_kwh: cur / 1000 });
+      }
+      const priceMap = new Map(price5.map(p => [p.slice_ts, p.price_eur_kwh]));
+      // Predicted blocks index
+      const predBlocks = new Map();
+      for (const bl of (rev.pred || [])){ let arr = predBlocks.get(bl.battery_id); if (!arr){ arr = []; predBlocks.set(bl.battery_id, arr);} arr.push({ s:new Date(bl.start_ts).getTime(), e:new Date(bl.end_ts).getTime(), p:Number(bl.power_kw) }); }
+      function predAt(bid, tsIso){ const t = new Date(tsIso).getTime(); const arr = predBlocks.get(bid)||[]; for (let i=0;i<arr.length;i++){ const b=arr[i]; if (t>=b.s && t<b.e) return b.p; } return 0; }
+      // Actual map by battery and 5-min bucketed ts (normalize to avoid drift)
+      const actByBat = new Map();
+      for (const r of (rev.actual || [])){
+        let m = actByBat.get(r.battery_id); if (!m){ m = new Map(); actByBat.set(r.battery_id, m); }
+        const ts = new Date(r.ts); const bucket = new Date(Math.floor(ts.getTime()/300000)*300000).toISOString();
+        m.set(bucket, Number(r.power_kw||0));
+      }
+      const h = 5/60;
+      let revPred = 0, revAct = 0;
+      for (const b of (rev.batteries || [])){
+        const m = actByBat.get(b.battery_id) || new Map();
+        for (let i=0; i<price5.length; i++){
+          const ts = price5[i].slice_ts; const price = priceMap.get(ts);
+          const pPred = predAt(b.battery_id, ts);
+          const pAct = m.has(ts) ? Number(m.get(ts)) : 0;
+          revPred += (pPred * h) * price;
+          revAct  += (pAct  * h) * price;
+        }
+      }
+      // Ensure finite numbers
+      const clean = (v) => (isFinite(v) ? v : 0);
+      return { rev_pred_eur: clean(revPred), rev_act_eur: clean(revAct), loss_eur: clean(revPred - revAct) };
+    } catch (e) { return null; }
+  }
+
   function statusFromATime(aTimePct, slaConfig){
     const tgt = Number(slaConfig?.targetPct ?? 95);
     const green = Number(slaConfig?.greenBufferPct ?? 2);
@@ -241,12 +289,13 @@
       const meta = assetMeta.get(p.projectId) || p;
       if (rev){
         const m = computeProjectSla(rev, slaCfg.targetPct);
+        const rsum = computeProjectRevenue(rev);
         const status = statusFromATime(m.a_time_pct, slaCfg);
-        rows.push({ projectId: p.projectId, name: p.name, slaStatus: status, uptimePct: m.a_time_pct, lastMaintenanceAt: meta.lastMaintenanceAt || null, location: meta.location || p.location, sizeMWh: meta.sizeMWh || p.sizeMWh });
+        rows.push({ projectId: p.projectId, name: p.name, slaStatus: status, uptimePct: m.a_time_pct, lastMaintenanceAt: meta.lastMaintenanceAt || null, location: meta.location || p.location, sizeMWh: meta.sizeMWh || p.sizeMWh, rev_pred_eur: rsum ? rsum.rev_pred_eur : null, rev_act_eur: rsum ? rsum.rev_act_eur : null, loss_eur: rsum ? rsum.loss_eur : null });
         totalSlices += m.slices_total; downtimeSlices += m.downtime_slices; counts[status]++;
       } else {
         const status = meta.slaStatus || p.slaStatus || 'yellow';
-        rows.push({ projectId: p.projectId, name: p.name, slaStatus: status, uptimePct: meta.uptimePct || p.uptimePct || slaCfg.targetPct, lastMaintenanceAt: meta.lastMaintenanceAt || null, location: meta.location || p.location, sizeMWh: meta.sizeMWh || p.sizeMWh });
+        rows.push({ projectId: p.projectId, name: p.name, slaStatus: status, uptimePct: meta.uptimePct || p.uptimePct || slaCfg.targetPct, lastMaintenanceAt: meta.lastMaintenanceAt || null, location: meta.location || p.location, sizeMWh: meta.sizeMWh || p.sizeMWh, rev_pred_eur: null, rev_act_eur: null, loss_eur: null });
         counts[status]++;
       }
     }

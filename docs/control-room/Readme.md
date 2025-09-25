@@ -76,7 +76,7 @@ const portfolioSummary = {
 };
 ```
 
-### Asset Portfolio (Table)
+### Financial performance (Table)
 - `ProjectListItem`
   - `projectId`: string
   - `name`: string

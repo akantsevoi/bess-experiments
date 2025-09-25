@@ -11,7 +11,7 @@
       <aside class="sidebar">
         <div class="brand">Control Room</div>
         <nav class="tabs">
-          <button type="button" class="tab active" data-tab="overview">Overview Battery Projects</button>
+          <button type="button" class="tab active" data-tab="overview">Financial Performance</button>
           <button type="button" class="tab" data-tab="sla">SLA Metrics</button>
         </nav>
       </aside>
@@ -19,7 +19,7 @@
         <section id="overview" class="view active">
           <header class="top-strip" id="topStrip"></header>
           <section>
-            <h2>Asset Portfolio</h2>
+            <h2>Financial performance</h2>
             <div id="portfolioTable"></div>
           </section>
         </section>
@@ -35,11 +35,7 @@
 
     <!-- Data -->
     <!-- Projects meta will be fetched from data/static/projects.json -->
-    <!-- Revenue datasets used for computing SLA metrics per project -->
-    <script src="data/revenue-P-001.js"></script>
-    <script src="data/revenue-P-002.js"></script>
-    <script src="data/revenue-P-003.js"></script>
-    <script src="data/revenue-P-004.js"></script>
+    <!-- Revenue datasets are loaded from data/static/revenue-<ID>.json at runtime -->
     <!-- Logic -->
     <script src="js/util.js"></script>
     <script src="js/energy_utils.js"></script>

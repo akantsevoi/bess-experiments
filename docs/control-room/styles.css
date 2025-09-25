@@ -45,6 +45,10 @@ tbody tr:hover { background: #f9fafb; cursor: pointer; }
 
 .muted { color: var(--muted); }
 
+/* Text helpers for positive/negative emphasis */
+.text-green { color: var(--ok); }
+.text-red { color: var(--bad); }
+
 /* Scrollable large tables (e.g., Per Slice Diff) */
 .table-container {
   max-height: calc(9 * 42px + 44px); /* ~9 rows + header */
