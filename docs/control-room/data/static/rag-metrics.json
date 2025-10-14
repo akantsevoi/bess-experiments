@@ -1,0 +1,129 @@
+{
+  "P-001": {
+    "availability_reliability": {
+      "MTTR_h": 28,
+      "MTBF_h": 540,
+      "response_time_min": 35,
+      "component_availability_pct": 98.1,
+      "critical_alerts": 1,
+      "note": "Inverter failure (Supplier A)"
+    },
+    "maintenance_service": {
+      "preventive_pct": 92,
+      "corrective_closure_pct": 94,
+      "repeat_issue_rate_pct": 6,
+      "work_order_aging_h": 18
+    },
+    "performance_efficiency": {
+      "temp_compliance_pct": 96
+    },
+    "commercial": {
+      "sla_score_pct": 96,
+      "damages_eur": 0,
+      "warranty_time_days": 15,
+      "invoice_disputes": 0,
+      "clauses": {"availability": "4.2"}
+    },
+    "data_reporting": {
+      "telemetry_uptime_pct": 99.4,
+      "data_completeness_pct": 98.7,
+      "report_delivery_pct": 100,
+      "alarm_accuracy_pct": 98.5
+    }
+  },
+  "P-002": {
+    "availability_reliability": {
+      "MTTR_h": 20,
+      "MTBF_h": 420,
+      "response_time_min": 45,
+      "component_availability_pct": 96.9,
+      "critical_alerts": 0
+    },
+    "maintenance_service": {
+      "preventive_pct": 90,
+      "corrective_closure_pct": 92,
+      "repeat_issue_rate_pct": 9,
+      "work_order_aging_h": 30
+    },
+    "performance_efficiency": {
+      "temp_compliance_pct": 92
+    },
+    "commercial": {
+      "sla_score_pct": 93,
+      "damages_eur": 1200,
+      "warranty_time_days": 10,
+      "invoice_disputes": 1,
+      "clauses": {"availability": "4.2"}
+    },
+    "data_reporting": {
+      "telemetry_uptime_pct": 97.2,
+      "data_completeness_pct": 96.4,
+      "report_delivery_pct": 98,
+      "alarm_accuracy_pct": 95.8
+    }
+  },
+  "P-003": {
+    "availability_reliability": {
+      "MTTR_h": 36,
+      "MTBF_h": 260,
+      "response_time_min": 75,
+      "component_availability_pct": 94.5,
+      "critical_alerts": 2,
+      "note": "PCS overtemp, comms drop"
+    },
+    "maintenance_service": {
+      "preventive_pct": 84,
+      "corrective_closure_pct": 88,
+      "repeat_issue_rate_pct": 14,
+      "work_order_aging_h": 60
+    },
+    "performance_efficiency": {
+      "temp_compliance_pct": 88
+    },
+    "commercial": {
+      "sla_score_pct": 88,
+      "damages_eur": 3500,
+      "warranty_time_days": 5,
+      "invoice_disputes": 2,
+      "clauses": {"availability": "4.2"}
+    },
+    "data_reporting": {
+      "telemetry_uptime_pct": 94.2,
+      "data_completeness_pct": 93.5,
+      "report_delivery_pct": 90,
+      "alarm_accuracy_pct": 92.5
+    }
+  },
+  "P-004": {
+    "availability_reliability": {
+      "MTTR_h": 16,
+      "MTBF_h": 600,
+      "response_time_min": 20,
+      "component_availability_pct": 99.1,
+      "critical_alerts": 0
+    },
+    "maintenance_service": {
+      "preventive_pct": 97,
+      "corrective_closure_pct": 98,
+      "repeat_issue_rate_pct": 3,
+      "work_order_aging_h": 10
+    },
+    "performance_efficiency": {
+      "temp_compliance_pct": 98
+    },
+    "commercial": {
+      "sla_score_pct": 98,
+      "damages_eur": 0,
+      "warranty_time_days": 20,
+      "invoice_disputes": 0,
+      "clauses": {"availability": "4.2"}
+    },
+    "data_reporting": {
+      "telemetry_uptime_pct": 99.8,
+      "data_completeness_pct": 99.2,
+      "report_delivery_pct": 100,
+      "alarm_accuracy_pct": 99.1
+    }
+  }
+}
+

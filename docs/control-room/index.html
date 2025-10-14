@@ -14,6 +14,7 @@
         <nav class="tabs">
           <button type="button" class="tab active" data-tab="overview">Financial Performance</button>
           <button type="button" class="tab" data-tab="sla">SLA Metrics</button>
+          <button type="button" class="tab" data-tab="rag">RAG Matrix Performance</button>
         </nav>
       </aside>
       <main class="content">
@@ -30,6 +31,44 @@
             <h2>Portfolio SLA Metrics</h2>
             <div id="slaTable"></div>
           </section>
+        </section>
+        <section id="rag" class="view">
+          <header class="top-strip" id="topStripRag"></header>
+          <section>
+            <h2>RAG Matrix — Orka</h2>
+            <div class="rag-controls">
+              <div class="filters">
+                <label>Filter:</label>
+                <select id="ragFilterSupplier">
+                  <option value="">All Suppliers</option>
+                </select>
+                <select id="ragFilterRegion">
+                  <option value="">All Regions</option>
+                  <option value="DE">DE</option>
+                  <option value="SE">SE</option>
+                  <option value="UK">UK</option>
+                </select>
+                <select id="ragFilterKpi">
+                  <option value="">All KPI</option>
+                  <option value="availability">Availability & Reliability</option>
+                  <option value="maintenance">Maintenance & Service</option>
+                  <option value="performance">Performance & Efficiency</option>
+                  <option value="commercial">Commercial / Contractual</option>
+                  <option value="data">Data & Reporting</option>
+                </select>
+              </div>
+              <div id="ragDailySummary" class="muted"></div>
+            </div>
+            <div id="ragMatrix" class="rag-matrix"></div>
+          </section>
+
+          <!-- Drawer overlay for cell actions -->
+          <div id="ragDrawer" class="rag-drawer" aria-hidden="true">
+            <div class="rag-drawer-panel">
+              <button type="button" class="rag-drawer-close" id="ragDrawerClose">×</button>
+              <div id="ragDrawerContent"></div>
+            </div>
+          </div>
         </section>
       </main>
     </div>

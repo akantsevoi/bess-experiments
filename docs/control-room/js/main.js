@@ -15,6 +15,8 @@
     if (el) el.innerHTML = html;
     const elSla = document.getElementById('topStripSla');
     if (elSla) elSla.innerHTML = html;
+    const elRag = document.getElementById('topStripRag');
+    if (elRag) elRag.innerHTML = html;
   }
 
   function renderPortfolioTable(rows){
@@ -129,6 +131,260 @@
         if (jd && Array.isArray(jd.assetPortfolio)) window.assetPortfolio = jd.assetPortfolio;
       }
     } catch (e) { /* ignore */ }
+  }
+
+  // RAG Matrix helpers
+  async function loadRagExtras(){
+    try {
+      const viaHttp = (typeof location !== 'undefined' && location.protocol !== 'file:');
+      if (!viaHttp) return;
+      const resp = await fetch('data/static/rag-metrics.json', { cache: 'no-store' });
+      if (resp.ok){ window.ragExtras = await resp.json(); }
+    } catch (e) { /* ignore */ }
+  }
+
+  function classify(value, thresholds){
+    // thresholds: { r:number, a:[lo,hi], g:number } as percentage cutoffs
+    if (typeof value !== 'number' || !isFinite(value)) return null;
+    if (value < thresholds.r) return 'r';
+    if (value <= thresholds.a[1]){ return (value < thresholds.a[0]) ? 'r' : 'a'; }
+    return 'g';
+  }
+
+  function aggAvailability(project, revMetrics){
+    const t = { r: 97, a: [97, 98], g: 98 };
+    const availability = Number(revMetrics?.a_time_pct);
+    const dots = [];
+    const extras = (window.ragExtras && window.ragExtras[project.projectId] && window.ragExtras[project.projectId].availability_reliability) || null;
+    const mttr = extras?.MTTR_h; const mtbf = extras?.MTBF_h; const resp = extras?.response_time_min; const compAvail = extras?.component_availability_pct; const critical = extras?.critical_alerts || 0;
+    // Sub-KPIs
+    if (typeof compAvail === 'number') dots.push({ k: 'Component', v: compAvail, s: classify(compAvail, { r: 97, a: [97,98], g: 98 }) });
+    if (typeof mttr === 'number') dots.push({ k: 'MTTR', v: mttr, s: mttr > 24 ? 'r' : (mttr > 20 ? 'a' : 'g') });
+    if (typeof mtbf === 'number') dots.push({ k: 'MTBF', v: mtbf, s: mtbf < 300 ? 'r' : (mtbf < 500 ? 'a' : 'g') });
+    if (typeof resp === 'number') dots.push({ k: 'Response', v: resp, s: resp > 60 ? 'r' : (resp > 30 ? 'a' : 'g') });
+    const base = classify(availability, t);
+    const elevated = (critical > 0) ? 'r' : base;
+    return { value: availability, status: elevated, dots, breach: (critical > 0), extras };
+  }
+
+  function computeProjectSoh(project){
+    const bats = (project && project.batteries) ? project.batteries : [];
+    let baseSum = 0, latestSum = 0, count = 0;
+    for (const b of bats){
+      const soh = b && b.soh;
+      if (!soh || !soh.baseline || !Array.isArray(soh.tests) || !soh.tests.length) continue;
+      const base = Number(soh.baseline.usable_kwh);
+      const latest = soh.tests.slice().sort((a,b)=> new Date(a.ts)-new Date(b.ts)).slice(-1)[0];
+      const latestVal = Number(latest && latest.usable_kwh);
+      if (!isFinite(base) || base <= 0 || !isFinite(latestVal) || latestVal <= 0) continue;
+      baseSum += base;
+      latestSum += latestVal;
+      count++;
+    }
+    if (baseSum <= 0 || count === 0) return null;
+    return (latestSum / baseSum) * 100;
+  }
+
+  function aggMaintenance(project){
+    const t = { r: 90, a: [90,95], g: 95 };
+    const extras = (window.ragExtras && window.ragExtras[project.projectId] && window.ragExtras[project.projectId].maintenance_service) || {};
+    const prev = Number(extras?.preventive_pct);
+    const corr = Number(extras?.corrective_closure_pct);
+    const rep = Number(extras?.repeat_issue_rate_pct);
+    const aging = Number(extras?.work_order_aging_h);
+    const baseVal = isFinite(prev) && isFinite(corr) ? Math.min(prev, corr) : (isFinite(prev) ? prev : (isFinite(corr) ? corr : null));
+    const dots = [];
+    if (isFinite(prev)) dots.push({ k: 'Preventive', v: prev, s: classify(prev, t) });
+    if (isFinite(corr)) dots.push({ k: 'Corrective', v: corr, s: classify(corr, t) });
+    if (isFinite(rep)) dots.push({ k: 'Repeat', v: rep, s: rep > 10 ? 'r' : (rep > 5 ? 'a' : 'g') });
+    if (isFinite(aging)) dots.push({ k: 'Aging', v: aging, s: aging > 48 ? 'r' : (aging > 24 ? 'a' : 'g') });
+    return { value: baseVal, status: classify(baseVal, t), dots, extras };
+  }
+
+  function aggPerformance(project, revMetrics){
+    const t = { r: 88, a: [88,91], g: 91 };
+    const rte = Number(revMetrics?.rte_pct);
+    const soh = computeProjectSoh(project);
+    const extras = (window.ragExtras && window.ragExtras[project.projectId] && window.ragExtras[project.projectId].performance_efficiency) || {};
+    const temp = Number(extras?.temp_compliance_pct);
+    const dots = [];
+    if (isFinite(rte)) dots.push({ k: 'RTE', v: rte, s: classify(rte, t) });
+    if (isFinite(soh)) dots.push({ k: 'SoH', v: soh, s: soh < 70 ? 'r' : (soh < 80 ? 'a' : 'g') });
+    if (isFinite(temp)) dots.push({ k: 'Temp', v: temp, s: temp < 90 ? 'r' : (temp < 95 ? 'a' : 'g') });
+    const base = classify(rte, t);
+    return { value: rte, status: base, dots, extras };
+  }
+
+  function aggCommercial(projectId, revenueSummary){
+    const t = { r: 90, a: [90,95], g: 95 };
+    const extras = (window.ragExtras && window.ragExtras[projectId] && window.ragExtras[projectId].commercial) || {};
+    let base = Number(extras?.sla_score_pct);
+    if (!isFinite(base) && revenueSummary){
+      const { rev_pred_eur, loss_eur } = revenueSummary;
+      const pred = Number(rev_pred_eur), loss = Number(loss_eur);
+      if (isFinite(pred) && pred > 0 && isFinite(loss)) base = Math.max(0, 100 - 100 * (loss / pred));
+    }
+    const dots = [];
+    if (isFinite(base)) dots.push({ k: 'SLA Score', v: base, s: classify(base, t) });
+    if (typeof extras?.damages_eur === 'number') dots.push({ k: 'Damages', v: extras.damages_eur, s: extras.damages_eur > 0 ? 'r' : 'g' });
+    if (typeof extras?.invoice_disputes === 'number') dots.push({ k: 'Disputes', v: extras.invoice_disputes, s: extras.invoice_disputes > 0 ? 'a' : 'g' });
+    return { value: base, status: classify(base, t), dots, extras };
+  }
+
+  function aggData(projectId){
+    const t = { r: 95, a: [95,99], g: 99 };
+    const extras = (window.ragExtras && window.ragExtras[projectId] && window.ragExtras[projectId].data_reporting) || {};
+    const comp = Number(extras?.data_completeness_pct);
+    const tel = Number(extras?.telemetry_uptime_pct);
+    const del = Number(extras?.report_delivery_pct);
+    const alarm = Number(extras?.alarm_accuracy_pct);
+    const base = isFinite(comp) ? comp : (isFinite(tel) ? tel : null);
+    const dots = [];
+    if (isFinite(tel)) dots.push({ k: 'Telemetry', v: tel, s: classify(tel, t) });
+    if (isFinite(comp)) dots.push({ k: 'Completeness', v: comp, s: classify(comp, t) });
+    if (isFinite(del)) dots.push({ k: 'Delivery', v: del, s: classify(del, t) });
+    if (isFinite(alarm)) dots.push({ k: 'Alarm', v: alarm, s: classify(alarm, t) });
+    return { value: base, status: classify(base, t), dots, extras };
+  }
+
+  function cellClass(status){ return status === 'g' ? 'g' : (status === 'a' ? 'a' : 'r'); }
+
+  function trendArrow(curr, prev){ if (!isFinite(curr) || !isFinite(prev)) return '—'; if (curr > prev + 0.1) return '↑'; if (curr < prev - 0.1) return '↓'; return '—'; }
+
+  function ensureTooltip(){
+    let el = document.querySelector('.rag-tip');
+    if (!el){ el = document.createElement('div'); el.className = 'rag-tip'; el.style.display = 'none'; document.body.appendChild(el); }
+    return el;
+  }
+
+  function showTip(html, x, y){ const tip = ensureTooltip(); tip.innerHTML = html; tip.style.left = (x+12)+'px'; tip.style.top = (y+12)+'px'; tip.style.display = 'block'; }
+  function hideTip(){ const tip = document.querySelector('.rag-tip'); if (tip) tip.style.display = 'none'; }
+
+  function openDrawer(html){ const d = document.getElementById('ragDrawer'); const c = document.getElementById('ragDrawerContent'); if (c) c.innerHTML = html; if (d){ d.setAttribute('aria-hidden','false'); } }
+  function closeDrawer(){ const d = document.getElementById('ragDrawer'); if (d){ d.setAttribute('aria-hidden','true'); } }
+
+  async function renderRagMatrix(){
+    const mount = document.getElementById('ragMatrix');
+    if (!mount) return;
+    mount.innerHTML = '<p class="muted">Loading…</p>';
+    await loadRagExtras();
+
+    const projects = window.projects || [];
+    const ids = projects.map(p => p.projectId);
+    await loadRevenueDataForProjects(ids);
+    const revenue = window.revenueData || {};
+
+    // Daily summary
+    const ok = projects.length; // simplified; could compute from agg
+    const headerEl = document.getElementById('ragDailySummary');
+    if (headerEl){
+      // quick count from availability classification
+      let g=0,a=0,r=0; for (const p of projects){ const rev = revenue[p.projectId]; const m = rev ? computeProjectSla(rev, window.portfolioSummary?.slaConfig?.targetPct) : null; const s = m ? classify(m.a_time_pct, { r:97, a:[97,98], g:98 }) : 'a'; if (s==='g') g++; else if (s==='a') a++; else r++; }
+      headerEl.textContent = `${g} OK · ${a} at risk · ${r} breach`;
+    }
+
+    let html = '<table><thead><tr>'+
+      '<th>Project</th>'+
+      '<th>Availability & Reliability</th>'+
+      '<th>Maintenance & Service</th>'+
+      '<th>Performance & Efficiency</th>'+
+      '<th>Commercial / Contractual</th>'+
+      '<th>Data & Reporting</th>'+
+      '</tr></thead><tbody>';
+    for (const p of projects){
+      const rev = revenue[p.projectId];
+      const m = rev ? computeProjectSla(rev, window.portfolioSummary?.slaConfig?.targetPct) : null;
+      const revSum = rev ? (function(){
+        try {
+          const totals = (window.EnergyUtils && typeof window.EnergyUtils.computeRevenueTotals === 'function') ? window.EnergyUtils.computeRevenueTotals(rev) : null;
+          if (totals) return { rev_pred_eur: totals.pred_eur, rev_act_eur: totals.act_eur, loss_eur: totals.loss_eur };
+        } catch {}
+        return null;
+      })() : null;
+      const a = aggAvailability(p, m);
+      const ms = aggMaintenance(p);
+      const perf = aggPerformance(p, m);
+      const comm = aggCommercial(p.projectId, revSum);
+      const data = aggData(p.projectId);
+      function cell(label, o){
+        const cls = cellClass(o.status) + (o.breach ? ' pulse' : '');
+        const main = (isFinite(o.value) ? formatPct(o.value) : '—');
+        const micro = (o.dots||[]).slice(0,5).map(d => `<span class="dot ${cellClass(d.s)}" title="${d.k}"></span>`).join('');
+        return `<td><div class="rag-cell ${cls}" data-kpi="${label}"><div class="main">${main}</div><div class="micro">${micro}</div></div></td>`;
+      }
+      html += `<tr data-id="${p.projectId}">`+
+        `<td class="rag-project">${p.name}</td>`+
+        cell('availability', a)+
+        cell('maintenance', ms)+
+        cell('performance', perf)+
+        cell('commercial', comm)+
+        cell('data', data)+
+      `</tr>`;
+    }
+    html += '</tbody></table>';
+    mount.innerHTML = '<div class="rag-matrix">'+html+'</div>';
+
+    // Hover tooltip
+    mount.querySelectorAll('tbody tr').forEach(tr => {
+      const pid = tr.getAttribute('data-id');
+      const project = (window.projects||[]).find(x=>x.projectId===pid);
+      const rev = revenue[pid];
+      const m = rev ? computeProjectSla(rev, window.portfolioSummary?.slaConfig?.targetPct) : null;
+      const metrics = {
+        availability: aggAvailability(project, m),
+        maintenance: aggMaintenance(project),
+        performance: aggPerformance(project, m),
+        commercial: aggCommercial(pid, null),
+        data: aggData(pid)
+      };
+      tr.querySelectorAll('.rag-cell').forEach(cell => {
+        const kpi = cell.getAttribute('data-kpi');
+        cell.addEventListener('mousemove', (ev) => {
+          const o = metrics[kpi];
+          const items = (o.dots||[]).map(d => `<li>${d.k}: ${isFinite(d.v)? (d.k==='MTTR'? `${d.v}h` : (d.k==='Response'? `${d.v}m` : `${formatPct(d.v)}`)) : '—'}</li>`).join('');
+          const title = {
+            availability: 'Availability & Reliability', maintenance: 'Maintenance & Service', performance: 'Performance & Efficiency', commercial: 'Commercial / Contractual', data: 'Data & Reporting'
+          }[kpi] || 'KPI';
+          showTip(`<h4>${title}</h4><ul>${items}</ul>`, ev.clientX, ev.clientY);
+          document.body.style.backdropFilter = 'blur(1px)';
+        });
+        cell.addEventListener('mouseleave', () => { hideTip(); document.body.style.backdropFilter = ''; });
+        cell.addEventListener('click', () => {
+          const o = metrics[kpi];
+          // simple sparkline using last 7 pseudo-points around value
+          const base = isFinite(o.value) ? o.value : 0; const pts = Array.from({length:7}, (_,i)=> Math.max(0, Math.min(100, base + (i-3)*0.2)));
+          const w=320,h=56; const xs= w/(pts.length-1); const ys = v => h - (v/100)*h; let d=''; pts.forEach((v,i)=>{ d += (i?'L':'M') + (i*xs).toFixed(1)+','+ys(v).toFixed(1)+' '; });
+          const clause = 'Clause 4.2 — Supplier must maintain ≥97% availability.';
+          const breach = base < 97;
+          const subj = `SLA Breach — Site ${project.name} (${kpi})`;
+          const body = `Dear [Supplier],\n\nIn reference to Clause 4.2, system ${kpi} is at ${base.toFixed(1)}% on ${new Date().toISOString().slice(0,10)}.\nWe request corrective action and review of applicable credits.\n\nRegards,\nOrka Operations`;
+          const insight = (kpi==='availability' && (o.extras?.critical_alerts>0)) ? 'Likely root cause: Inverter/HVAC fault. Similar issue recently.' : 'Next inspection due in 2 days.';
+          const panel = `
+            <h3>Performance Summary</h3>
+            <div class="section">Project: <strong>${project.name}</strong> · KPI: <strong>${({availability:'Availability',maintenance:'Maintenance',performance:'Performance',commercial:'Commercial',data:'Data'})[kpi]}</strong></div>
+            <div class="section">
+              <svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><path d="${d}" stroke="#374151" stroke-width="2" fill="none"/></svg>
+            </div>
+            <div class="section">Trend: ${trendArrow(base, pts[pts.length-2])} · Current: ${isFinite(base)?formatPct(base):'—'}</div>
+            <div class="section"><strong>Contractual Reference</strong><div>${clause}<br/>Breach window: 12–24 hrs triggers penalty.</div></div>
+            <div class="section"><strong>Auto‑Drafted Claim Email</strong><div>
+              <div><em>Subject:</em> ${subj}</div>
+              <pre style="white-space:pre-wrap;background:rgba(0,0,0,.04);padding:8px;border-radius:8px;">${body}</pre>
+              <div style="display:flex; gap:8px;">
+                <button class="btn primary">Send Claim</button>
+                <button class="btn">Edit</button>
+                <button class="btn">Dismiss Breach</button>
+              </div>
+            </div></div>
+            <div class="section"><strong>AI Insight</strong><div>${insight}</div></div>
+          `;
+          openDrawer(panel);
+        });
+      });
+    });
+
+    const closeBtn = document.getElementById('ragDrawerClose');
+    if (closeBtn){ closeBtn.onclick = closeDrawer; }
   }
 
   async function renderSlaProjectsTable(){
@@ -312,7 +568,7 @@
 
   function initTabs(){
     const tabs = Array.from(document.querySelectorAll('.sidebar .tabs .tab'));
-    const views = { overview: document.getElementById('overview'), sla: document.getElementById('sla') };
+    const views = { overview: document.getElementById('overview'), sla: document.getElementById('sla'), rag: document.getElementById('rag') };
     function activate(target){
       tabs.forEach(b => b.classList.remove('active'));
       const btn = tabs.find(b => b.getAttribute('data-tab') === target);
@@ -323,6 +579,8 @@
         const mount = document.getElementById('slaTable');
         if (mount && !mount.innerHTML.trim()) { mount.innerHTML = '<p class="muted">Loading…</p>'; }
         renderSlaProjectsTable();
+      } else if (target === 'rag') {
+        renderRagMatrix();
       }
     }
     tabs.forEach(btn => {
@@ -334,9 +592,10 @@
         try { window.location.hash = target; } catch {}
       });
     });
-    // Deep-link support: #sla opens SLA tab
+    // Deep-link support: #sla or #rag opens respective tab
     const hash = (window.location.hash || '').replace('#','');
     if (hash === 'sla') activate('sla');
+    else if (hash === 'rag') activate('rag');
   }
 
   // Init
