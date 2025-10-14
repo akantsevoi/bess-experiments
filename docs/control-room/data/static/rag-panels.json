@@ -1,0 +1,130 @@
+{
+  "P-001": {
+    "availability": {
+      "clause": "Clause 4.2 — Supplier must maintain ≥97% availability. Breach window: 12–24 hrs triggers penalty.",
+      "reasons": [
+        "Availability below target: 96.8% vs 97%",
+        "1 Critical Alert: Inverter failure (Supplier A)",
+        "MTTR above threshold: 28h (>24h)"
+      ],
+      "email": {
+        "subject": "SLA Breach — Site Hamburg BESS (Availability)",
+        "body": "Dear [Supplier],\n\nIn reference to Clause 4.2, system availability dropped to 96.8% on 2025-09-21.\nWe request corrective action and review of applicable credits.\n\nRegards,\nOrka Operations"
+      },
+      "insights": [
+        "Likely root cause: HVAC control fault. Similar issue 3 weeks ago.",
+        "Next inspection due in 2 days."
+      ]
+    },
+    "maintenance": {
+      "clause": "Clause 6.1 — Preventive completion ≥95%, Corrective closure ≥95% within window.",
+      "reasons": [
+        "Preventive completion: 92% (below 95%)",
+        "Corrective closure: 94% (slightly below target)"
+      ],
+      "email": null,
+      "insights": ["Schedule pull-forward on overdue PMs for B1/B2"]
+    },
+    "performance": {
+      "clause": "Clause 8.3 — Round Trip Efficiency ≥91%.",
+      "reasons": ["RTE at 91.5% (within target)"]
+    },
+    "commercial": {
+      "clause": "Clause 10.2 — SLA score ≥95%; credits apply otherwise.",
+      "reasons": ["SLA score 96% (compliant)"]
+    },
+    "data": {
+      "clause": "Clause 12.4 — Data completeness ≥99% and telemetry uptime ≥99%.",
+      "reasons": [
+        "Data completeness: 98.7% (slightly below)",
+        "Telemetry uptime: 99.4% (compliant)"
+      ]
+    }
+  },
+  "P-002": {
+    "availability": {
+      "clause": "Clause 4.2 — Supplier must maintain ≥97% availability.",
+      "reasons": [
+        "Availability below target: 95.2%",
+        "Response time 45m (near limit)"
+      ],
+      "email": {
+        "subject": "SLA Breach — Site Stockholm BESS (Availability)",
+        "body": "Dear [Supplier],\n\nIn reference to Clause 4.2, system availability measured 95.2% on 2025-09-21.\nPlease provide corrective action plan and review applicable credits.\n\nRegards,\nOrka Operations"
+      },
+      "insights": ["Investigate recurring curtailment windows and inverter restarts."]
+    },
+    "maintenance": {
+      "clause": "Clause 6.1 — Preventive completion ≥95%, Corrective closure ≥95% within window.",
+      "reasons": ["Backlog aging 30h (amber)"]
+    },
+    "performance": {
+      "clause": "Clause 8.3 — Round Trip Efficiency ≥91%.",
+      "reasons": ["RTE 90.5% (near target)", "Temperature compliance: 92% (amber)"]
+    },
+    "commercial": {
+      "clause": "Clause 10.2 — SLA score ≥95%; credits apply otherwise.",
+      "reasons": ["SLA score 93% (amber)", "Damages: €1200 recorded"]
+    },
+    "data": {
+      "clause": "Clause 12.4 — Data completeness ≥99% and telemetry uptime ≥99%.",
+      "reasons": ["Completeness 96.4% (amber)", "Telemetry 97.2% (amber)"]
+    }
+  },
+  "P-003": {
+    "availability": {
+      "clause": "Clause 4.2 — Supplier must maintain ≥97% availability.",
+      "reasons": [
+        "Availability 93.2% (breach)",
+        "MTTR 36h and MTBF 260h (poor)",
+        "Response time 75m (breach)",
+        "2 Critical Alerts: PCS overtemp, comms drop"
+      ],
+      "email": {
+        "subject": "SLA Breach — Site Berlin BESS (Availability)",
+        "body": "Dear [Supplier],\n\nPer Clause 4.2, availability at Berlin BESS fell to 93.2% on 2025-09-21.\nKindly initiate corrective actions and confirm applicable credits per contract.\n\nRegards,\nOrka Operations"
+      },
+      "insights": ["Pattern matches previous overtemperature incidents; inspect HVAC loop and filters."]
+    },
+    "maintenance": {
+      "clause": "Clause 6.1 — Preventive completion ≥95%, Corrective closure ≥95% within window.",
+      "reasons": ["Preventive 84% (breach)", "Corrective 88% (breach)", "Repeat issues 14%"],
+      "email": null
+    },
+    "performance": {
+      "clause": "Clause 8.3 — Round Trip Efficiency ≥91%.",
+      "reasons": ["RTE 87.5% (breach)", "Temperature compliance 88% (breach)"]
+    },
+    "commercial": {
+      "clause": "Clause 10.2 — SLA score ≥95%; credits apply otherwise.",
+      "reasons": ["SLA score 88% (breach)", "Damages €3500", "2 open disputes"]
+    },
+    "data": {
+      "clause": "Clause 12.4 — Data completeness ≥99% and telemetry uptime ≥99%.",
+      "reasons": ["Completeness 93.5%", "Delivery 90%", "Telemetry 94.2%"]
+    }
+  },
+  "P-004": {
+    "availability": {
+      "clause": "Clause 4.2 — Supplier must maintain ≥97% availability.",
+      "reasons": ["Availability 98.1% (compliant)"]
+    },
+    "maintenance": {
+      "clause": "Clause 6.1 — Preventive completion ≥95%, Corrective closure ≥95% within window.",
+      "reasons": ["Preventive 97%, Corrective 98% (compliant)"]
+    },
+    "performance": {
+      "clause": "Clause 8.3 — Round Trip Efficiency ≥91%.",
+      "reasons": ["RTE 93% (compliant)"]
+    },
+    "commercial": {
+      "clause": "Clause 10.2 — SLA score ≥95%; credits apply otherwise.",
+      "reasons": ["SLA score 98% (compliant)"]
+    },
+    "data": {
+      "clause": "Clause 12.4 — Data completeness ≥99% and telemetry uptime ≥99%.",
+      "reasons": ["Data completeness 99.2% and telemetry 99.8% (compliant)"]
+    }
+  }
+}
+

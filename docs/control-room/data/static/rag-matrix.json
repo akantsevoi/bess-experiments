@@ -1,0 +1,216 @@
+{
+  "P-001": {
+    "availability": {
+      "value_pct": 96.8,
+      "status": "r",
+      "pulse": true,
+      "sub": [
+        { "key": "availability", "label": "Availability", "value": "96.8", "unit": "%", "status": "r" },
+        { "key": "mttr", "label": "MTTR", "value": "28", "unit": "h", "status": "r" },
+        { "key": "mtbf", "label": "MTBF", "value": "540", "unit": "h", "status": "g" },
+        { "key": "response", "label": "Response", "value": "35", "unit": "m", "status": "a" },
+        { "key": "comp", "label": "Component", "value": "98.1", "unit": "%", "status": "g" }
+      ],
+      "trend": [96.3, 96.4, 96.5, 96.6, 96.7, 96.7, 96.8]
+    },
+    "maintenance": {
+      "value_pct": 93.0,
+      "status": "a",
+      "sub": [
+        { "key": "preventive", "label": "Preventive", "value": "92", "unit": "%", "status": "a" },
+        { "key": "corrective", "label": "Corrective", "value": "94", "unit": "%", "status": "a" },
+        { "key": "repeat", "label": "Repeat", "value": "6", "unit": "%", "status": "a" },
+        { "key": "aging", "label": "Aging", "value": "18", "unit": "h", "status": "g" }
+      ],
+      "trend": [92.5, 92.7, 92.9, 93.0, 93.0, 93.0, 93.0]
+    },
+    "performance": {
+      "value_pct": 91.5,
+      "status": "g",
+      "sub": [
+        { "key": "rte", "label": "RTE", "value": "91.5", "unit": "%", "status": "g" },
+        { "key": "soh", "label": "SoH", "value": "98.0", "unit": "%", "status": "g" },
+        { "key": "temp", "label": "Temp", "value": "96", "unit": "%", "status": "g" }
+      ],
+      "trend": [91.0, 91.1, 91.2, 91.3, 91.4, 91.5, 91.5]
+    },
+    "commercial": {
+      "value_pct": 96.0,
+      "status": "g",
+      "sub": [
+        { "key": "sla_score", "label": "SLA Score", "value": "96", "unit": "%", "status": "g" },
+        { "key": "damages", "label": "Damages", "value": "0", "unit": "€", "status": "g" },
+        { "key": "disputes", "label": "Disputes", "value": "0", "unit": "", "status": "g" }
+      ],
+      "trend": [95.8, 95.8, 95.9, 95.9, 96.0, 96.0, 96.0]
+    },
+    "data": {
+      "value_pct": 98.7,
+      "status": "a",
+      "sub": [
+        { "key": "telemetry", "label": "Telemetry", "value": "99.4", "unit": "%", "status": "g" },
+        { "key": "completeness", "label": "Completeness", "value": "98.7", "unit": "%", "status": "a" },
+        { "key": "delivery", "label": "Delivery", "value": "100", "unit": "%", "status": "g" },
+        { "key": "alarm", "label": "Alarm", "value": "98.5", "unit": "%", "status": "g" }
+      ],
+      "trend": [98.5, 98.5, 98.6, 98.6, 98.6, 98.7, 98.7]
+    }
+  },
+  "P-002": {
+    "availability": {
+      "value_pct": 95.2,
+      "status": "r",
+      "pulse": true,
+      "sub": [
+        { "key": "availability", "label": "Availability", "value": "95.2", "unit": "%", "status": "r" },
+        { "key": "mttr", "label": "MTTR", "value": "20", "unit": "h", "status": "g" },
+        { "key": "mtbf", "label": "MTBF", "value": "420", "unit": "h", "status": "a" },
+        { "key": "response", "label": "Response", "value": "45", "unit": "m", "status": "a" },
+        { "key": "comp", "label": "Component", "value": "96.9", "unit": "%", "status": "a" }
+      ],
+      "trend": [95.0, 95.0, 95.1, 95.1, 95.2, 95.2, 95.2]
+    },
+    "maintenance": {
+      "value_pct": 91.0,
+      "status": "a",
+      "sub": [
+        { "key": "preventive", "label": "Preventive", "value": "90", "unit": "%", "status": "a" },
+        { "key": "corrective", "label": "Corrective", "value": "92", "unit": "%", "status": "a" },
+        { "key": "repeat", "label": "Repeat", "value": "9", "unit": "%", "status": "a" },
+        { "key": "aging", "label": "Aging", "value": "30", "unit": "h", "status": "a" }
+      ]
+    },
+    "performance": {
+      "value_pct": 90.5,
+      "status": "g",
+      "sub": [
+        { "key": "rte", "label": "RTE", "value": "90.5", "unit": "%", "status": "g" },
+        { "key": "soh", "label": "SoH", "value": "97.5", "unit": "%", "status": "g" },
+        { "key": "temp", "label": "Temp", "value": "92", "unit": "%", "status": "a" }
+      ]
+    },
+    "commercial": {
+      "value_pct": 93.0,
+      "status": "a",
+      "sub": [
+        { "key": "sla_score", "label": "SLA Score", "value": "93", "unit": "%", "status": "a" },
+        { "key": "damages", "label": "Damages", "value": "1200", "unit": "€", "status": "r" },
+        { "key": "disputes", "label": "Disputes", "value": "1", "unit": "", "status": "a" }
+      ]
+    },
+    "data": {
+      "value_pct": 96.4,
+      "status": "a",
+      "sub": [
+        { "key": "telemetry", "label": "Telemetry", "value": "97.2", "unit": "%", "status": "a" },
+        { "key": "completeness", "label": "Completeness", "value": "96.4", "unit": "%", "status": "a" },
+        { "key": "delivery", "label": "Delivery", "value": "98", "unit": "%", "status": "a" },
+        { "key": "alarm", "label": "Alarm", "value": "95.8", "unit": "%", "status": "a" }
+      ]
+    }
+  },
+  "P-003": {
+    "availability": {
+      "value_pct": 93.2,
+      "status": "r",
+      "pulse": true,
+      "sub": [
+        { "key": "availability", "label": "Availability", "value": "93.2", "unit": "%", "status": "r" },
+        { "key": "mttr", "label": "MTTR", "value": "36", "unit": "h", "status": "r" },
+        { "key": "mtbf", "label": "MTBF", "value": "260", "unit": "h", "status": "r" },
+        { "key": "response", "label": "Response", "value": "75", "unit": "m", "status": "r" },
+        { "key": "comp", "label": "Component", "value": "94.5", "unit": "%", "status": "r" }
+      ]
+    },
+    "maintenance": {
+      "value_pct": 86.0,
+      "status": "r",
+      "sub": [
+        { "key": "preventive", "label": "Preventive", "value": "84", "unit": "%", "status": "r" },
+        { "key": "corrective", "label": "Corrective", "value": "88", "unit": "%", "status": "r" },
+        { "key": "repeat", "label": "Repeat", "value": "14", "unit": "%", "status": "r" },
+        { "key": "aging", "label": "Aging", "value": "60", "unit": "h", "status": "r" }
+      ]
+    },
+    "performance": {
+      "value_pct": 87.5,
+      "status": "r",
+      "sub": [
+        { "key": "rte", "label": "RTE", "value": "87.5", "unit": "%", "status": "r" },
+        { "key": "soh", "label": "SoH", "value": "95.0", "unit": "%", "status": "g" },
+        { "key": "temp", "label": "Temp", "value": "88", "unit": "%", "status": "r" }
+      ]
+    },
+    "commercial": {
+      "value_pct": 88.0,
+      "status": "r",
+      "sub": [
+        { "key": "sla_score", "label": "SLA Score", "value": "88", "unit": "%", "status": "r" },
+        { "key": "damages", "label": "Damages", "value": "3500", "unit": "€", "status": "r" },
+        { "key": "disputes", "label": "Disputes", "value": "2", "unit": "", "status": "a" }
+      ]
+    },
+    "data": {
+      "value_pct": 93.5,
+      "status": "r",
+      "sub": [
+        { "key": "telemetry", "label": "Telemetry", "value": "94.2", "unit": "%", "status": "r" },
+        { "key": "completeness", "label": "Completeness", "value": "93.5", "unit": "%", "status": "r" },
+        { "key": "delivery", "label": "Delivery", "value": "90", "unit": "%", "status": "r" },
+        { "key": "alarm", "label": "Alarm", "value": "92.5", "unit": "%", "status": "r" }
+      ]
+    }
+  },
+  "P-004": {
+    "availability": {
+      "value_pct": 98.1,
+      "status": "g",
+      "sub": [
+        { "key": "availability", "label": "Availability", "value": "98.1", "unit": "%", "status": "g" },
+        { "key": "mttr", "label": "MTTR", "value": "16", "unit": "h", "status": "g" },
+        { "key": "mtbf", "label": "MTBF", "value": "600", "unit": "h", "status": "g" },
+        { "key": "response", "label": "Response", "value": "20", "unit": "m", "status": "g" },
+        { "key": "comp", "label": "Component", "value": "99.1", "unit": "%", "status": "g" }
+      ]
+    },
+    "maintenance": {
+      "value_pct": 97.0,
+      "status": "g",
+      "sub": [
+        { "key": "preventive", "label": "Preventive", "value": "97", "unit": "%", "status": "g" },
+        { "key": "corrective", "label": "Corrective", "value": "98", "unit": "%", "status": "g" },
+        { "key": "repeat", "label": "Repeat", "value": "3", "unit": "%", "status": "g" },
+        { "key": "aging", "label": "Aging", "value": "10", "unit": "h", "status": "g" }
+      ]
+    },
+    "performance": {
+      "value_pct": 93.0,
+      "status": "g",
+      "sub": [
+        { "key": "rte", "label": "RTE", "value": "93.0", "unit": "%", "status": "g" },
+        { "key": "soh", "label": "SoH", "value": "98.5", "unit": "%", "status": "g" },
+        { "key": "temp", "label": "Temp", "value": "98", "unit": "%", "status": "g" }
+      ]
+    },
+    "commercial": {
+      "value_pct": 98.0,
+      "status": "g",
+      "sub": [
+        { "key": "sla_score", "label": "SLA Score", "value": "98", "unit": "%", "status": "g" },
+        { "key": "damages", "label": "Damages", "value": "0", "unit": "€", "status": "g" },
+        { "key": "disputes", "label": "Disputes", "value": "0", "unit": "", "status": "g" }
+      ]
+    },
+    "data": {
+      "value_pct": 99.2,
+      "status": "g",
+      "sub": [
+        { "key": "telemetry", "label": "Telemetry", "value": "99.8", "unit": "%", "status": "g" },
+        { "key": "completeness", "label": "Completeness", "value": "99.2", "unit": "%", "status": "g" },
+        { "key": "delivery", "label": "Delivery", "value": "100", "unit": "%", "status": "g" },
+        { "key": "alarm", "label": "Alarm", "value": "99.1", "unit": "%", "status": "g" }
+      ]
+    }
+  }
+}
+
