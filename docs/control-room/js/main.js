@@ -285,11 +285,44 @@
     const projects = window.projects || [];
     const matrix = window.ragMatrix || {};
 
+    // Populate Supplier filter options once
+    (function populateSuppliers(){
+      try {
+        const el = document.getElementById('ragFilterSupplier');
+        if (!el) return;
+        // if already populated beyond the default, skip
+        const existing = new Set(Array.from(el.options).map(o => o.value));
+        const sup = new Set();
+        for (const p of projects){
+          for (const b of (p.batteries||[])) if (b.supplier) sup.add(String(b.supplier));
+        }
+        for (const s of Array.from(sup).sort()){
+          if (existing.has(s)) continue;
+          const opt = document.createElement('option'); opt.value = s; opt.textContent = s; el.appendChild(opt);
+        }
+      } catch {}
+    })();
+
+    // Read filters
+    const fSupplier = (document.getElementById('ragFilterSupplier')||{}).value || '';
+    const fRegion = (document.getElementById('ragFilterRegion')||{}).value || '';
+    const fKpi = (document.getElementById('ragFilterKpi')||{}).value || '';
+
+    // Apply row filters: by Supplier (any battery match) and Region (country code)
+    const filteredProjects = projects.filter(p => {
+      if (fRegion && String(p.location?.country||'') !== String(fRegion)) return false;
+      if (fSupplier){
+        const any = (p.batteries||[]).some(b => String(b.supplier||'') === String(fSupplier));
+        if (!any) return false;
+      }
+      return true;
+    });
+
     // Daily summary (static from matrix availability statuses)
     const headerEl = document.getElementById('ragDailySummary');
     if (headerEl){
       let g=0,a=0,r=0;
-      for (const p of projects){
+      for (const p of filteredProjects){
         const pm = matrix[p.projectId];
         const s = pm && pm.availability && pm.availability.status || 'a';
         if (s==='g') g++; else if (s==='a') a++; else r++;
@@ -305,7 +338,7 @@
       '<th>Commercial / Contractual</th>'+
       '<th>Data & Reporting</th>'+
       '</tr></thead><tbody>';
-    for (const p of projects){
+    for (const p of filteredProjects){
       const pm = matrix[p.projectId] || {};
       function cell(label){
         const o = pm[label] || {};
@@ -325,6 +358,34 @@
     }
     html += '</tbody></table>';
     mount.innerHTML = '<div class="rag-matrix">'+html+'</div>';
+
+    // Highlight selected KPI column by dimming others
+    (function applyKpiHighlight(){
+      if (!fKpi) return; // none selected
+      const table = mount.querySelector('table');
+      if (!table) return;
+      // Header marks
+      const headerMap = {
+        availability: 1,
+        maintenance: 2,
+        performance: 3,
+        commercial: 4,
+        data: 5
+      };
+      const idx = headerMap[fKpi]; // 0 is the project col
+      const ths = table.querySelectorAll('thead th');
+      ths.forEach((th,i)=> { th.classList.toggle('focus', i===idx); th.classList.toggle('dim', i!==0 && i!==idx); });
+      // Body cells
+      table.querySelectorAll('tbody tr').forEach(tr => {
+        const cells = tr.querySelectorAll('td');
+        cells.forEach((td,i)=>{
+          const rc = td.querySelector('.rag-cell');
+          if (!rc) return;
+          rc.classList.toggle('focus', i===idx);
+          rc.classList.toggle('dim', i!==idx);
+        });
+      });
+    })();
 
     // Hover tooltip
     mount.querySelectorAll('tbody tr').forEach(tr => {
@@ -373,6 +434,15 @@
 
     const closeBtn = document.getElementById('ragDrawerClose');
     if (closeBtn){ closeBtn.onclick = closeDrawer; }
+
+    // Bind filter change handlers once
+    if (!window._ragFiltersBound){
+      const elS = document.getElementById('ragFilterSupplier');
+      const elR = document.getElementById('ragFilterRegion');
+      const elK = document.getElementById('ragFilterKpi');
+      [elS, elR, elK].forEach(el => { if (el) el.addEventListener('change', () => renderRagMatrix()); });
+      window._ragFiltersBound = true;
+    }
   }
 
   async function renderSlaProjectsTable(){
