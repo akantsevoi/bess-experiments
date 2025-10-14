@@ -435,6 +435,26 @@
     const closeBtn = document.getElementById('ragDrawerClose');
     if (closeBtn){ closeBtn.onclick = closeDrawer; }
 
+    // Close drawer when clicking outside the panel
+    const overlay = document.getElementById('ragDrawer');
+    if (overlay && !overlay._outsideClickBound){
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeDrawer();
+      });
+      overlay._outsideClickBound = true;
+    }
+
+    // Close on ESC key
+    if (!window._ragEscBound){
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape'){
+          const d = document.getElementById('ragDrawer');
+          if (d && d.getAttribute('aria-hidden') === 'false') closeDrawer();
+        }
+      });
+      window._ragEscBound = true;
+    }
+
     // Bind filter change handlers once
     if (!window._ragFiltersBound){
       const elS = document.getElementById('ragFilterSupplier');
