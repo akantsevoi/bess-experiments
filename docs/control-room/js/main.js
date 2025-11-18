@@ -345,7 +345,17 @@
         const cls = cellClass(o.status) + ((o.pulse || o.status==='r') ? ' pulse' : '');
         const main = (isFinite(o.value_pct) ? formatPct(o.value_pct) : '—');
         const micro = Array.isArray(o.sub) ? o.sub.slice(0,5).map(d => `<span class="dot ${cellClass(d.status)}" title="${d.label}"></span>`).join('') : '';
-        return `<td><div class="rag-cell ${cls}" data-kpi="${label}"><div class="main">${main}</div><div class="micro">${micro}</div></div></td>`;
+        // Status icon (applies to all KPI columns): good/at-risk/breach
+        let iconName = '';
+        let iconClass = '';
+        if (o && typeof o.status === 'string'){
+          if (o.status === 'g') { iconName = 'check_circle'; iconClass = 'status-ok'; }
+          else if (o.status === 'a') { iconName = 'warning'; iconClass = 'status-warn'; }
+          else if (o.status === 'r') { iconName = 'error'; iconClass = 'status-bad'; }
+        }
+        const statusIcon = iconName ? `<span class="material-symbols-outlined status-icon ${iconClass}" aria-hidden="true">${iconName}</span>` : '';
+        const mainWithIcon = statusIcon ? `${statusIcon}<span class="pct">${main}</span>` : main;
+        return `<td><div class="rag-cell ${cls}" data-kpi="${label}"><div class="main">${mainWithIcon}</div><div class="micro">${micro}</div></div></td>`;
       }
       html += `<tr data-id="${p.projectId}">`+
         `<td class="rag-project">${p.name}</td>`+
