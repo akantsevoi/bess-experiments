@@ -353,8 +353,9 @@
           else if (o.status === 'a') { iconName = 'warning'; iconClass = 'status-warn'; }
           else if (o.status === 'r') { iconName = 'error'; iconClass = 'status-bad'; }
         }
-        const statusIcon = iconName ? `<span class="material-symbols-outlined status-icon ${iconClass}" aria-hidden="true">${iconName}</span>` : '';
-        const mainWithIcon = statusIcon ? `${statusIcon}<span class="pct">${main}</span>` : main;
+        const statusIcon = iconName ? `<span class="material-symbols-outlined status-icon ${iconClass}" title="${o.status==='g'?'Good':(o.status==='a'?'At risk':(o.status==='r'?'Breach':''))}" aria-label="${o.status==='g'?'Good':(o.status==='a'?'At risk':(o.status==='r'?'Breach':''))}">${iconName}</span>` : '';
+        // Remove numeric percentage from RAG plates; show only the status icon
+        const mainWithIcon = statusIcon || '—';
         return `<td><div class="rag-cell ${cls}" data-kpi="${label}"><div class="main">${mainWithIcon}</div><div class="micro">${micro}</div></div></td>`;
       }
       html += `<tr data-id="${p.projectId}">`+
