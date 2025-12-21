@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Control Room 2</title>
+    <style>
+      :root {
+        --bg: #0f172a;
+        --panel: #111827;
+        --muted: #94a3b8;
+        --text: #e5e7eb;
+        --accent: #22d3ee;
+        --border: #1f2937;
+      }
+      html, body { height: 100%; margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); }
+      .layout { display: grid; grid-template-columns: 260px 1fr; height: 100%; }
+      .sidebar { background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
+      .brand { padding: 16px; font-weight: 700; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+      .nav { padding: 8px; display: grid; gap: 6px; }
+      .tab { appearance: none; border: 1px solid var(--border); background: transparent; color: var(--text); padding: 10px 12px; text-align: left; border-radius: 8px; cursor: pointer; font: inherit; }
+      .tab:hover { border-color: #334155; }
+      .tab.active { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(34,211,238,0.25) inset; }
+      .grow { flex: 1; }
+      .collapse { margin: 8px; appearance: none; background: transparent; color: var(--muted); border: 1px solid var(--border); padding: 8px 10px; border-radius: 8px; cursor: pointer; }
+      .content { padding: 16px 20px; overflow: auto; }
+      .section { display: none; }
+      .section.active { display: block; }
+      .section h2 { margin: 0 0 12px; font-size: 18px; font-weight: 600; color: var(--text); }
+      .muted { color: var(--muted); }
+      .sidebar.collapsed { width: 56px; grid-column: 1 / 1; }
+      .sidebar.collapsed .brand { font-size: 0; padding: 12px; }
+      .sidebar.collapsed .nav .tab { text-indent: -9999px; height: 36px; padding: 0; }
+      .sidebar.collapsed .collapse { font-size: 0; padding: 6px; }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">Control Room 2</div>
+        <nav class="nav" id="nav">
+          <button class="tab active" data-target="financial">Financial Performance</button>
+          <button class="tab" data-target="datasources">Data Sources</button>
+        </nav>
+        <div class="grow"></div>
+        <button class="collapse" id="collapseBtn" title="Collapse sidebar">⟨⟩</button>
+      </aside>
+      <main class="content">
+        <section class="section active" id="section-financial" aria-labelledby="tab-financial">
+          <h2>Financial Performance</h2>
+          <div class="muted">Section intentionally left empty.</div>
+        </section>
+        <section class="section" id="section-datasources" aria-labelledby="tab-datasources">
+          <h2>Data Sources</h2>
+          <div class="muted">Section intentionally left empty.</div>
+        </section>
+        <section class="section" id="section-project" aria-label="Project">
+          <h2 id="project-title">Project</h2>
+          <div class="muted" id="project-placeholder">Project view placeholder. Route reserved.</div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      (function () {
+        function byRevisionDesc(a, b) {
+          const ra = typeof a.revision === 'number' ? a.revision : 0;
+          const rb = typeof b.revision === 'number' ? b.revision : 0;
+          return rb - ra;
+        }
+
+        function parseIso(s) {
+          return new Date(s).getTime();
+        }
+
+        function addIndex(map, key, id) {
+          if (!map[key]) map[key] = [];
+          if (!map[key].includes(id)) map[key].push(id);
+        }
+
+        const priceStore = (function () {
+          const state = {
+            version: '1.0',
+            pricesById: {},
+            indexByZoneMarketType: {},
+            indexByZone: {},
+            indexPredByIssuedAt: {}
+          };
+
+          const zmtKey = (z, m, t) => `${z}|${m}|${t}`;
+          const predIssuedKey = (z, m, i) => `${z}|${m}|predicted|${i}`;
+
+          function upsert(series) {
+            state.pricesById[series.series_id] = series;
+            addIndex(state.indexByZone, series.zone_code, series.series_id);
+            addIndex(state.indexByZoneMarketType, zmtKey(series.zone_code, series.market, series.series_type), series.series_id);
+            if (series.series_type === 'predicted' && series.issued_at) {
+              addIndex(state.indexPredByIssuedAt, predIssuedKey(series.zone_code, series.market, series.issued_at), series.series_id);
+            }
+          }
+
+          function getActual(zone, market) {
+            const ids = state.indexByZoneMarketType[zmtKey(zone, market, 'actual')] || [];
+            const items = ids.map(id => state.pricesById[id]);
+            if (!items.length) return null;
+            items.sort(byRevisionDesc);
+            return items[0] || null;
+          }
+
+          function pickLatestIssued(seriesList, asOfMs) {
+            const withIssued = seriesList.filter(s => !!s.issued_at);
+            if (!withIssued.length) return null;
+            if (typeof asOfMs === 'number') {
+              const past = withIssued.filter(s => parseIso(s.issued_at) <= asOfMs);
+              const pool = past.length ? past : withIssued;
+              pool.sort((a, b) => parseIso(b.issued_at) - parseIso(a.issued_at) || byRevisionDesc(a, b));
+              return pool[0] || null;
+            }
+            withIssued.sort((a, b) => parseIso(b.issued_at) - parseIso(a.issued_at) || byRevisionDesc(a, b));
+            return withIssued[0] || null;
+          }
+
+          function getForecast(zone, market, opts = {}) {
+            const ids = state.indexByZoneMarketType[zmtKey(zone, market, 'predicted')] || [];
+            let items = ids.map(id => state.pricesById[id]);
+            if (!items.length) return null;
+            if (typeof opts.quantile === 'number') {
+              items = items.filter(s => s.quantile === opts.quantile);
+            }
+            if (opts.issued_at) {
+              items = items.filter(s => s.issued_at === opts.issued_at);
+              if (!items.length) return null;
+              items.sort(byRevisionDesc);
+              return items[0] || null;
+            }
+            const chosen = pickLatestIssued(items, opts.as_of ? parseIso(opts.as_of) : undefined);
+            if (chosen) return chosen;
+            items.sort(byRevisionDesc);
+            return items[0] || null;
+          }
+
+          function listZones() {
+            return Object.keys(state.indexByZone);
+          }
+
+          function clear() {
+            state.pricesById = {};
+            state.indexByZoneMarketType = {};
+            state.indexByZone = {};
+            state.indexPredByIssuedAt = {};
+          }
+
+          return { state, upsert, getActual, getForecast, listZones, clear };
+        })();
+
+        const consumptionStore = (function () {
+          const state = {
+            version: '1.0',
+            forecastsById: {},
+            indexByAsset: {},
+            indexByAssetIssuedAt: {},
+            indexByAssetOpt: {}
+          };
+
+          const assetIssuedKey = (asset, issued) => `${asset}|${issued}`;
+          const assetOptKey = (asset, opt) => `${asset}|${opt}`;
+
+          function upsert(series) {
+            state.forecastsById[series.series_id] = series;
+            addIndex(state.indexByAsset, series.asset_id, series.series_id);
+            addIndex(state.indexByAssetIssuedAt, assetIssuedKey(series.asset_id, series.issued_at), series.series_id);
+            addIndex(state.indexByAssetOpt, assetOptKey(series.asset_id, series.optimizer_version), series.series_id);
+          }
+
+          function getForecast(asset_id, opts = {}) {
+            const ids = state.indexByAsset[asset_id] || [];
+            let items = ids.map(id => state.forecastsById[id]);
+            if (!items.length) return null;
+            if (opts.optimizer_version) items = items.filter(s => s.optimizer_version === opts.optimizer_version);
+            if (opts.scenario_id) items = items.filter(s => s.scenario_id === opts.scenario_id);
+            if (opts.issued_at) {
+              items = items.filter(s => s.issued_at === opts.issued_at);
+              if (!items.length) return null;
+              items.sort(byRevisionDesc);
+              return items[0] || null;
+            }
+            if (opts.as_of) {
+              const asOfMs = parseIso(opts.as_of);
+              const past = items.filter(s => parseIso(s.issued_at) <= asOfMs);
+              const pool = past.length ? past : items;
+              pool.sort((a, b) => parseIso(b.issued_at) - parseIso(a.issued_at) || byRevisionDesc(a, b));
+              return pool[0] || null;
+            }
+            items.sort((a, b) => parseIso(b.issued_at) - parseIso(a.issued_at) || byRevisionDesc(a, b));
+            return items[0] || null;
+          }
+
+          function clear() {
+            state.forecastsById = {};
+            state.indexByAsset = {};
+            state.indexByAssetIssuedAt = {};
+            state.indexByAssetOpt = {};
+          }
+
+          return { state, upsert, getForecast, clear };
+        })();
+
+        window.orka = {
+          priceStore,
+          consumptionStore
+        };
+
+        // Simple tab handling
+        const nav = document.getElementById('nav');
+        const sidebar = document.getElementById('sidebar');
+        const collapseBtn = document.getElementById('collapseBtn');
+        const sections = {
+          financial: document.getElementById('section-financial'),
+          datasources: document.getElementById('section-datasources'),
+          project: document.getElementById('section-project')
+        };
+
+        function activate(view) {
+          // buttons
+          nav.querySelectorAll('.tab').forEach(btn => btn.classList.toggle('active', btn.dataset.target === view));
+          // sections
+          Object.entries(sections).forEach(([key, el]) => el.classList.toggle('active', key === view));
+        }
+
+        function parseRoute() {
+          const raw = (location.hash || '#financial').slice(1);
+          if (raw.startsWith('project/')) {
+            const id = decodeURIComponent(raw.slice('project/'.length));
+            return { view: 'project', params: { id } };
+          }
+          if (raw === 'datasources') return { view: 'datasources', params: {} };
+          return { view: 'financial', params: {} };
+        }
+
+        function handleHashChange() {
+          const route = parseRoute();
+          activate(route.view);
+          if (route.view === 'project') {
+            const title = document.getElementById('project-title');
+            const ph = document.getElementById('project-placeholder');
+            title.textContent = route.params.id ? `Project: ${route.params.id}` : 'Project';
+            ph.textContent = route.params.id ? `Reserved project detail view for ${route.params.id}.` : 'Project view placeholder. Route reserved.';
+          }
+        }
+
+        nav.addEventListener('click', (e) => {
+          const btn = e.target.closest('.tab');
+          if (!btn) return;
+          const target = btn.dataset.target;
+          if (location.hash.slice(1) !== target) {
+            location.hash = `#${target}`;
+          } else {
+            // re-apply current route
+            handleHashChange();
+          }
+        });
+
+        collapseBtn.addEventListener('click', () => {
+          sidebar.classList.toggle('collapsed');
+        });
+
+        window.addEventListener('hashchange', handleHashChange);
+        handleHashChange();
+
+        // Public helper to navigate to a project
+        window.orka = Object.assign({}, window.orka, {
+          navigateToProject(id) { location.hash = `#project/${encodeURIComponent(id)}`; }
+        });
+
+        console.info('Orka in-memory stores initialized', window.orka);
+      })();
+    </script>
+  </body>
+  </html>
