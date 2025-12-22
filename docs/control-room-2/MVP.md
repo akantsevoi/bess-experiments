@@ -225,8 +225,9 @@ Note: When computing revenue or SLA-weighted metrics, the UI should pair a consu
 
 ## Financial Performance & Project View
 
-- Financial tab:
-  - Lists all assets (name, id, zone, MW/MWh). Clicking an asset navigates to the project view `#project/<asset_id>`.
+ - Financial tab:
+  - Lists all assets in a 3‑column layout with a header: Asset (name + id), Zone (location), Size (MW/MWh).
+  - Each row is clickable and navigates to the project view `#project/<asset_id>`.
 
 - Project view (per-asset):
   - Header shows basic asset info, the selected predicted price datasource label, and the latest predicted consumption label.

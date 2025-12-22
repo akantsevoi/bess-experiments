@@ -1037,25 +1037,37 @@
           if (!finAssetsListEl) return;
           finAssetsListEl.innerHTML = '';
           const items = Object.values(orka.assetsStore.state.assetsById);
+          // header row
+          const header = document.createElement('div');
+          header.className = 'card';
+          header.innerHTML = `
+            <div style="display:grid; grid-template-columns: 1fr 120px 160px; gap:12px; font-size:12px; color: var(--muted);">
+              <div>Asset</div>
+              <div>Zone</div>
+              <div>Size</div>
+            </div>`;
+          finAssetsListEl.appendChild(header);
+          // rows
           items.forEach(asset => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-              <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
-                <div>
-                  <div><strong>${asset.name}</strong> <span class="muted" style="font-size:12px">(${asset.asset_id})</span></div>
-                  <div class="muted" style="font-size:12px">${asset.zone_code} · ${asset.bess.power_rating_mw}MW / ${asset.bess.energy_capacity_mwh}MWh</div>
-                </div>
+            const row = document.createElement('div');
+            row.className = 'card';
+            row.innerHTML = `
+              <div style="display:grid; grid-template-columns: 1fr 120px 160px; align-items:center; gap:12px;">
+                <div><strong>${asset.name}</strong> <span class="muted" style="font-size:12px">(${asset.asset_id})</span></div>
+                <div>${asset.zone_code}</div>
+                <div>${asset.bess.power_rating_mw}MW / ${asset.bess.energy_capacity_mwh}MWh</div>
               </div>`;
-            card.style.cursor = 'pointer';
-            card.addEventListener('click', () => {
+            row.style.cursor = 'pointer';
+            row.setAttribute('role', 'button');
+            row.setAttribute('title', 'Open project');
+            row.addEventListener('click', () => {
               if (window.orka && typeof window.orka.navigateToProject === 'function') {
                 window.orka.navigateToProject(asset.asset_id);
               } else {
                 location.hash = `#project/${encodeURIComponent(asset.asset_id)}`;
               }
             });
-            finAssetsListEl.appendChild(card);
+            finAssetsListEl.appendChild(row);
           });
           ensureFinAssetsVisibility();
         }
@@ -1290,7 +1302,7 @@
 
           // Predicted price streams (one per zone)
           const nowIso = new Date().toISOString();
-          const makePrice = (zone_code, market, currency, quantile = 0.5, interval_min = 60, horizon_h = 24, source = 'SIMULATED_V1') => {
+          const makePrice = (zone_code, market, currency, quantile = 0.5, interval_min = 15, horizon_h = 24, source = 'SIMULATED_V1') => {
             const qPart = isFinite(quantile) ? `q${quantile}` : 'q50';
             const series_id = `${zone_code}_${market}_predicted_${qPart}_i${nowIso}_r1`;
             const series = {
@@ -1318,7 +1330,7 @@
           orka.assetsStore.setDataSource('BESS-GB', 'predicted_price', p2.series_id);
 
           // Predicted consumption (one per asset), tied to selected price
-          const makeCons = (asset, price_series_id, interval_min = 60, horizon_h = 24, optimizer_version = 'v1', scenario_id = 'base') => {
+          const makeCons = (asset, price_series_id, interval_min = 15, horizon_h = 24, optimizer_version = 'v1', scenario_id = 'base') => {
             const issued_at = nowIso;
             const sPart = scenario_id ? `_s${scenario_id}` : '';
             const series_id = `${asset.asset_id}_cons_pred_i${issued_at}_opt${optimizer_version}${sPart}_r1`;
