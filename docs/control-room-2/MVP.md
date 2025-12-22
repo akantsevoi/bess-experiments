@@ -218,6 +218,7 @@ Note: When computing revenue or SLA-weighted metrics, the UI should pair a consu
 ## Data Sources UI (MVP behavior)
 
 - Assets section: Create and list assets (BESS). Cards show basic specs and a Data sources area.
+  - Per-asset settings: edit SLA thresholds (critical/warn) which control coloring on Financial and Project views.
 - Predicted electricity prices: Per asset, a dropdown lists all predicted price series available for the asset's `zone_code`.
   - Selection persists in-memory at `assetsStore.assetsById[asset_id].datasources.predicted_price`.
   - The “Add price stream” button opens the price modal prefilled with the asset's zone.
@@ -248,6 +249,7 @@ Note: When computing revenue or SLA-weighted metrics, the UI should pair a consu
     - Coloring: shows a delta (actual − predicted) in green when non‑negative and red when negative.
   - Each row is clickable and navigates to the project view `#project/<asset_id>`.
   - Adds a 5th column “SLA (time)”, computed from the selected (or latest) actual telemetry series for each asset.
+    - Threshold coloring: SLA < 95% red; SLA < 98% yellow; otherwise green.
 
 - Project view (per-asset):
   - Header shows basic asset info, the selected predicted price datasource label, and the latest predicted consumption label.
@@ -257,7 +259,7 @@ Note: When computing revenue or SLA-weighted metrics, the UI should pair a consu
     - Cumulative series: `cum_t = sum_{k<=t} rev_k`.
     - Join rule: Intervals are included only when both price and consumption datapoints exist for the same `interval_start` ISO timestamp (applied separately for predicted and actual overlays).
     - Rendering: Simple canvas line chart with labeled axes (Y: currency; X: timeline) and legend (Predicted vs Actual). Updates ~every 2 seconds to reflect streaming sources.
-  - Time-based SLA (MVP): Computed from the selected (or latest) actual telemetry as `SLA_time = sum(A_t · Δt) / sum(Δt)`, where `A_t = availability_flag ∈ {0,1}` and `Δt = interval_duration_min`. Displayed as a percentage on the project view.
+  - Time-based SLA (MVP): Computed from the selected (or latest) actual telemetry as `SLA_time = sum(A_t · Δt) / sum(Δt)`, where `A_t = availability_flag ∈ {0,1}` and `Δt = interval_duration_min`. Displayed as a percentage on the project view with threshold coloring (red <95%, yellow <98%, green otherwise).
 
 Notes:
 - The selected predicted price per asset is stored in `asset.datasources.predicted_price` and is used for revenue calculations.
@@ -342,6 +344,10 @@ type Asset = BaseAsset & {
     actual_price?: string;         // series_id of chosen actual price series for the asset's zone
     actual_consumption?: string;   // series_id of chosen actual consumption (telemetry) for this asset
     // future keys: consumption_forecast, weather, etc.
+  };
+  sla_targets?: {                  // per-asset SLA coloring thresholds
+    critical: number;              // fraction [0..1]; red if SLA < critical (default 0.95)
+    warn: number;                  // fraction [0..1]; yellow if SLA < warn (default 0.98)
   };
 };
 
