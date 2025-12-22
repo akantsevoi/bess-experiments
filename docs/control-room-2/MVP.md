@@ -242,6 +242,10 @@ Note: When computing revenue or SLA-weighted metrics, the UI should pair a consu
 
  - Financial tab:
   - Lists all assets in a 3‑column layout with a header: Asset (name + id), Zone (location), Size (MW/MWh).
+  - Adds a 4th column “Revenue (pred vs actual)” showing totals for predicted vs actual.
+    - Predicted revenue is limited to the time coverage of actual data (e.g., if actual covers up to 15:00, predicted points after 15:00 are ignored in this total).
+    - Refreshes periodically to reflect streaming updates.
+    - Coloring: shows a delta (actual − predicted) in green when non‑negative and red when negative.
   - Each row is clickable and navigates to the project view `#project/<asset_id>`.
 
 - Project view (per-asset):

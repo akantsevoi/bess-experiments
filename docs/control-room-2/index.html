@@ -340,7 +340,7 @@
                 <div><strong>Predicted Revenue</strong> <span class="muted" style="font-size:12px">(streaming)</span></div>
                 <div class="muted" id="project-chart-hint" style="font-size:12px"></div>
               </div>
-              <div id="project-chart" style="height:240px; width:100%; position:relative;"></div>
+              <div id="project-chart" style="height:clamp(220px, 40vh, 360px); width:100%; position:relative;"></div>
             </div>
           </div>
         </section>
@@ -751,12 +751,30 @@
             host.appendChild(canvas);
             return;
           }
-          const tMin = points[0].t;
-          const tMax = points[points.length - 1].t;
-          const vMin = Math.min(0, ...points.map(p => p.cum));
-          const vMax = Math.max(0, ...points.map(p => p.cum));
+          // Determine combined time/value ranges across predicted and actual
+          const predTMin = points.length ? points[0].t : Infinity;
+          const predTMax = points.length ? points[points.length - 1].t : -Infinity;
+          const actTMin = actPoints.length ? actPoints[0].t : Infinity;
+          const actTMax = actPoints.length ? actPoints[actPoints.length - 1].t : -Infinity;
+          const tMin = Math.min(predTMin, actTMin);
+          const tMax = Math.max(predTMax, actTMax);
+          // Value range with padding; include both series
+          const predVals = points.map(p => p.cum);
+          const actVals = actPoints.map(p => p.cum);
+          let vMin = Math.min(0, predVals.length ? Math.min(...predVals) : 0, actVals.length ? Math.min(...actVals) : 0);
+          let vMax = Math.max(0, predVals.length ? Math.max(...predVals) : 0, actVals.length ? Math.max(...actVals) : 0);
+          if (vMax === vMin) {
+            // Expand a flat line to avoid divide-by-zero and clipping
+            vMax = vMax + 1;
+            vMin = vMin - 1;
+          } else {
+            const pad = (vMax - vMin) * 0.08; // 8% headroom
+            vMax += pad;
+            vMin -= pad;
+          }
           const x = t => padL + ((t - tMin) / Math.max(1, (tMax - tMin))) * plotW;
-          const y = v => padT + (vMax === vMin ? plotH / 2 : (1 - (v - vMin) / (vMax - vMin)) * plotH);
+          const yRaw = v => padT + (1 - (v - vMin) / (vMax - vMin)) * plotH;
+          const y = v => Math.min(padT + plotH - 2, Math.max(padT + 2, yRaw(v))); // clamp into plot
           // gridlines
           ctx.strokeStyle = 'rgba(148,163,184,0.15)';
           ctx.lineWidth = 1;
@@ -788,7 +806,7 @@
           // last value label
           ctx.fillStyle = '#94a3b8';
           const last = points[points.length - 1];
-          ctx.fillText(`${last.cum.toFixed(2)}`, x(last.t) + 6, y(last.cum) - 6);
+          ctx.fillText(`${last.cum.toFixed(2)}`, Math.min(padL + plotW - 30, x(last.t) + 6), y(last.cum) - 6);
           // Axis labels and ticks
           const currency = priceSeries.currency || '';
           const symbolMap = { EUR: '€', GBP: '£', USD: '$' };
@@ -823,15 +841,24 @@
           const title = `Cumulative Revenue (${currency || 'currency'})`;
           ctx.fillStyle = '#94a3b8';
           ctx.fillText(title, padL + 8, padT - 6);
-          // Legend
-          const legY = padT + 6;
-          // predicted
-          ctx.fillStyle = '#22d3ee'; ctx.fillRect(padL + 220, legY - 8, 10, 2);
-          ctx.fillStyle = '#94a3b8'; ctx.fillText('Predicted', padL + 236, legY);
-          // actual
+          // Legend (right-aligned to avoid overflow)
+          const legY = padT + 8;
+          const predLbl = 'Predicted';
+          const actLbl = 'Actual';
+          const markerW = 12, gap = 6, spacing = 16;
+          let legendWidth = markerW + gap + ctx.measureText(predLbl).width;
+          if (actPoints.length) legendWidth += spacing + markerW + gap + ctx.measureText(actLbl).width;
+          let lx = padL + plotW - legendWidth;
+          // predicted item
+          ctx.fillStyle = '#22d3ee'; ctx.fillRect(lx, legY - 7, markerW, 3);
+          lx += markerW + gap;
+          ctx.fillStyle = '#94a3b8'; ctx.fillText(predLbl, lx, legY);
+          lx += ctx.measureText(predLbl).width + spacing;
+          // actual item (if present)
           if (actPoints.length) {
-            ctx.fillStyle = '#f59e0b'; ctx.fillRect(padL + 310, legY - 8, 10, 2);
-            ctx.fillStyle = '#94a3b8'; ctx.fillText('Actual', padL + 326, legY);
+            ctx.fillStyle = '#f59e0b'; ctx.fillRect(lx, legY - 7, markerW, 3);
+            lx += markerW + gap;
+            ctx.fillStyle = '#94a3b8'; ctx.fillText(actLbl, lx, legY);
           }
           host.appendChild(canvas);
         }
@@ -876,6 +903,7 @@
         function handleHashChange() {
           const route = parseRoute();
           activate(route.view);
+          if (window.__finTimer) { clearInterval(window.__finTimer); window.__finTimer = null; }
           if (route.view === 'project') {
             const title = document.getElementById('project-title');
             const ph = document.getElementById('project-placeholder');
@@ -891,6 +919,10 @@
           } else if (route.view === 'financial') {
             // render assets list when visiting the financial tab
             renderFinancialAssetsList();
+            window.__finTimer = setInterval(() => {
+              // periodic refresh to reflect streaming
+              if (location.hash.slice(1) === 'financial') renderFinancialAssetsList();
+            }, 2000);
           } else if (route.view !== 'datasources') {
             // Ensure modal is closed when leaving datasources
             closeAddPriceModal();
@@ -916,6 +948,23 @@
 
         window.addEventListener('hashchange', handleHashChange);
         handleHashChange();
+
+        // Resize handling to keep charts within view
+        window.addEventListener('resize', () => {
+          const route = parseRoute();
+          if (route.view === 'project' && route.params.id) {
+            // Re-render current project chart on resize
+            const a = orka.assetsStore.get(route.params.id);
+            const psId = a && a.datasources && a.datasources.predicted_price;
+            const ps = psId ? orka.priceStore.state.pricesById[psId] : null;
+            const cs = orka.consumptionStore.getForecast(route.params.id) || null;
+            const apId = a && a.datasources && a.datasources.actual_price;
+            const aps = apId ? orka.priceStore.state.pricesById[apId] : null;
+            const acId = a && a.datasources && a.datasources.actual_consumption;
+            const acs = acId ? orka.telemetryStore.state.seriesById[acId] : orka.telemetryStore.getLatest(route.params.id);
+            drawRevenueChart(a, ps, cs, aps, acs);
+          }
+        });
 
         // Public helper to navigate to a project
         window.orka = Object.assign({}, window.orka, {
@@ -1372,21 +1421,25 @@
           const header = document.createElement('div');
           header.className = 'card';
           header.innerHTML = `
-            <div style="display:grid; grid-template-columns: 1fr 120px 160px; gap:12px; font-size:12px; color: var(--muted);">
+            <div style="display:grid; grid-template-columns: 1fr 120px 160px 200px; gap:12px; font-size:12px; color: var(--muted);">
               <div>Asset</div>
               <div>Zone</div>
               <div>Size</div>
+              <div>Revenue (pred vs actual)</div>
             </div>`;
           finAssetsListEl.appendChild(header);
           // rows
           items.forEach(asset => {
             const row = document.createElement('div');
             row.className = 'card';
+            const rev = computeAssetRevenues(asset);
+            const revHtml = rev.html;
             row.innerHTML = `
-              <div style="display:grid; grid-template-columns: 1fr 120px 160px; align-items:center; gap:12px;">
+              <div style="display:grid; grid-template-columns: 1fr 120px 160px 200px; align-items:center; gap:12px;">
                 <div><strong>${asset.name}</strong> <span class="muted" style="font-size:12px">(${asset.asset_id})</span></div>
                 <div>${asset.zone_code}</div>
                 <div>${asset.bess.power_rating_mw}MW / ${asset.bess.energy_capacity_mwh}MWh</div>
+                <div>${revHtml}</div>
               </div>`;
             row.style.cursor = 'pointer';
             row.setAttribute('role', 'button');
@@ -1401,6 +1454,74 @@
             finAssetsListEl.appendChild(row);
           });
           ensureFinAssetsVisibility();
+        }
+
+        function currencySymbol(curr) {
+          const map = { EUR: '€', GBP: '£', USD: '$' };
+          return map[curr] || '';
+        }
+
+        function computeAssetRevenues(asset) {
+          // Actual revenue and cutoff time
+          const apId = asset.datasources && asset.datasources.actual_price;
+          const acId = asset.datasources && asset.datasources.actual_consumption;
+          const aps = apId ? orka.priceStore.state.pricesById[apId] : null;
+          const acs = acId ? orka.telemetryStore.state.seriesById[acId] : null;
+          const actual = sumActualRevenue(aps, acs);
+          const cutoffTs = actual && isFinite(actual.lastTs) ? actual.lastTs : undefined;
+          // Predicted series
+          const ppId = asset.datasources && asset.datasources.predicted_price;
+          const pps = ppId ? orka.priceStore.state.pricesById[ppId] : null;
+          const pcs = orka.consumptionStore.getForecast(asset.asset_id) || null;
+          const predicted = sumPredictedRevenue(pps, pcs, cutoffTs);
+          // Build text
+          const currency = (actual && actual.currency) || (predicted && predicted.currency) || '';
+          const sym = currencySymbol(currency);
+          const predText = predicted ? `${sym}${predicted.total.toFixed(2)}` : '—';
+          const actText = actual ? `${sym}${actual.total.toFixed(2)}` : '—';
+          let deltaHtml = '';
+          if (predicted && actual) {
+            const delta = actual.total - predicted.total;
+            const color = delta >= 0 ? '#10b981' : '#ef4444';
+            const sign = delta >= 0 ? '+' : '';
+            deltaHtml = ` <span style="color:${color}">(${sign}${sym}${delta.toFixed(2)})</span>`;
+          }
+          return { html: `${predText} vs ${actText}${deltaHtml}` };
+        }
+
+        function sumPredictedRevenue(priceSeries, consSeries, cutoffTs) {
+          if (!priceSeries || !consSeries) return null;
+          const priceMap = Object.create(null);
+          (priceSeries.data || []).forEach(([iso, v]) => { priceMap[iso] = v; });
+          let total = 0;
+          (consSeries.data || []).forEach(dp => {
+            const t = new Date(dp.interval_start).getTime();
+            if (cutoffTs !== undefined && t > cutoffTs) return;
+            const price = priceMap[dp.interval_start];
+            if (price === undefined) return;
+            const e = dp.predicted_energy_mwh || 0;
+            const st = dp.predicted_state;
+            const signedE = st === 'DISCHARGING' ? e : (st === 'CHARGING' ? -e : 0);
+            total += price * signedE;
+          });
+          return { total, currency: priceSeries.currency };
+        }
+
+        function sumActualRevenue(priceSeries, consSeries) {
+          if (!priceSeries || !consSeries) return null;
+          const priceMap = Object.create(null);
+          (priceSeries.data || []).forEach(([iso, v]) => { priceMap[iso] = v; });
+          let total = 0;
+          let lastTs = undefined;
+          (consSeries.data || []).forEach(dp => {
+            const price = priceMap[dp.interval_start];
+            if (price === undefined) return;
+            const dis = dp.energy_discharged_mwh || 0;
+            const chg = dp.energy_charged_mwh || 0;
+            total += price * (dis - chg);
+            lastTs = new Date(dp.interval_start).getTime();
+          });
+          return { total, currency: priceSeries.currency, lastTs };
         }
 
         if (formAddAsset) formAddAsset.addEventListener('submit', (e) => {
