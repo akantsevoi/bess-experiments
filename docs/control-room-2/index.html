@@ -243,6 +243,16 @@
         <section class="section" id="section-project" aria-label="Project">
           <h2 id="project-title">Project</h2>
           <div class="muted" id="project-placeholder">Project view placeholder. Route reserved.</div>
+          <div id="project-content" class="grid" style="display:none; gap:12px;">
+            <div class="card" id="project-info"></div>
+            <div class="card" id="project-chart-card">
+              <div class="row" style="justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <div><strong>Predicted Revenue</strong> <span class="muted" style="font-size:12px">(streaming)</span></div>
+                <div class="muted" id="project-chart-hint" style="font-size:12px"></div>
+              </div>
+              <div id="project-chart" style="height:240px; width:100%; position:relative;"></div>
+            </div>
+          </div>
         </section>
       </main>
     </div>
@@ -477,6 +487,184 @@
         // expose assets store
         window.orka = Object.assign({}, window.orka, { assetsStore });
 
+        // ------- Project view (per-asset) -------
+        let projectRenderTimer = null;
+
+        function teardownProjectView() {
+          const content = document.getElementById('project-content');
+          const ph = document.getElementById('project-placeholder');
+          if (projectRenderTimer) { clearInterval(projectRenderTimer); projectRenderTimer = null; }
+          const chartHost = document.getElementById('project-chart');
+          if (chartHost) chartHost.innerHTML = '';
+          if (content) content.style.display = 'none';
+          if (ph) ph.style.display = '';
+        }
+
+        function renderProjectView(assetId) {
+          const asset = orka.assetsStore.get(assetId);
+          const content = document.getElementById('project-content');
+          const ph = document.getElementById('project-placeholder');
+          const info = document.getElementById('project-info');
+          const hint = document.getElementById('project-chart-hint');
+          if (!asset || !content || !info) {
+            if (ph) { ph.textContent = `Unknown asset: ${assetId}`; ph.style.display = ''; }
+            if (content) content.style.display = 'none';
+            return;
+          }
+          ph.style.display = 'none';
+          content.style.display = 'block';
+          const priceSel = asset.datasources && asset.datasources.predicted_price;
+          const priceSeries = priceSel ? orka.priceStore.state.pricesById[priceSel] : null;
+          const consSeries = orka.consumptionStore.getForecast(assetId) || null;
+          const priceLabel = priceSeries ? seriesLabel(priceSeries) : '—';
+          const consLabel = consSeries ? `issued ${formatUtc(consSeries.issued_at)} · opt ${consSeries.optimizer_version}${consSeries.scenario_id ? ' · ' + consSeries.scenario_id : ''}` : '—';
+          info.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
+              <div>
+                <div><strong>${asset.name}</strong> <span class="muted" style="font-size:12px">(${asset.asset_id})</span></div>
+                <div class="muted" style="font-size:12px">${asset.zone_code} · ${asset.bess.power_rating_mw}MW / ${asset.bess.energy_capacity_mwh}MWh</div>
+              </div>
+              <div class="muted" style="font-size:12px; text-align:right;">
+                <div>Price: ${priceLabel}</div>
+                <div>Consumption: ${consLabel}</div>
+              </div>
+            </div>`;
+          if (hint) hint.textContent = 'updates every ~2s';
+          drawRevenueChart(asset, priceSeries, consSeries);
+          if (projectRenderTimer) clearInterval(projectRenderTimer);
+          projectRenderTimer = setInterval(() => {
+            const a = orka.assetsStore.get(assetId);
+            const psId = a && a.datasources && a.datasources.predicted_price;
+            const ps = psId ? orka.priceStore.state.pricesById[psId] : null;
+            const cs = orka.consumptionStore.getForecast(assetId) || null;
+            drawRevenueChart(a, ps, cs);
+          }, 2000);
+        }
+
+        function drawRevenueChart(asset, priceSeries, consSeries) {
+          const host = document.getElementById('project-chart');
+          if (!host) return;
+          host.innerHTML = '';
+          if (!asset || !priceSeries || !consSeries) {
+            const msg = document.createElement('div');
+            msg.className = 'muted';
+            msg.style.padding = '6px 0';
+            msg.textContent = !asset ? 'No asset' : (!priceSeries ? 'Select a predicted price for this asset.' : 'No predicted consumption series found.');
+            host.appendChild(msg);
+            return;
+          }
+          // Build price map by interval_start
+          const priceMap = Object.create(null);
+          (priceSeries.data || []).forEach(([iso, v]) => { priceMap[iso] = v; });
+          const points = [];
+          let cum = 0;
+          (consSeries.data || []).forEach(dp => {
+            const iso = dp.interval_start;
+            const price = priceMap[iso];
+            if (price === undefined) return; // skip until price arrives
+            const e = dp.predicted_energy_mwh || 0;
+            const state = dp.predicted_state;
+            const signedE = state === 'DISCHARGING' ? e : (state === 'CHARGING' ? -e : 0);
+            const rev = price * signedE;
+            cum += rev;
+            points.push({ t: new Date(iso).getTime(), rev, cum });
+          });
+          // Draw simple line chart for cumulative revenue
+          const w = host.clientWidth || 600;
+          const h = host.clientHeight || 240;
+          const canvas = document.createElement('canvas');
+          const dpr = Math.max(1, window.devicePixelRatio || 1);
+          canvas.width = Math.floor(w * dpr);
+          canvas.height = Math.floor(h * dpr);
+          canvas.style.width = w + 'px';
+          canvas.style.height = h + 'px';
+          const ctx = canvas.getContext('2d');
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          // background
+          ctx.fillStyle = '#0b1220';
+          ctx.fillRect(0, 0, w, h);
+          // axes padding
+          const padL = 56, padR = 8, padT = 18, padB = 32;
+          const plotW = w - padL - padR;
+          const plotH = h - padT - padB;
+          // axes
+          ctx.strokeStyle = '#1f2937';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(padL, padT);
+          ctx.lineTo(padL, padT + plotH);
+          ctx.lineTo(padL + plotW, padT + plotH);
+          ctx.stroke();
+          if (points.length === 0) {
+            ctx.fillStyle = '#94a3b8';
+            ctx.fillText('Waiting for data…', padL + 8, padT + 16);
+            host.appendChild(canvas);
+            return;
+          }
+          const tMin = points[0].t;
+          const tMax = points[points.length - 1].t;
+          const vMin = Math.min(0, ...points.map(p => p.cum));
+          const vMax = Math.max(0, ...points.map(p => p.cum));
+          const x = t => padL + ((t - tMin) / Math.max(1, (tMax - tMin))) * plotW;
+          const y = v => padT + (vMax === vMin ? plotH / 2 : (1 - (v - vMin) / (vMax - vMin)) * plotH);
+          // gridlines
+          ctx.strokeStyle = 'rgba(148,163,184,0.15)';
+          ctx.lineWidth = 1;
+          const yTicks = 4;
+          for (let i = 0; i <= yTicks; i++) {
+            const gy = padT + (plotH * i / yTicks);
+            ctx.beginPath(); ctx.moveTo(padL, gy); ctx.lineTo(padL + plotW, gy); ctx.stroke();
+          }
+          // line
+          ctx.strokeStyle = '#22d3ee';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          points.forEach((p, idx) => {
+            const xx = x(p.t), yy = y(p.cum);
+            if (idx === 0) ctx.moveTo(xx, yy); else ctx.lineTo(xx, yy);
+          });
+          ctx.stroke();
+          // last value label
+          ctx.fillStyle = '#94a3b8';
+          const last = points[points.length - 1];
+          ctx.fillText(`${last.cum.toFixed(2)}`, x(last.t) + 6, y(last.cum) - 6);
+          // Axis labels and ticks
+          const currency = priceSeries.currency || '';
+          const symbolMap = { EUR: '€', GBP: '£', USD: '$' };
+          const unit = symbolMap[currency] || (currency ? currency + ' ' : '');
+          ctx.fillStyle = '#94a3b8';
+          ctx.font = '12px system-ui';
+          // Y tick labels
+          for (let i = 0; i <= yTicks; i++) {
+            const v = vMax === vMin ? 0 : (vMax - (vMax - vMin) * (i / yTicks));
+            const gy = padT + (plotH * i / yTicks);
+            const txt = `${unit}${v.toFixed(0)}`;
+            ctx.fillText(txt, 6, gy + 4);
+          }
+          // X time labels
+          const xTicks = Math.min(4, Math.max(1, points.length - 1));
+          if (tMax > tMin) {
+            for (let i = 0; i <= xTicks; i++) {
+              const tt = tMin + (i / xTicks) * (tMax - tMin);
+              const xx = x(tt);
+              ctx.strokeStyle = '#1f2937';
+              ctx.beginPath(); ctx.moveTo(xx, padT + plotH); ctx.lineTo(xx, padT + plotH + 4); ctx.stroke();
+              const d = new Date(tt);
+              const dd = pad2(d.getUTCDate()), mo = pad2(d.getUTCMonth() + 1);
+              const hh = pad2(d.getUTCHours()), mm = pad2(d.getUTCMinutes());
+              const lbl = `${dd}/${mo} ${hh}:${mm}`;
+              const tw = ctx.measureText(lbl).width;
+              ctx.fillStyle = '#94a3b8';
+              ctx.fillText(lbl, Math.min(Math.max(padL, xx - tw / 2), padL + plotW - tw), padT + plotH + 16);
+            }
+          }
+          // Y-axis title hint
+          const title = `Cumulative Revenue (${currency || 'currency'})`;
+          ctx.fillStyle = '#94a3b8';
+          ctx.fillText(title, padL + 8, padT - 6);
+          host.appendChild(canvas);
+        }
+
         // Simple tab handling
         const nav = document.getElementById('nav');
         const sidebar = document.getElementById('sidebar');
@@ -521,13 +709,21 @@
             const title = document.getElementById('project-title');
             const ph = document.getElementById('project-placeholder');
             title.textContent = route.params.id ? `Project: ${route.params.id}` : 'Project';
-            ph.textContent = route.params.id ? `Reserved project detail view for ${route.params.id}.` : 'Project view placeholder. Route reserved.';
+            if (route.params.id) {
+              ph.style.display = 'none';
+              renderProjectView(route.params.id);
+            } else {
+              ph.textContent = 'Project view placeholder. Route reserved.';
+              ph.style.display = '';
+              teardownProjectView();
+            }
           } else if (route.view === 'financial') {
             // render assets list when visiting the financial tab
             renderFinancialAssetsList();
           } else if (route.view !== 'datasources') {
             // Ensure modal is closed when leaving datasources
             closeAddPriceModal();
+            teardownProjectView();
           }
         }
 
@@ -570,9 +766,7 @@
         const formAddAsset = document.getElementById('form-add-asset');
         const assetsListEl = document.getElementById('assets-list');
         const assetsEmptyEl = document.getElementById('assets-empty');
-        // Financial assets list elements
-        const finAssetsListEl = document.getElementById('fin-assets-list');
-        const finAssetsEmptyEl = document.getElementById('fin-assets-empty');
+        // Financial assets list elements (queried on demand in render to avoid TDZ)
 
         // Predicted consumption UI
         const btnAddCons = document.getElementById('btn-add-cons');
@@ -738,6 +932,8 @@
         }
 
         function ensureFinAssetsVisibility() {
+          const finAssetsListEl = document.getElementById('fin-assets-list');
+          const finAssetsEmptyEl = document.getElementById('fin-assets-empty');
           const hasAny = Object.keys(orka.assetsStore.state.assetsById).length > 0;
           if (finAssetsEmptyEl) finAssetsEmptyEl.style.display = hasAny ? 'none' : '';
           if (finAssetsListEl) finAssetsListEl.style.display = hasAny ? 'grid' : 'none';
@@ -837,6 +1033,7 @@
         }
 
         function renderFinancialAssetsList() {
+          const finAssetsListEl = document.getElementById('fin-assets-list');
           if (!finAssetsListEl) return;
           finAssetsListEl.innerHTML = '';
           const items = Object.values(orka.assetsStore.state.assetsById);
