@@ -223,6 +223,34 @@ Note: When computing revenue or SLA-weighted metrics, the UI should pair a consu
   - The “Add price stream” button opens the price modal prefilled with the asset's zone.
 - Date formatting: Timestamps display as `dd/mm/yyyy HH:MM:SS UTC` to be locale-agnostic for the MVP.
 
+## Financial Performance & Project View
+
+- Financial tab:
+  - Lists all assets (name, id, zone, MW/MWh). Clicking an asset navigates to the project view `#project/<asset_id>`.
+
+- Project view (per-asset):
+  - Header shows basic asset info, the selected predicted price datasource label, and the latest predicted consumption label.
+  - Predicted Revenue chart:
+    - Metric: Cumulative predicted revenue over time.
+    - Per-interval revenue: `rev_t = price_t * (E_dis_t - E_chg_t)` where sign is taken from predicted_state (DISCHARGING positive, CHARGING negative, IDLE zero).
+    - Cumulative series: `cum_t = sum_{k<=t} rev_k`.
+    - Join rule: Intervals are included only when both predicted price and predicted consumption datapoints exist for the same `interval_start` ISO timestamp.
+    - Rendering: Simple canvas line chart with labeled axes (Y: currency; X: timeline). Updates approximately every 2 seconds to reflect streaming sources.
+
+Notes:
+- The selected predicted price per asset is stored in `asset.datasources.predicted_price` and is used for revenue calculations.
+- The project view uses the latest predicted consumption series returned by `consumptionStore.getForecast(asset_id)`.
+
+## Demo bootstrap (optional)
+
+- A guard flag `predefinedSimulatedAssetsEnabled` (boolean) initializes a demo scenario on page load when true.
+  - Assets created:
+    - `BESS-DE` in `DE-LU` (50MW/100MWh), SoC bounds 10–90%.
+    - `BESS-GB` in `GB` (30MW/60MWh), SoC bounds 15–85%.
+  - Predicted price streams started (q0.5, 60-min intervals, 24h horizon, 5-second emission): one per zone; each asset selects its zone’s stream in `datasources.predicted_price`.
+  - Predicted consumption series started (60-min intervals, 24h horizon, 5-second emission): one per asset, tied to the selected price.
+- Set the flag to `false` to start with a clean slate and create everything manually via the UI.
+
 ### Predicted price streams (simulated)
 - Creation: Modal under Data Sources → “Predicted electricity prices → +”.
   - Fields: `zone_code`, `market`, `currency`, `interval_min`, `issued_at` (UTC), `quantile`, `horizon_h`, `source`.
