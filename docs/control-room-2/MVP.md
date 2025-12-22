@@ -223,6 +223,21 @@ Note: When computing revenue or SLA-weighted metrics, the UI should pair a consu
   - The “Add price stream” button opens the price modal prefilled with the asset's zone.
 - Date formatting: Timestamps display as `dd/mm/yyyy HH:MM:SS UTC` to be locale-agnostic for the MVP.
 
+### Actual data sources (simulated)
+
+- Actual electricity prices:
+  - Creation: Data Sources → “Actual electricity prices → +”. Fields: `zone_code`, `market`, `currency`, `interval_min`, `horizon_h`, `source`.
+  - Series shape: Stored in `priceStore` with `series_type: 'actual'`, `data: [ISO8601, price]`.
+  - Emission: One interval every 5 seconds, random walk similar to predicted.
+  - Asset usage: Asset cards include a dropdown to select the active actual price series for the asset’s zone; saved to `asset.datasources.actual_price`.
+
+- Actual consumption (telemetry):
+  - Creation: Data Sources → “Actual consumption → +” (per asset). Fields: `asset`, `interval_min`, `horizon_h`, `source`.
+  - Store: `telemetryStore` with series keyed by `series_id`; indexed by `asset_id`.
+  - Datapoints: `{ interval_start, state, energy_charged_mwh, energy_discharged_mwh, soe_pct_end }`.
+  - Emission: One interval every 5 seconds; respects asset SoC and power/efficiency parameters.
+  - Asset usage: Asset cards include a dropdown to select the active actual consumption series; saved to `asset.datasources.actual_consumption`.
+
 ## Financial Performance & Project View
 
  - Financial tab:
@@ -232,11 +247,11 @@ Note: When computing revenue or SLA-weighted metrics, the UI should pair a consu
 - Project view (per-asset):
   - Header shows basic asset info, the selected predicted price datasource label, and the latest predicted consumption label.
   - Predicted Revenue chart:
-    - Metric: Cumulative predicted revenue over time.
+    - Metric: Cumulative predicted revenue over time, with optional actual cumulative revenue overlay when actual sources are selected.
     - Per-interval revenue: `rev_t = price_t * (E_dis_t - E_chg_t)` where sign is taken from predicted_state (DISCHARGING positive, CHARGING negative, IDLE zero).
     - Cumulative series: `cum_t = sum_{k<=t} rev_k`.
-    - Join rule: Intervals are included only when both predicted price and predicted consumption datapoints exist for the same `interval_start` ISO timestamp.
-    - Rendering: Simple canvas line chart with labeled axes (Y: currency; X: timeline). Updates approximately every 2 seconds to reflect streaming sources.
+    - Join rule: Intervals are included only when both price and consumption datapoints exist for the same `interval_start` ISO timestamp (applied separately for predicted and actual overlays).
+    - Rendering: Simple canvas line chart with labeled axes (Y: currency; X: timeline) and legend (Predicted vs Actual). Updates ~every 2 seconds to reflect streaming sources.
 
 Notes:
 - The selected predicted price per asset is stored in `asset.datasources.predicted_price` and is used for revenue calculations.
@@ -250,6 +265,8 @@ Notes:
     - `BESS-GB` in `GB` (30MW/60MWh), SoC bounds 15–85%.
   - Predicted price streams started (q0.5, 60-min intervals, 24h horizon, 5-second emission): one per zone; each asset selects its zone’s stream in `datasources.predicted_price`.
   - Predicted consumption series started (60-min intervals, 24h horizon, 5-second emission): one per asset, tied to the selected price.
+  - Actual price streams started (60-min intervals, 24h horizon, 5-second emission): one per zone; each asset selects its zone’s stream in `datasources.actual_price`.
+  - Actual consumption series started (60-min intervals, 24h horizon, 5-second emission): one per asset; each asset selects its series in `datasources.actual_consumption`.
 - Set the flag to `false` to start with a clean slate and create everything manually via the UI.
 
 ### Predicted price streams (simulated)
@@ -315,7 +332,9 @@ type Asset = BaseAsset & {
   bess: BessSpec;                  // required for 'BESS' assets
   datasources?: {                  // selected data sources for this asset (by key)
     predicted_price?: string;      // series_id of chosen predicted price series for the asset's zone
-    // future keys: actual_price, consumption_forecast, weather, etc.
+    actual_price?: string;         // series_id of chosen actual price series for the asset's zone
+    actual_consumption?: string;   // series_id of chosen actual consumption (telemetry) for this asset
+    // future keys: consumption_forecast, weather, etc.
   };
 };
 
