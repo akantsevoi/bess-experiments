@@ -89,6 +89,15 @@
           </div>
           <div id="price-streams-empty" class="card muted">No streams yet. Use + to add a predicted price stream.</div>
           <div id="price-streams-list" class="grid" style="display:none"></div>
+
+          <div class="toolbar">
+            <div class="row muted">Predicted consumption (per asset)</div>
+            <div class="row">
+              <button class="btn icon primary" id="btn-add-cons" title="Add predicted consumption series" aria-haspopup="dialog" aria-controls="modal-add-cons">+</button>
+            </div>
+          </div>
+          <div id="cons-streams-empty" class="card muted">No consumption series yet. Use + to add one for an asset.</div>
+          <div id="cons-streams-list" class="grid" style="display:none"></div>
         </section>
         <!-- Modal: Add Asset -->
         <div class="modal" id="modal-add-asset" role="dialog" aria-modal="true" aria-labelledby="dlg-add-asset-title">
@@ -180,6 +189,49 @@
               <div class="actions">
                 <button type="button" class="btn" id="btn-cancel-add-price">Cancel</button>
                 <button type="submit" class="btn primary" id="btn-submit-add-price">Add</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- Modal: Add Predicted Consumption (per asset) -->
+        <div class="modal" id="modal-add-cons" role="dialog" aria-modal="true" aria-labelledby="dlg-add-cons-title">
+          <div class="dialog">
+            <h3 id="dlg-add-cons-title">Add Predicted Consumption</h3>
+            <p class="desc">Create a simulated forecast tied to an existing asset. Emits one interval every 5 seconds.</p>
+            <form id="form-add-cons">
+              <div class="grid" style="margin-bottom:12px">
+                <div>
+                  <div class="label">Asset</div>
+                  <select class="select" name="asset_id" id="sel-cons-asset" required></select>
+                </div>
+                <div>
+                  <div class="label">Issued at (UTC)</div>
+                  <input class="input" type="datetime-local" step="1" name="issued_at" lang="en-GB" required />
+                </div>
+                <div>
+                  <div class="label">Interval (min)</div>
+                  <input class="input" type="number" min="5" step="5" name="interval_min" value="60" required />
+                </div>
+                <div>
+                  <div class="label">Horizon (hours)</div>
+                  <input class="input" type="number" min="1" max="168" step="1" name="horizon_h" value="24" />
+                </div>
+                <div>
+                  <div class="label">Optimizer version</div>
+                  <input class="input" name="optimizer_version" placeholder="e.g., v1" value="v1" />
+                </div>
+                <div>
+                  <div class="label">Scenario</div>
+                  <input class="input" name="scenario_id" placeholder="e.g., base" value="base" />
+                </div>
+                <div>
+                  <div class="label">Price assumption</div>
+                  <select class="select" name="price_assumption_source" id="sel-cons-price" required></select>
+                </div>
+              </div>
+              <div class="actions">
+                <button type="button" class="btn" id="btn-cancel-add-cons">Cancel</button>
+                <button type="submit" class="btn primary" id="btn-submit-add-cons">Add</button>
               </div>
             </form>
           </div>
@@ -494,7 +546,7 @@
           navigateToProject(id) { location.hash = `#project/${encodeURIComponent(id)}`; }
         });
 
-        // Data Sources UI wiring + assets + simulated price emitters
+        // Data Sources UI wiring + assets + simulated price & consumption emitters
         const btnAddPrice = document.getElementById('btn-add-price');
         const modalAddPrice = document.getElementById('modal-add-price');
         const btnCancelAddPrice = document.getElementById('btn-cancel-add-price');
@@ -510,12 +562,62 @@
         const assetsListEl = document.getElementById('assets-list');
         const assetsEmptyEl = document.getElementById('assets-empty');
 
+        // Predicted consumption UI
+        const btnAddCons = document.getElementById('btn-add-cons');
+        const modalAddCons = document.getElementById('modal-add-cons');
+        const btnCancelAddCons = document.getElementById('btn-cancel-add-cons');
+        const formAddCons = document.getElementById('form-add-cons');
+        const consListEl = document.getElementById('cons-streams-list');
+        const consEmptyEl = document.getElementById('cons-streams-empty');
+        const selConsAsset = document.getElementById('sel-cons-asset');
+        const selConsPrice = document.getElementById('sel-cons-price');
+
         if (btnAddPrice) btnAddPrice.addEventListener('click', () => openAddPriceModal());
         if (btnCancelAddPrice) btnCancelAddPrice.addEventListener('click', () => closeAddPriceModal());
         if (modalAddPrice) modalAddPrice.addEventListener('click', (e) => { if (e.target === modalAddPrice) closeAddPriceModal(); });
         if (btnAddAsset) btnAddAsset.addEventListener('click', () => { if (modalAddAsset) modalAddAsset.classList.add('open'); });
         if (btnCancelAddAsset) btnCancelAddAsset.addEventListener('click', () => { if (modalAddAsset) modalAddAsset.classList.remove('open'); });
         if (modalAddAsset) modalAddAsset.addEventListener('click', (e) => { if (e.target === modalAddAsset) modalAddAsset.classList.remove('open'); });
+        if (btnAddCons) btnAddCons.addEventListener('click', () => {
+          if (!selConsAsset || !selConsPrice) return;
+          // Populate assets select
+          selConsAsset.innerHTML = '';
+          const assets = Object.values(orka.assetsStore.state.assetsById);
+          if (!assets.length) {
+            alert('Create an asset first.');
+            return;
+          }
+          assets.forEach(a => selConsAsset.insertAdjacentHTML('beforeend', `<option value="${a.asset_id}">${a.name} (${a.asset_id})</option>`));
+          // Populate price options for the first asset by default
+          populateConsPriceOptions();
+          if (modalAddCons) modalAddCons.classList.add('open');
+        });
+        if (btnCancelAddCons) btnCancelAddCons.addEventListener('click', () => { if (modalAddCons) modalAddCons.classList.remove('open'); });
+        if (modalAddCons) modalAddCons.addEventListener('click', (e) => { if (e.target === modalAddCons) modalAddCons.classList.remove('open'); });
+        if (selConsAsset) selConsAsset.addEventListener('change', populateConsPriceOptions);
+
+        function populateConsPriceOptions() {
+          if (!selConsAsset || !selConsPrice) return;
+          const assetId = selConsAsset.value;
+          const asset = orka.assetsStore.get(assetId);
+          selConsPrice.innerHTML = '';
+          if (!asset) return;
+          const zoneIds = orka.priceStore.state.indexByZone[asset.zone_code] || [];
+          const zoneSeries = zoneIds.map(id => orka.priceStore.state.pricesById[id]).filter(s => s && s.series_type === 'predicted');
+          if (!zoneSeries.length) {
+            selConsPrice.insertAdjacentHTML('beforeend', '<option value="" disabled selected>No predicted price streams in this zone</option>');
+            return;
+          }
+          // Preselect asset-chosen price if present
+          const preferred = asset.datasources && asset.datasources.predicted_price;
+          let foundPreferred = false;
+          zoneSeries.forEach(s => {
+            const sel = preferred && s.series_id === preferred ? 'selected' : '';
+            if (sel) foundPreferred = true;
+            selConsPrice.insertAdjacentHTML('beforeend', `<option value="${s.series_id}" ${sel}>${seriesLabel(s)}</option>`);
+          });
+          if (!foundPreferred) selConsPrice.selectedIndex = 0;
+        }
         if (formAddPrice) formAddPrice.addEventListener('submit', (e) => {
           e.preventDefault();
           const fd = new FormData(formAddPrice);
@@ -565,12 +667,56 @@
           renderAssetsList();
         });
 
+        if (formAddCons) formAddCons.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const fd = new FormData(formAddCons);
+          const data = Object.fromEntries(fd.entries());
+          const asset_id = String(data.asset_id || '').trim();
+          const asset = orka.assetsStore.get(asset_id);
+          if (!asset) { alert('Asset is required'); return; }
+          const issuedLocal = String(data.issued_at || '');
+          const issuedAtIso = issuedLocal ? new Date(issuedLocal).toISOString() : new Date().toISOString();
+          const interval_min = Math.max(1, parseInt(String(data.interval_min || '60'), 10));
+          const horizon_h = Math.max(1, parseInt(String(data.horizon_h || '24'), 10));
+          const optimizer_version = String(data.optimizer_version || 'v1');
+          const scenario_id = String(data.scenario_id || '').trim() || undefined;
+          const price_assumption_source = String(data.price_assumption_source || '').trim();
+          if (!price_assumption_source) { alert('Select a price assumption'); return; }
+
+          // Build series_id: <asset>_cons_pred_i<ISO-issued>_opt<optimizer_version>[_s<scenario>]_r1
+          const sPart = scenario_id ? `_s${scenario_id}` : '';
+          const id = `${asset_id}_cons_pred_i${issuedAtIso}_opt${optimizer_version}${sPart}_r1`;
+
+          const series = {
+            series_id: id,
+            asset_id,
+            interval_duration_min: interval_min,
+            optimizer_version,
+            price_assumption_source,
+            issued_at: issuedAtIso,
+            scenario_id,
+            revision: 1,
+            data: []
+          };
+          orka.consumptionStore.upsert(series);
+          startPredictedConsumptionEmitter(series, asset, horizon_h);
+          if (modalAddCons) modalAddCons.classList.remove('open');
+          formAddCons.reset();
+        });
+
         const activePriceEmitters = {};
+        const activeConsumptionEmitters = {};
 
         function ensureListVisibility() {
           const hasAny = Object.keys(activePriceEmitters).length > 0;
           if (emptyEl) emptyEl.style.display = hasAny ? 'none' : '';
           if (listEl) listEl.style.display = hasAny ? 'grid' : 'none';
+        }
+
+        function ensureConsVisibility() {
+          const hasAny = Object.keys(activeConsumptionEmitters).length > 0;
+          if (consEmptyEl) consEmptyEl.style.display = hasAny ? 'none' : '';
+          if (consListEl) consListEl.style.display = hasAny ? 'grid' : 'none';
         }
 
         function ensureAssetsVisibility() {
@@ -604,6 +750,13 @@
             ? `Using: ${seriesLabel(orka.priceStore.state.pricesById[selectedPriceId])}`
             : 'No source selected.';
 
+          // Consumption series for this asset
+          const consIds = (orka.consumptionStore.state.indexByAsset[asset.asset_id] || []);
+          const consSeries = consIds.map(id => orka.consumptionStore.state.forecastsById[id]);
+          const consListHtml = consSeries.length
+            ? consSeries.map(s => `<li>issued ${formatUtc(s.issued_at)} · opt ${s.optimizer_version}${s.scenario_id ? ' · ' + s.scenario_id : ''}</li>`).join('')
+            : '<li class="muted">No predicted consumption yet.</li>';
+
           card.innerHTML = `
             <div class="row" style="justify-content:space-between; align-items:flex-start; gap:12px;">
               <div style="min-width:0;">
@@ -620,6 +773,9 @@
                       <button class="btn" data-action="add-price" data-zone="${asset.zone_code}">Add price stream</button>
                     </div>
                     <div class="muted" id="${hintId}" style="font-size:12px;">${zoneSeries.length ? hintText : 'No predicted price streams yet.'}</div>
+                    <div style="font-size:13px; margin:10px 0 4px"><strong>Predicted consumption</strong></div>
+                    <ul style="margin:0 0 8px 18px; padding:0; list-style:disc;">${consListHtml}</ul>
+                    <button class="btn" data-action="add-cons" data-asset="${asset.asset_id}">Add consumption</button>
                   </div>
                 </div>
               </div>
@@ -627,6 +783,8 @@
 
           const addBtn = card.querySelector('[data-action="add-price"]');
           if (addBtn) addBtn.addEventListener('click', () => openAddPriceFromAsset(asset.zone_code));
+          const addConsBtn = card.querySelector('[data-action="add-cons"]');
+          if (addConsBtn) addConsBtn.addEventListener('click', () => openAddConsForAsset(asset.asset_id));
           const select = card.querySelector(`#${selectId}`);
           const hint = card.querySelector(`#${hintId}`);
           if (select) {
@@ -640,6 +798,16 @@
             });
           }
           return card;
+        }
+
+        function openAddConsForAsset(assetId) {
+          if (!selConsAsset || !selConsPrice) return;
+          // fill selects and open
+          selConsAsset.innerHTML = '';
+          const assets = Object.values(orka.assetsStore.state.assetsById);
+          assets.forEach(a => selConsAsset.insertAdjacentHTML('beforeend', `<option value="${a.asset_id}" ${a.asset_id === assetId ? 'selected' : ''}>${a.name} (${a.asset_id})</option>`));
+          populateConsPriceOptions();
+          if (modalAddCons) modalAddCons.classList.add('open');
         }
 
         function renderAssetsList() {
@@ -752,6 +920,101 @@
           activePriceEmitters[series.series_id] = { timer, stop };
           if (stopBtn) stopBtn.addEventListener('click', stop);
           ensureListVisibility();
+        }
+
+        function createConsEmitterRow(series, asset) {
+          const row = document.createElement('div');
+          row.className = 'card';
+          const sid = safeId(series.series_id);
+          row.id = `cons-row-${sid}`;
+          row.innerHTML = `
+            <div class="row" style="justify-content:space-between; align-items:center;">
+              <div>
+                <div><strong>${asset.name}</strong> · ${asset.asset_id} · ${series.interval_duration_min}min</div>
+                <div class="muted" style="font-size:12px">issued ${formatUtc(series.issued_at)} · opt ${series.optimizer_version}${series.scenario_id ? ' · ' + series.scenario_id : ''}</div>
+              </div>
+              <div class="row">
+                <span class="muted" style="font-size:12px" id="cons-stat-${sid}">emitted 0 pts</span>
+                <button class="btn" id="cons-stop-${sid}">Stop</button>
+              </div>
+            </div>`;
+          consListEl.appendChild(row);
+          return row;
+        }
+
+        function startPredictedConsumptionEmitter(series, asset, horizon_h) {
+          const nPoints = Math.max(1, Math.round((horizon_h * 60) / series.interval_duration_min));
+          const intervalMs = series.interval_duration_min * 60 * 1000; // logical interval
+          const tickRealMs = 5000; // emit every 5 seconds
+
+          const row = createConsEmitterRow(series, asset);
+          const sid = safeId(series.series_id);
+          const stat = row.querySelector(`#cons-stat-${sid}`);
+          const stopBtn = row.querySelector(`#cons-stop-${sid}`);
+
+          let emitted = 0;
+          let nextTs = new Date(series.issued_at).getTime();
+          // SoE baseline
+          const minPct = asset.bess.min_soc_pct ?? 10;
+          const maxPct = asset.bess.max_soc_pct ?? 90;
+          let soePct = (minPct + maxPct) / 2;
+          const cap = Math.max(1e-6, asset.bess.energy_capacity_mwh);
+          const maxChg = asset.bess.max_charge_mw ?? asset.bess.power_rating_mw;
+          const maxDis = asset.bess.max_discharge_mw ?? asset.bess.power_rating_mw;
+          const effChg = (asset.bess.charge_efficiency_pct ?? 95) / 100;
+          const effDis = (asset.bess.discharge_efficiency_pct ?? 95) / 100;
+
+          function nextPoint() {
+            // Choose state based on where SoE is relative to bounds
+            let state;
+            if (soePct <= minPct + 2) state = 'CHARGING';
+            else if (soePct >= maxPct - 2) state = 'DISCHARGING';
+            else state = Math.random() < 0.5 ? 'CHARGING' : (Math.random() < 0.5 ? 'DISCHARGING' : 'IDLE');
+
+            let power = 0;
+            if (state === 'CHARGING') power = Math.max(0, (0.6 + Math.random() * 0.4) * maxChg) * -1; // negative for charging
+            if (state === 'DISCHARGING') power = Math.max(0, (0.6 + Math.random() * 0.4) * maxDis);
+            // IDLE stays 0
+            const hours = series.interval_duration_min / 60;
+            const e = Math.abs(power) * hours; // MWh magnitude
+            let nextSoe = soePct;
+            if (state === 'CHARGING') nextSoe = Math.min(maxPct, soePct + (e * effChg / cap) * 100);
+            if (state === 'DISCHARGING') nextSoe = Math.max(minPct, soePct - (e / effDis / cap) * 100);
+            return { state, power, energy: e, soeEnd: Math.round(nextSoe * 100) / 100 };
+          }
+
+          function tick() {
+            if (emitted >= nPoints) { stop(); return; }
+            const p = nextPoint();
+            const iso = new Date(nextTs).toISOString();
+            const s = orka.consumptionStore.state.forecastsById[series.series_id];
+            if (s) {
+              s.data.push({
+                interval_start: iso,
+                predicted_state: p.state,
+                predicted_power_mw: Math.round(p.power * 100) / 100,
+                predicted_energy_mwh: Math.round(p.energy * 1000) / 1000,
+                predicted_soe_pct_end: p.soeEnd
+              });
+            }
+            emitted += 1;
+            soePct = p.soeEnd;
+            nextTs += intervalMs;
+            if (stat) stat.textContent = `emitted ${emitted} / ${nPoints} pts`;
+            console.info('Simulated predicted consumption event', { series_id: series.series_id, interval_start: iso, state: p.state });
+          }
+
+          function stop() {
+            clearInterval(activeConsumptionEmitters[series.series_id].timer);
+            delete activeConsumptionEmitters[series.series_id];
+            if (stopBtn) { stopBtn.disabled = true; stopBtn.textContent = 'Stopped'; }
+            ensureConsVisibility();
+          }
+
+          const timer = setInterval(tick, tickRealMs);
+          activeConsumptionEmitters[series.series_id] = { timer, stop };
+          if (stopBtn) stopBtn.addEventListener('click', stop);
+          ensureConsVisibility();
         }
 
         // Initial render for assets section

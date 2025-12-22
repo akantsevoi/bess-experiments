@@ -36,6 +36,11 @@ In order to calculate revenue loss we need few data sources:
     - same as item 4 but the one that was predicted
     - will be used to compare revenue
 
+MVP simulation & UI notes:
+- The Data Sources tab lets you create simulated predicted price streams (by zone/market) and predicted consumption series (per asset).
+- Price and consumption simulations emit one logical interval every 5 seconds until the requested horizon is reached.
+- Assets can select which predicted price series to use for downstream calculations; this selection is stored in-memory.
+
 ## ry interval start (UTC, ISO 8601).
 - interval_duration_min: Predicted price
 - event_id: unique id of provided piece of information

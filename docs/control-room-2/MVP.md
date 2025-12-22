@@ -223,6 +223,31 @@ Note: When computing revenue or SLA-weighted metrics, the UI should pair a consu
   - The “Add price stream” button opens the price modal prefilled with the asset's zone.
 - Date formatting: Timestamps display as `dd/mm/yyyy HH:MM:SS UTC` to be locale-agnostic for the MVP.
 
+### Predicted price streams (simulated)
+- Creation: Modal under Data Sources → “Predicted electricity prices → +”.
+  - Fields: `zone_code`, `market`, `currency`, `interval_min`, `issued_at` (UTC), `quantile`, `horizon_h`, `source`.
+  - Series ID format: `<zone>_<market>_predicted_q<quantile>_i<issued>_r1`.
+- Emission: Simulation appends one interval every 5 seconds until `horizon_h` is reached.
+  - Logical interval = `interval_min`; timestamps are ISO UTC.
+  - Price values follow a bounded random walk for demo purposes.
+- Listing: Active simulated streams appear with an “emitted x/y pts” counter and a Stop button.
+
+### Predicted consumption (per asset, simulated)
+- Creation: Modal under Data Sources → “Predicted consumption → +” (or from an Asset card).
+  - Requires selecting an existing `asset`.
+  - Fields: `asset`, `issued_at` (UTC), `interval_min`, `horizon_h`, `optimizer_version`, `scenario_id`, and `price_assumption_source` (predicted price series for the asset's zone).
+  - Series ID format: `<asset>_cons_pred_i<issued>_opt<optimizer_version>[_s<scenario>]_r1`.
+- Emission: Simulation appends one interval every 5 seconds until `horizon_h` is reached.
+  - Respects asset parameters: `min_soc_pct`, `max_soc_pct`, `energy_capacity_mwh`, `power_rating_mw`, optional `max_charge_mw`, `max_discharge_mw`, `charge_efficiency_pct`, `discharge_efficiency_pct`.
+  - Generates per-interval: `predicted_state`, `predicted_power_mw`, `predicted_energy_mwh`, `predicted_soe_pct_end`.
+- Listing:
+  - Asset cards show a bulleted list of predicted consumption series (`issued_at`, optimizer version, scenario).
+  - A dedicated list of active simulated consumption series shows progress and a Stop button.
+
+Notes:
+- Asset cards currently support choosing the active predicted price source via a dropdown; consumption selection can be added similarly later.
+- All simulations are in-memory and reset on reload.
+
 ### Assets (BESS)
 
 Goal: represent battery assets with enough detail for planning, optimization assumptions, and UI listing/selection. Keep minimal but expressive for MVP.
