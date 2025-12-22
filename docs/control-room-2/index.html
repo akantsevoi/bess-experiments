@@ -68,7 +68,11 @@
       <main class="content">
         <section class="section active" id="section-financial" aria-labelledby="tab-financial">
           <h2>Financial Performance</h2>
-          <div class="muted">Section intentionally left empty.</div>
+          <div class="toolbar">
+            <div class="row muted">Assets</div>
+          </div>
+          <div id="fin-assets-empty" class="card muted">No assets yet. Add assets in Data Sources.</div>
+          <div id="fin-assets-list" class="grid" style="display:none"></div>
         </section>
         <section class="section" id="section-datasources" aria-labelledby="tab-datasources">
           <h2>Data Sources</h2>
@@ -245,6 +249,8 @@
 
     <script>
       (function () {
+        // Toggle to preload demo assets and data sources on page load
+        const predefinedSimulatedAssetsEnabled = true;
         function byRevisionDesc(a, b) {
           const ra = typeof a.revision === 'number' ? a.revision : 0;
           const rb = typeof b.revision === 'number' ? b.revision : 0;
@@ -516,6 +522,9 @@
             const ph = document.getElementById('project-placeholder');
             title.textContent = route.params.id ? `Project: ${route.params.id}` : 'Project';
             ph.textContent = route.params.id ? `Reserved project detail view for ${route.params.id}.` : 'Project view placeholder. Route reserved.';
+          } else if (route.view === 'financial') {
+            // render assets list when visiting the financial tab
+            renderFinancialAssetsList();
           } else if (route.view !== 'datasources') {
             // Ensure modal is closed when leaving datasources
             closeAddPriceModal();
@@ -561,6 +570,9 @@
         const formAddAsset = document.getElementById('form-add-asset');
         const assetsListEl = document.getElementById('assets-list');
         const assetsEmptyEl = document.getElementById('assets-empty');
+        // Financial assets list elements
+        const finAssetsListEl = document.getElementById('fin-assets-list');
+        const finAssetsEmptyEl = document.getElementById('fin-assets-empty');
 
         // Predicted consumption UI
         const btnAddCons = document.getElementById('btn-add-cons');
@@ -725,6 +737,12 @@
           if (assetsListEl) assetsListEl.style.display = hasAny ? 'grid' : 'none';
         }
 
+        function ensureFinAssetsVisibility() {
+          const hasAny = Object.keys(orka.assetsStore.state.assetsById).length > 0;
+          if (finAssetsEmptyEl) finAssetsEmptyEl.style.display = hasAny ? 'none' : '';
+          if (finAssetsListEl) finAssetsListEl.style.display = hasAny ? 'grid' : 'none';
+        }
+
         function openAddPriceFromAsset(zoneCode) {
           openAddPriceModal();
           const z = document.querySelector('#form-add-price [name="zone_code"]');
@@ -818,6 +836,33 @@
           ensureAssetsVisibility();
         }
 
+        function renderFinancialAssetsList() {
+          if (!finAssetsListEl) return;
+          finAssetsListEl.innerHTML = '';
+          const items = Object.values(orka.assetsStore.state.assetsById);
+          items.forEach(asset => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
+                <div>
+                  <div><strong>${asset.name}</strong> <span class="muted" style="font-size:12px">(${asset.asset_id})</span></div>
+                  <div class="muted" style="font-size:12px">${asset.zone_code} · ${asset.bess.power_rating_mw}MW / ${asset.bess.energy_capacity_mwh}MWh</div>
+                </div>
+              </div>`;
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', () => {
+              if (window.orka && typeof window.orka.navigateToProject === 'function') {
+                window.orka.navigateToProject(asset.asset_id);
+              } else {
+                location.hash = `#project/${encodeURIComponent(asset.asset_id)}`;
+              }
+            });
+            finAssetsListEl.appendChild(card);
+          });
+          ensureFinAssetsVisibility();
+        }
+
         if (formAddAsset) formAddAsset.addEventListener('submit', (e) => {
           e.preventDefault();
           const fd = new FormData(formAddAsset);
@@ -842,6 +887,7 @@
           if (modalAddAsset) modalAddAsset.classList.remove('open');
           formAddAsset.reset();
           renderAssetsList();
+          renderFinancialAssetsList();
         });
 
         function createEmitterRow(series) {
@@ -1017,9 +1063,93 @@
           ensureConsVisibility();
         }
 
-        // Initial render for assets section
+        // Initial render for assets section and financial assets list
         if (typeof renderAssetsList === 'function') {
           renderAssetsList();
+        }
+        if (typeof renderFinancialAssetsList === 'function') {
+          renderFinancialAssetsList();
+        }
+
+        // Demo bootstrap: create a couple of assets and start simulated sources
+        function bootstrapSimulatedDemo() {
+          // Assets
+          const a1 = {
+            asset_id: 'BESS-DE',
+            name: 'Battery DE (50/100)',
+            asset_type: 'BESS',
+            zone_code: 'DE-LU',
+            bess: { power_rating_mw: 50, energy_capacity_mwh: 100, min_soc_pct: 10, max_soc_pct: 90 }
+          };
+          const a2 = {
+            asset_id: 'BESS-GB',
+            name: 'Battery GB (30/60)',
+            asset_type: 'BESS',
+            zone_code: 'GB',
+            bess: { power_rating_mw: 30, energy_capacity_mwh: 60, min_soc_pct: 15, max_soc_pct: 85 }
+          };
+          orka.assetsStore.upsert(a1);
+          orka.assetsStore.upsert(a2);
+
+          // Predicted price streams (one per zone)
+          const nowIso = new Date().toISOString();
+          const makePrice = (zone_code, market, currency, quantile = 0.5, interval_min = 60, horizon_h = 24, source = 'SIMULATED_V1') => {
+            const qPart = isFinite(quantile) ? `q${quantile}` : 'q50';
+            const series_id = `${zone_code}_${market}_predicted_${qPart}_i${nowIso}_r1`;
+            const series = {
+              series_id,
+              zone_code,
+              market,
+              series_type: 'predicted',
+              currency,
+              interval_duration_min: interval_min,
+              source,
+              issued_at: nowIso,
+              quantile,
+              revision: 1,
+              data: []
+            };
+            orka.priceStore.upsert(series);
+            startPredictedPriceEmitter(series, horizon_h);
+            return series;
+          };
+          const p1 = makePrice('DE-LU', 'DA', 'EUR', 0.5);
+          const p2 = makePrice('GB', 'DA', 'GBP', 0.5);
+
+          // Persist chosen price per asset
+          orka.assetsStore.setDataSource('BESS-DE', 'predicted_price', p1.series_id);
+          orka.assetsStore.setDataSource('BESS-GB', 'predicted_price', p2.series_id);
+
+          // Predicted consumption (one per asset), tied to selected price
+          const makeCons = (asset, price_series_id, interval_min = 60, horizon_h = 24, optimizer_version = 'v1', scenario_id = 'base') => {
+            const issued_at = nowIso;
+            const sPart = scenario_id ? `_s${scenario_id}` : '';
+            const series_id = `${asset.asset_id}_cons_pred_i${issued_at}_opt${optimizer_version}${sPart}_r1`;
+            const series = {
+              series_id,
+              asset_id: asset.asset_id,
+              interval_duration_min: interval_min,
+              optimizer_version,
+              price_assumption_source: price_series_id,
+              issued_at,
+              scenario_id,
+              revision: 1,
+              data: []
+            };
+            orka.consumptionStore.upsert(series);
+            startPredictedConsumptionEmitter(series, asset, horizon_h);
+            return series;
+          };
+          makeCons(a1, p1.series_id);
+          makeCons(a2, p2.series_id);
+
+          // Refresh UI sections
+          renderAssetsList();
+          renderFinancialAssetsList();
+        }
+
+        if (predefinedSimulatedAssetsEnabled) {
+          bootstrapSimulatedDemo();
         }
         console.info('Orka in-memory stores initialized', window.orka);
       })();
