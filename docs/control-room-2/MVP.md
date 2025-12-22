@@ -263,10 +263,11 @@ Notes:
   - Assets created:
     - `BESS-DE` in `DE-LU` (50MW/100MWh), SoC bounds 10–90%.
     - `BESS-GB` in `GB` (30MW/60MWh), SoC bounds 15–85%.
-  - Predicted price streams started (q0.5, 60-min intervals, 24h horizon, 5-second emission): one per zone; each asset selects its zone’s stream in `datasources.predicted_price`.
-  - Predicted consumption series started (60-min intervals, 24h horizon, 5-second emission): one per asset, tied to the selected price.
-  - Actual price streams started (60-min intervals, 24h horizon, 5-second emission): one per zone; each asset selects its zone’s stream in `datasources.actual_price`.
-  - Actual consumption series started (60-min intervals, 24h horizon, 5-second emission): one per asset; each asset selects its series in `datasources.actual_consumption`.
+- Predicted price streams started (q0.5, 60-min intervals, 24h horizon, 5-second emission): one per zone; each asset selects its zone’s stream in `datasources.predicted_price`.
+- Predicted consumption series started (60-min intervals, 24h horizon, 5-second emission): one per asset, tied to the selected price.
+- Actual price streams started (60-min intervals, 24h horizon, 5-second emission): one per zone; each asset selects its zone’s stream in `datasources.actual_price`.
+- Actual consumption series started (60-min intervals, 24h horizon, 5-second emission): one per asset; each asset selects its series in `datasources.actual_consumption`.
+ - Timing: Predicted streams are preloaded for 2 simulated hours ahead starting at the current time; actual streams start at the current time. This makes the predicted revenue line initially extend ahead of the actual line, and both continue advancing together.
 - Set the flag to `false` to start with a clean slate and create everything manually via the UI.
 
 ### Predicted price streams (simulated)

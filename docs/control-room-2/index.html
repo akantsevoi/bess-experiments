@@ -1461,8 +1461,12 @@
           const stopBtn = row.querySelector(`#stop-${sid}`);
 
           let emitted = 0;
-          let nextTs = new Date(series.issued_at).getTime();
-          let lastPrice = 50 + Math.random() * 10; // baseline
+          // Continue after any existing data
+          const existing = orka.priceStore.state.pricesById[series.series_id];
+          const hasData = existing && Array.isArray(existing.data) && existing.data.length > 0;
+          let nextTs = hasData ? (new Date(existing.data[existing.data.length - 1][0]).getTime() + intervalMs)
+                                : new Date(series.issued_at).getTime();
+          let lastPrice = hasData ? existing.data[existing.data.length - 1][1] : 50 + Math.random() * 10; // baseline
 
           function nextPrice(prev) {
             // simple bounded random walk
@@ -1596,11 +1600,15 @@
           const stopBtn = row.querySelector(`#cons-stop-${sid}`);
 
           let emitted = 0;
-          let nextTs = new Date(series.issued_at).getTime();
+          const existing = orka.consumptionStore.state.forecastsById[series.series_id];
+          const hasData = existing && Array.isArray(existing.data) && existing.data.length > 0;
+          let nextTs = hasData ? (new Date(existing.data[existing.data.length - 1].interval_start).getTime() + intervalMs)
+                                : new Date(series.issued_at).getTime();
           // SoE baseline
           const minPct = asset.bess.min_soc_pct ?? 10;
           const maxPct = asset.bess.max_soc_pct ?? 90;
-          let soePct = (minPct + maxPct) / 2;
+          let soePct = hasData ? (existing.data[existing.data.length - 1].predicted_soe_pct_end ?? ((minPct + maxPct) / 2))
+                               : (minPct + maxPct) / 2;
           const cap = Math.max(1e-6, asset.bess.energy_capacity_mwh);
           const maxChg = asset.bess.max_charge_mw ?? asset.bess.power_rating_mw;
           const maxDis = asset.bess.max_discharge_mw ?? asset.bess.power_rating_mw;
@@ -1775,8 +1783,10 @@
           orka.assetsStore.upsert(a1);
           orka.assetsStore.upsert(a2);
 
-          // Predicted price streams (one per zone)
-          const nowIso = new Date().toISOString();
+          // Predicted price streams (one per zone). Preload from now to now+2h.
+          const nowMs = Date.now();
+          const nowIso = new Date(nowMs).toISOString();
+          const preloadHours = 2;
           const makePrice = (zone_code, market, currency, quantile = 0.5, interval_min = 15, horizon_h = 24, source = 'SIMULATED_V1') => {
             const qPart = isFinite(quantile) ? `q${quantile}` : 'q50';
             const series_id = `${zone_code}_${market}_predicted_${qPart}_i${nowIso}_r1`;
@@ -1794,6 +1804,21 @@
               data: []
             };
             orka.priceStore.upsert(series);
+            // Preload predicted prices from now to now+preloadHours
+            (function prefillPredictedPrices() {
+              const intervalMs = interval_min * 60 * 1000;
+              const n = Math.max(0, Math.round((preloadHours * 60) / interval_min));
+              let ts = nowMs;
+              let v = 50 + Math.random() * 10;
+              for (let i = 0; i < n; i++) {
+                const step = (Math.random() - 0.5) * 4;
+                v = Math.max(-100, Math.min(300, v + step));
+                const iso = new Date(ts).toISOString();
+                const s = orka.priceStore.state.pricesById[series_id];
+                if (s) s.data.push([iso, Math.round(v * 100) / 100]);
+                ts += intervalMs;
+              }
+            })();
             startPredictedPriceEmitter(series, horizon_h);
             return series;
           };
@@ -1804,7 +1829,7 @@
           orka.assetsStore.setDataSource('BESS-DE', 'predicted_price', p1.series_id);
           orka.assetsStore.setDataSource('BESS-GB', 'predicted_price', p2.series_id);
 
-          // Predicted consumption (one per asset), tied to selected price
+          // Predicted consumption (one per asset), tied to selected price. Preload now..now+2h
           const makeCons = (asset, price_series_id, interval_min = 15, horizon_h = 24, optimizer_version = 'v1', scenario_id = 'base') => {
             const issued_at = nowIso;
             const sPart = scenario_id ? `_s${scenario_id}` : '';
@@ -1821,6 +1846,42 @@
               data: []
             };
             orka.consumptionStore.upsert(series);
+            (function prefillPredictedConsumption() {
+              const intervalMs = interval_min * 60 * 1000;
+              const n = Math.max(0, Math.round((preloadHours * 60) / interval_min));
+              const minPct = asset.bess.min_soc_pct ?? 10;
+              const maxPct = asset.bess.max_soc_pct ?? 90;
+              let soePct = (minPct + maxPct) / 2;
+              const cap = Math.max(1e-6, asset.bess.energy_capacity_mwh);
+              const maxChg = asset.bess.max_charge_mw ?? asset.bess.power_rating_mw;
+              const maxDis = asset.bess.max_discharge_mw ?? asset.bess.power_rating_mw;
+              const effChg = (asset.bess.charge_efficiency_pct ?? 95) / 100;
+              const effDis = (asset.bess.discharge_efficiency_pct ?? 95) / 100;
+              let ts = nowMs;
+              for (let i = 0; i < n; i++) {
+                let state;
+                if (soePct <= minPct + 2) state = 'CHARGING';
+                else if (soePct >= maxPct - 2) state = 'DISCHARGING';
+                else state = Math.random() < 0.5 ? 'CHARGING' : (Math.random() < 0.5 ? 'DISCHARGING' : 'IDLE');
+                let power = 0;
+                if (state === 'CHARGING') power = -Math.max(0, (0.6 + Math.random() * 0.4) * maxChg);
+                if (state === 'DISCHARGING') power = Math.max(0, (0.6 + Math.random() * 0.4) * maxDis);
+                const hours = interval_min / 60;
+                const e = Math.abs(power) * hours;
+                if (state === 'CHARGING') soePct = Math.min(maxPct, soePct + (e * effChg / cap) * 100);
+                if (state === 'DISCHARGING') soePct = Math.max(minPct, soePct - (e / effDis / cap) * 100);
+                const iso = new Date(ts).toISOString();
+                const s = orka.consumptionStore.state.forecastsById[series_id];
+                if (s) s.data.push({
+                  interval_start: iso,
+                  predicted_state: state,
+                  predicted_power_mw: Math.round(power * 100) / 100,
+                  predicted_energy_mwh: Math.round(e * 1000) / 1000,
+                  predicted_soe_pct_end: Math.round(soePct * 100) / 100
+                });
+                ts += intervalMs;
+              }
+            })();
             startPredictedConsumptionEmitter(series, asset, horizon_h);
             return series;
           };
