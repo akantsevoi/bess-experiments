@@ -645,6 +645,8 @@
           const consLabel = consSeries ? `issued ${formatUtc(consSeries.issued_at)} · opt ${consSeries.optimizer_version}${consSeries.scenario_id ? ' · ' + consSeries.scenario_id : ''}` : '—';
           const actualPriceLabelText = actualPriceSeries ? actualPriceLabel(actualPriceSeries) : '—';
           const actualConsLabelText = actualConsSeries ? `${actualConsSeries.source || ''}` : '—';
+          const sla = computeTimeSLA(actualConsSeries) || { sla: 0 };
+          const slaPct = (sla.sla * 100).toFixed(1) + '%';
           info.innerHTML = `
             <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
               <div>
@@ -656,6 +658,7 @@
                 <div>Predicted consumption: ${consLabel}</div>
                 <div>Actual price: ${actualPriceLabelText}</div>
                 <div>Actual consumption: ${actualConsLabelText}</div>
+                <div><strong>SLA (time):</strong> ${slaPct}</div>
               </div>
             </div>`;
           if (hint) hint.textContent = 'updates every ~2s';
@@ -1421,11 +1424,12 @@
           const header = document.createElement('div');
           header.className = 'card';
           header.innerHTML = `
-            <div style="display:grid; grid-template-columns: 1fr 120px 160px 200px; gap:12px; font-size:12px; color: var(--muted);">
+            <div style="display:grid; grid-template-columns: 1fr 120px 160px 220px 120px; gap:12px; font-size:12px; color: var(--muted);">
               <div>Asset</div>
               <div>Zone</div>
               <div>Size</div>
               <div>Revenue (pred vs actual)</div>
+              <div>SLA (time)</div>
             </div>`;
           finAssetsListEl.appendChild(header);
           // rows
@@ -1434,12 +1438,16 @@
             row.className = 'card';
             const rev = computeAssetRevenues(asset);
             const revHtml = rev.html;
+            const slaSeries = (asset.datasources && asset.datasources.actual_consumption && orka.telemetryStore.state.seriesById[asset.datasources.actual_consumption]) || orka.telemetryStore.getLatest(asset.asset_id);
+            const sla = computeTimeSLA(slaSeries) || { sla: 0 };
+            const slaPct = (sla.sla * 100).toFixed(1) + '%';
             row.innerHTML = `
-              <div style="display:grid; grid-template-columns: 1fr 120px 160px 200px; align-items:center; gap:12px;">
+              <div style="display:grid; grid-template-columns: 1fr 120px 160px 220px 120px; align-items:center; gap:12px;">
                 <div><strong>${asset.name}</strong> <span class="muted" style="font-size:12px">(${asset.asset_id})</span></div>
                 <div>${asset.zone_code}</div>
                 <div>${asset.bess.power_rating_mw}MW / ${asset.bess.energy_capacity_mwh}MWh</div>
                 <div>${revHtml}</div>
+                <div>${slaPct}</div>
               </div>`;
             row.style.cursor = 'pointer';
             row.setAttribute('role', 'button');
@@ -1522,6 +1530,27 @@
             lastTs = new Date(dp.interval_start).getTime();
           });
           return { total, currency: priceSeries.currency, lastTs };
+        }
+
+        function computeTimeSLA(telemetrySeries, opts = {}) {
+          if (!telemetrySeries) return null;
+          const data = telemetrySeries.data || [];
+          if (!data.length) return { sla: 0, minsUp: 0, minsTotal: 0 };
+          const startMs = opts.windowStart ? new Date(opts.windowStart).getTime() : -Infinity;
+          const endMs = opts.windowEnd ? new Date(opts.windowEnd).getTime() : Infinity;
+          const dtMin = telemetrySeries.interval_duration_min || 60;
+          let up = 0, total = 0;
+          for (const dp of data) {
+            const t = new Date(dp.interval_start).getTime();
+            if (t < startMs || t > endMs) continue;
+            const a = dp.availability_flag;
+            const eligible = opts.eligibleFilter ? !!opts.eligibleFilter(dp) : true;
+            if (!eligible) continue;
+            total += dtMin;
+            if (a === 1 || a === true) up += dtMin;
+          }
+          const sla = total > 0 ? up / total : 0;
+          return { sla, minsUp: up, minsTotal: total };
         }
 
         if (formAddAsset) formAddAsset.addEventListener('submit', (e) => {
@@ -1829,6 +1858,11 @@
           const effChg = (asset.bess.charge_efficiency_pct ?? 95) / 100;
           const effDis = (asset.bess.discharge_efficiency_pct ?? 95) / 100;
           function nextPoint() {
+            // small chance of downtime
+            const down = Math.random() < 0.05; // 5% intervals as DOWN for demo
+            if (down) {
+              return { state: 'DOWN', charged: 0, discharged: 0, soeEnd: soePct, availability: 0 };
+            }
             let state;
             if (soePct <= minPct + 2) state = 'CHARGING';
             else if (soePct >= maxPct - 2) state = 'DISCHARGING';
@@ -1843,7 +1877,7 @@
             if (state === 'DISCHARGING') nextSoe = Math.max(minPct, soePct - (eMag / effDis / cap) * 100);
             const charged = state === 'CHARGING' ? eMag : 0;
             const discharged = state === 'DISCHARGING' ? eMag : 0;
-            return { state, charged, discharged, soeEnd: Math.round(nextSoe * 100) / 100 };
+            return { state, charged, discharged, soeEnd: Math.round(nextSoe * 100) / 100, availability: 1 };
           }
           function tick() {
             if (emitted >= nPoints) { stop(); return; }
@@ -1856,7 +1890,8 @@
                 state: p.state,
                 energy_charged_mwh: Math.round(p.charged * 1000) / 1000,
                 energy_discharged_mwh: Math.round(p.discharged * 1000) / 1000,
-                soe_pct_end: p.soeEnd
+                soe_pct_end: p.soeEnd,
+                availability_flag: p.availability
               });
             }
             emitted += 1;

@@ -234,19 +234,20 @@ Note: When computing revenue or SLA-weighted metrics, the UI should pair a consu
 - Actual consumption (telemetry):
   - Creation: Data Sources → “Actual consumption → +” (per asset). Fields: `asset`, `interval_min`, `horizon_h`, `source`.
   - Store: `telemetryStore` with series keyed by `series_id`; indexed by `asset_id`.
-  - Datapoints: `{ interval_start, state, energy_charged_mwh, energy_discharged_mwh, soe_pct_end }`.
+  - Datapoints: `{ interval_start, state, energy_charged_mwh, energy_discharged_mwh, soe_pct_end, availability_flag }`.
   - Emission: One interval every 5 seconds; respects asset SoC and power/efficiency parameters.
   - Asset usage: Asset cards include a dropdown to select the active actual consumption series; saved to `asset.datasources.actual_consumption`.
 
 ## Financial Performance & Project View
 
- - Financial tab:
+- Financial tab:
   - Lists all assets in a 3‑column layout with a header: Asset (name + id), Zone (location), Size (MW/MWh).
   - Adds a 4th column “Revenue (pred vs actual)” showing totals for predicted vs actual.
     - Predicted revenue is limited to the time coverage of actual data (e.g., if actual covers up to 15:00, predicted points after 15:00 are ignored in this total).
     - Refreshes periodically to reflect streaming updates.
     - Coloring: shows a delta (actual − predicted) in green when non‑negative and red when negative.
   - Each row is clickable and navigates to the project view `#project/<asset_id>`.
+  - Adds a 5th column “SLA (time)”, computed from the selected (or latest) actual telemetry series for each asset.
 
 - Project view (per-asset):
   - Header shows basic asset info, the selected predicted price datasource label, and the latest predicted consumption label.
@@ -256,6 +257,7 @@ Note: When computing revenue or SLA-weighted metrics, the UI should pair a consu
     - Cumulative series: `cum_t = sum_{k<=t} rev_k`.
     - Join rule: Intervals are included only when both price and consumption datapoints exist for the same `interval_start` ISO timestamp (applied separately for predicted and actual overlays).
     - Rendering: Simple canvas line chart with labeled axes (Y: currency; X: timeline) and legend (Predicted vs Actual). Updates ~every 2 seconds to reflect streaming sources.
+  - Time-based SLA (MVP): Computed from the selected (or latest) actual telemetry as `SLA_time = sum(A_t · Δt) / sum(Δt)`, where `A_t = availability_flag ∈ {0,1}` and `Δt = interval_duration_min`. Displayed as a percentage on the project view.
 
 Notes:
 - The selected predicted price per asset is stored in `asset.datasources.predicted_price` and is used for revenue calculations.
