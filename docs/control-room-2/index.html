@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -32,6 +32,26 @@
       .sidebar.collapsed .brand { font-size: 0; padding: 12px; }
       .sidebar.collapsed .nav .tab { text-indent: -9999px; height: 36px; padding: 0; }
       .sidebar.collapsed .collapse { font-size: 0; padding: 6px; }
+      /* Controls */
+      .row { display: flex; align-items: center; gap: 12px; }
+      .toolbar { display: flex; align-items: center; justify-content: space-between; margin: 12px 0 16px; }
+      .btn { appearance: none; border: 1px solid var(--border); background: #0b1220; color: var(--text); padding: 8px 12px; border-radius: 8px; cursor: pointer; font: inherit; }
+      .btn:hover { border-color: #334155; }
+      .btn.primary { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(34,211,238,0.25) inset; }
+      .btn.icon { width: 36px; height: 36px; display: inline-grid; place-items: center; font-size: 18px; }
+      .card { border: 1px solid var(--border); background: #0b1220; border-radius: 10px; padding: 12px; }
+      .grid { display: grid; gap: 12px; }
+      .label { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+      .input, .select { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--text); font: inherit; }
+      .input::placeholder { color: #64748b; }
+      .form-row { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .actions { display: flex; gap: 10px; justify-content: flex-end; }
+      /* Modal */
+      .modal { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.6); display: none; align-items: center; justify-content: center; z-index: 10; }
+      .modal.open { display: flex; }
+      .dialog { width: min(680px, 92vw); background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
+      .dialog h3 { margin: 0 0 8px; font-size: 16px; }
+      .dialog .desc { margin: 0 0 12px; color: var(--muted); font-size: 13px; }
     </style>
   </head>
   <body>
@@ -52,8 +72,118 @@
         </section>
         <section class="section" id="section-datasources" aria-labelledby="tab-datasources">
           <h2>Data Sources</h2>
-          <div class="muted">Section intentionally left empty.</div>
+          <div class="toolbar">
+            <div class="row muted">Assets</div>
+            <div class="row">
+              <button class="btn icon primary" id="btn-add-asset" title="Add asset" aria-haspopup="dialog" aria-controls="modal-add-asset">+</button>
+            </div>
+          </div>
+          <div id="assets-empty" class="card muted">No assets yet. Use + to add an asset.</div>
+          <div id="assets-list" class="grid" style="display:none"></div>
+
+          <div class="toolbar">
+            <div class="row muted">Predicted electricity prices</div>
+            <div class="row">
+              <button class="btn icon primary" id="btn-add-price" title="Add predicted price stream" aria-haspopup="dialog" aria-controls="modal-add-price">+</button>
+            </div>
+          </div>
+          <div id="price-streams-empty" class="card muted">No streams yet. Use + to add a predicted price stream.</div>
+          <div id="price-streams-list" class="grid" style="display:none"></div>
         </section>
+        <!-- Modal: Add Asset -->
+        <div class="modal" id="modal-add-asset" role="dialog" aria-modal="true" aria-labelledby="dlg-add-asset-title">
+          <div class="dialog">
+            <h3 id="dlg-add-asset-title">Add Asset</h3>
+            <p class="desc">Create a battery asset with minimal specs. More fields can be added later.</p>
+            <form id="form-add-asset">
+              <div class="grid" style="margin-bottom:12px">
+                <div>
+                  <div class="label">Asset ID</div>
+                  <input class="input" name="asset_id" placeholder="e.g., BESS-A" required />
+                </div>
+                <div>
+                  <div class="label">Name</div>
+                  <input class="input" name="name" placeholder="Battery A (50MW/100MWh)" required />
+                </div>
+                <div>
+                  <div class="label">Zone code</div>
+                  <input class="input" name="zone_code" placeholder="e.g., DE-LU" required />
+                </div>
+                <div>
+                  <div class="label">Power rating (MW)</div>
+                  <input class="input" type="number" min="0" step="0.1" name="power_rating_mw" placeholder="e.g., 50" required />
+                </div>
+                <div>
+                  <div class="label">Energy capacity (MWh)</div>
+                  <input class="input" type="number" min="0" step="0.1" name="energy_capacity_mwh" placeholder="e.g., 100" required />
+                </div>
+                <div>
+                  <div class="label">Min SoC (%)</div>
+                  <input class="input" type="number" min="0" max="100" step="1" name="min_soc_pct" value="10" />
+                </div>
+                <div>
+                  <div class="label">Max SoC (%)</div>
+                  <input class="input" type="number" min="0" max="100" step="1" name="max_soc_pct" value="90" />
+                </div>
+              </div>
+              <div class="actions">
+                <button type="button" class="btn" id="btn-cancel-add-asset">Cancel</button>
+                <button type="submit" class="btn primary" id="btn-submit-add-asset">Add</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- Modal: Add Predicted Price Stream (UI only) -->
+        <div class="modal" id="modal-add-price" role="dialog" aria-modal="true" aria-labelledby="dlg-add-price-title">
+          <div class="dialog">
+            <h3 id="dlg-add-price-title">Add Predicted Price Stream</h3>
+            <p class="desc">Configure parameters for a forecasted price series. This is UI-only for now; no data will be saved.</p>
+            <form id="form-add-price">
+              <div class="grid" style="margin-bottom:12px">
+                <div>
+                  <div class="label">Zone code</div>
+                  <input class="input" name="zone_code" placeholder="e.g., DE-LU" required />
+                </div>
+                <div>
+                  <div class="label">Market</div>
+                  <select class="select" name="market" required>
+                    <option value="DA">Day-Ahead (DA)</option>
+                    <option value="INTRADAY">Intraday</option>
+                    <option value="RT">Real-Time</option>
+                  </select>
+                </div>
+                <div>
+                  <div class="label">Currency</div>
+                  <input class="input" name="currency" placeholder="e.g., EUR" value="EUR" required />
+                </div>
+                <div>
+                  <div class="label">Interval (min)</div>
+                  <input class="input" type="number" min="5" step="5" name="interval_min" value="60" required />
+                </div>
+                <div>
+                  <div class="label">Issued at (UTC)</div>
+                  <input class="input" type="datetime-local" step="1" name="issued_at" lang="en-GB" required />
+                </div>
+                <div>
+                  <div class="label">Quantile</div>
+                  <input class="input" type="number" min="0" max="1" step="0.01" name="quantile" value="0.5" />
+                </div>
+                <div>
+                  <div class="label">Horizon (hours)</div>
+                  <input class="input" type="number" min="1" max="168" step="1" name="horizon_h" value="24" />
+                </div>
+                <div>
+                  <div class="label">Source / Model</div>
+                  <input class="input" name="source" placeholder="e.g., ENTSOE_DA_V1" />
+                </div>
+              </div>
+              <div class="actions">
+                <button type="button" class="btn" id="btn-cancel-add-price">Cancel</button>
+                <button type="submit" class="btn primary" id="btn-submit-add-price">Add</button>
+              </div>
+            </form>
+          </div>
+        </div>
         <section class="section" id="section-project" aria-label="Project">
           <h2 id="project-title">Project</h2>
           <div class="muted" id="project-placeholder">Project view placeholder. Route reserved.</div>
@@ -73,9 +203,31 @@
           return new Date(s).getTime();
         }
 
+        function pad2(n) { return String(n).padStart(2, '0'); }
+        function formatUtc(iso) {
+          const d = new Date(iso);
+          if (isNaN(d.getTime())) return String(iso);
+          const day = pad2(d.getUTCDate());
+          const mon = pad2(d.getUTCMonth() + 1);
+          const yr = d.getUTCFullYear();
+          const hh = pad2(d.getUTCHours());
+          const mm = pad2(d.getUTCMinutes());
+          const ss = pad2(d.getUTCSeconds());
+          return `${day}/${mon}/${yr} ${hh}:${mm}:${ss} UTC`;
+        }
+
+        function seriesLabel(s) {
+          if (!s) return '';
+          return `${s.market} · q${s.quantile ?? 0.5} · issued ${formatUtc(s.issued_at)}`;
+        }
+
         function addIndex(map, key, id) {
           if (!map[key]) map[key] = [];
           if (!map[key].includes(id)) map[key].push(id);
+        }
+
+        function safeId(s) {
+          return String(s).replace(/[^a-zA-Z0-9_-]/g, '_');
         }
 
         const priceStore = (function () {
@@ -210,6 +362,63 @@
           consumptionStore
         };
 
+        // Assets store: minimal in-memory registry for BESS assets
+        const assetsStore = (function () {
+          const state = {
+            version: '1.0',
+            assetsById: {},
+            indexByZone: {},
+            indexByType: {}
+          };
+
+          function upsert(asset) {
+            // expected fields (not strictly validated here):
+            // asset_id (string, required), name (string), asset_type ('BESS' default), zone_code (string)
+            const id = String(asset.asset_id);
+            const type = asset.asset_type || 'BESS';
+            const prev = state.assetsById[id] || {};
+            const merged = Object.assign({ asset_type: type }, prev, asset);
+            // Merge datasources map if provided
+            merged.datasources = Object.assign({}, prev.datasources || {}, asset.datasources || {});
+            state.assetsById[id] = merged;
+            addIndex(state.indexByZone, asset.zone_code, id);
+            addIndex(state.indexByType, type, id);
+          }
+
+          function get(asset_id) {
+            return state.assetsById[asset_id] || null;
+          }
+
+          function list(opts = {}) {
+            const { zone_code, asset_type } = opts;
+            let ids = Object.keys(state.assetsById);
+            if (zone_code) ids = state.indexByZone[zone_code] || [];
+            if (asset_type) {
+              const byType = state.indexByType[asset_type] || [];
+              ids = zone_code ? ids.filter(id => byType.includes(id)) : byType;
+            }
+            return ids.map(id => state.assetsById[id]);
+          }
+
+          function clear() {
+            state.assetsById = {};
+            state.indexByZone = {};
+            state.indexByType = {};
+          }
+
+          function setDataSource(asset_id, key, value) {
+            const a = state.assetsById[asset_id];
+            if (!a) return;
+            if (!a.datasources) a.datasources = {};
+            if (value) a.datasources[key] = value; else delete a.datasources[key];
+          }
+
+          return { state, upsert, get, list, clear, setDataSource };
+        })();
+
+        // expose assets store
+        window.orka = Object.assign({}, window.orka, { assetsStore });
+
         // Simple tab handling
         const nav = document.getElementById('nav');
         const sidebar = document.getElementById('sidebar');
@@ -237,6 +446,16 @@
           return { view: 'financial', params: {} };
         }
 
+        function closeAddPriceModal() {
+          const el = document.getElementById('modal-add-price');
+          if (el) el.classList.remove('open');
+        }
+
+        function openAddPriceModal() {
+          const el = document.getElementById('modal-add-price');
+          if (el) el.classList.add('open');
+        }
+
         function handleHashChange() {
           const route = parseRoute();
           activate(route.view);
@@ -245,6 +464,9 @@
             const ph = document.getElementById('project-placeholder');
             title.textContent = route.params.id ? `Project: ${route.params.id}` : 'Project';
             ph.textContent = route.params.id ? `Reserved project detail view for ${route.params.id}.` : 'Project view placeholder. Route reserved.';
+          } else if (route.view !== 'datasources') {
+            // Ensure modal is closed when leaving datasources
+            closeAddPriceModal();
           }
         }
 
@@ -272,6 +494,270 @@
           navigateToProject(id) { location.hash = `#project/${encodeURIComponent(id)}`; }
         });
 
+        // Data Sources UI wiring + assets + simulated price emitters
+        const btnAddPrice = document.getElementById('btn-add-price');
+        const modalAddPrice = document.getElementById('modal-add-price');
+        const btnCancelAddPrice = document.getElementById('btn-cancel-add-price');
+        const formAddPrice = document.getElementById('form-add-price');
+        const listEl = document.getElementById('price-streams-list');
+        const emptyEl = document.getElementById('price-streams-empty');
+
+        // Assets UI
+        const btnAddAsset = document.getElementById('btn-add-asset');
+        const modalAddAsset = document.getElementById('modal-add-asset');
+        const btnCancelAddAsset = document.getElementById('btn-cancel-add-asset');
+        const formAddAsset = document.getElementById('form-add-asset');
+        const assetsListEl = document.getElementById('assets-list');
+        const assetsEmptyEl = document.getElementById('assets-empty');
+
+        if (btnAddPrice) btnAddPrice.addEventListener('click', () => openAddPriceModal());
+        if (btnCancelAddPrice) btnCancelAddPrice.addEventListener('click', () => closeAddPriceModal());
+        if (modalAddPrice) modalAddPrice.addEventListener('click', (e) => { if (e.target === modalAddPrice) closeAddPriceModal(); });
+        if (btnAddAsset) btnAddAsset.addEventListener('click', () => { if (modalAddAsset) modalAddAsset.classList.add('open'); });
+        if (btnCancelAddAsset) btnCancelAddAsset.addEventListener('click', () => { if (modalAddAsset) modalAddAsset.classList.remove('open'); });
+        if (modalAddAsset) modalAddAsset.addEventListener('click', (e) => { if (e.target === modalAddAsset) modalAddAsset.classList.remove('open'); });
+        if (formAddPrice) formAddPrice.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const fd = new FormData(formAddPrice);
+          const data = Object.fromEntries(fd.entries());
+          // Normalize inputs
+          const zone_code = String(data.zone_code || '').trim();
+          const market = String(data.market || 'DA');
+          const currency = String(data.currency || 'EUR').toUpperCase();
+          const interval_min = Math.max(1, parseInt(String(data.interval_min || '60'), 10));
+          const horizon_h = Math.max(1, parseInt(String(data.horizon_h || '24'), 10));
+          const quantile = data.quantile !== undefined && data.quantile !== '' ? Number(data.quantile) : 0.5;
+          const source = String(data.source || 'SIMULATED_V1');
+          const issuedLocal = String(data.issued_at || '');
+          const issuedAtIso = issuedLocal ? new Date(issuedLocal).toISOString() : new Date().toISOString();
+
+          if (!zone_code) {
+            alert('Zone code is required');
+            return;
+          }
+
+          // Build series_id
+          const qPart = isFinite(quantile) ? `q${quantile}` : 'q50';
+          const id = `${zone_code}_${market}_predicted_${qPart}_i${issuedAtIso}_r1`;
+
+          // Create and upsert series into priceStore
+          const series = {
+            series_id: id,
+            zone_code,
+            market,
+            series_type: 'predicted',
+            currency,
+            interval_duration_min: interval_min,
+            source,
+            issued_at: issuedAtIso,
+            quantile,
+            revision: 1,
+            data: []
+          };
+          orka.priceStore.upsert(series);
+
+          // Start simulated emitter
+          startPredictedPriceEmitter(series, horizon_h);
+
+          closeAddPriceModal();
+          formAddPrice.reset();
+          // re-render assets data source sections (counts per zone)
+          renderAssetsList();
+        });
+
+        const activePriceEmitters = {};
+
+        function ensureListVisibility() {
+          const hasAny = Object.keys(activePriceEmitters).length > 0;
+          if (emptyEl) emptyEl.style.display = hasAny ? 'none' : '';
+          if (listEl) listEl.style.display = hasAny ? 'grid' : 'none';
+        }
+
+        function ensureAssetsVisibility() {
+          const hasAny = Object.keys(orka.assetsStore.state.assetsById).length > 0;
+          if (assetsEmptyEl) assetsEmptyEl.style.display = hasAny ? 'none' : '';
+          if (assetsListEl) assetsListEl.style.display = hasAny ? 'grid' : 'none';
+        }
+
+        function openAddPriceFromAsset(zoneCode) {
+          openAddPriceModal();
+          const z = document.querySelector('#form-add-price [name="zone_code"]');
+          if (z) z.value = zoneCode || '';
+        }
+
+        function renderAssetCard(asset) {
+          const card = document.createElement('div');
+          card.className = 'card';
+          const sid = safeId(asset.asset_id);
+          const zoneSeriesIds = (orka.priceStore.state.indexByZone[asset.zone_code] || []);
+          const zoneSeries = zoneSeriesIds
+            .map(id => orka.priceStore.state.pricesById[id])
+            .filter(s => s && s.series_type === 'predicted');
+
+          const selectId = `sel-price-${sid}`;
+          const hintId = `hint-price-${sid}`;
+          const selectedPriceId = asset.datasources && asset.datasources.predicted_price || '';
+          const optionsHtml = ['<option value="">— Select price source —</option>']
+            .concat(zoneSeries.map(s => `<option value="${s.series_id}" ${s.series_id === selectedPriceId ? 'selected' : ''}>${seriesLabel(s)}</option>`))
+            .join('');
+          const hintText = selectedPriceId
+            ? `Using: ${seriesLabel(orka.priceStore.state.pricesById[selectedPriceId])}`
+            : 'No source selected.';
+
+          card.innerHTML = `
+            <div class="row" style="justify-content:space-between; align-items:flex-start; gap:12px;">
+              <div style="min-width:0;">
+                <div><strong>${asset.name}</strong> <span class="muted" style="font-size:12px">(${asset.asset_id})</span></div>
+                <div class="muted" style="font-size:12px">${asset.zone_code} · ${asset.bess.power_rating_mw}MW / ${asset.bess.energy_capacity_mwh}MWh · SoC ${asset.bess.min_soc_pct}-${asset.bess.max_soc_pct}%</div>
+                <div style="margin-top:8px">
+                  <div class="label" style="margin:0 0 6px">Data sources</div>
+                  <div>
+                    <div style="font-size:13px; margin-bottom:4px"><strong>Predicted electricity prices</strong></div>
+                    <div class="row" style="align-items:center; gap:8px; margin-bottom:6px;">
+                      <select class="select" id="${selectId}" ${zoneSeries.length ? '' : 'disabled'}>
+                        ${optionsHtml}
+                      </select>
+                      <button class="btn" data-action="add-price" data-zone="${asset.zone_code}">Add price stream</button>
+                    </div>
+                    <div class="muted" id="${hintId}" style="font-size:12px;">${zoneSeries.length ? hintText : 'No predicted price streams yet.'}</div>
+                  </div>
+                </div>
+              </div>
+            </div>`;
+
+          const addBtn = card.querySelector('[data-action="add-price"]');
+          if (addBtn) addBtn.addEventListener('click', () => openAddPriceFromAsset(asset.zone_code));
+          const select = card.querySelector(`#${selectId}`);
+          const hint = card.querySelector(`#${hintId}`);
+          if (select) {
+            select.addEventListener('change', () => {
+              const val = select.value;
+              orka.assetsStore.setDataSource(asset.asset_id, 'predicted_price', val || undefined);
+              if (hint) {
+                const s = val ? orka.priceStore.state.pricesById[val] : null;
+                hint.textContent = val && s ? `Using: ${seriesLabel(s)}` : 'No source selected.';
+              }
+            });
+          }
+          return card;
+        }
+
+        function renderAssetsList() {
+          if (!assetsListEl) return;
+          assetsListEl.innerHTML = '';
+          const items = Object.values(orka.assetsStore.state.assetsById);
+          items.forEach(asset => assetsListEl.appendChild(renderAssetCard(asset)));
+          ensureAssetsVisibility();
+        }
+
+        if (formAddAsset) formAddAsset.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const fd = new FormData(formAddAsset);
+          const data = Object.fromEntries(fd.entries());
+          const asset_id = String(data.asset_id || '').trim();
+          const name = String(data.name || '').trim();
+          const zone_code = String(data.zone_code || '').trim();
+          const power_rating_mw = Number(data.power_rating_mw || 0);
+          const energy_capacity_mwh = Number(data.energy_capacity_mwh || 0);
+          const min_soc_pct = Number(data.min_soc_pct || 0);
+          const max_soc_pct = Number(data.max_soc_pct || 100);
+          if (!asset_id || !name || !zone_code) { alert('Asset ID, Name and Zone code are required'); return; }
+          if (!(isFinite(power_rating_mw) && isFinite(energy_capacity_mwh))) { alert('Provide numeric power and energy'); return; }
+          const asset = {
+            asset_id,
+            name,
+            asset_type: 'BESS',
+            zone_code,
+            bess: { power_rating_mw, energy_capacity_mwh, min_soc_pct, max_soc_pct }
+          };
+          orka.assetsStore.upsert(asset);
+          if (modalAddAsset) modalAddAsset.classList.remove('open');
+          formAddAsset.reset();
+          renderAssetsList();
+        });
+
+        function createEmitterRow(series) {
+          const row = document.createElement('div');
+          row.className = 'card';
+          const sid = safeId(series.series_id);
+          row.id = `row-${sid}`;
+          row.innerHTML = `
+            <div class="row" style="justify-content:space-between; align-items:center;">
+              <div>
+                <div><strong>${series.zone_code}</strong> · ${series.market} · q${series.quantile ?? 0.5}</div>
+                <div class="muted" style="font-size:12px">issued ${formatUtc(series.issued_at)}</div>
+              </div>
+              <div class="row">
+                <span class="muted" style="font-size:12px" id="stat-${sid}">emitted 0 pts</span>
+                <button class="btn" id="stop-${sid}">Stop</button>
+              </div>
+            </div>`;
+          listEl.appendChild(row);
+          return row;
+        }
+
+        function startPredictedPriceEmitter(series, horizon_h) {
+          const nPoints = Math.max(1, Math.round((horizon_h * 60) / series.interval_duration_min));
+          const intervalMs = series.interval_duration_min * 60 * 1000; // logical interval between timestamps
+          const tickRealMs = 5000; // emit every 5 seconds
+
+          const row = createEmitterRow(series);
+          const sid = safeId(series.series_id);
+          const stat = row.querySelector(`#stat-${sid}`);
+          const stopBtn = row.querySelector(`#stop-${sid}`);
+
+          let emitted = 0;
+          let nextTs = new Date(series.issued_at).getTime();
+          let lastPrice = 50 + Math.random() * 10; // baseline
+
+          function nextPrice(prev) {
+            // simple bounded random walk
+            const step = (Math.random() - 0.5) * 4; // +/-2
+            let v = prev + step;
+            if (v < -100) v = -100;
+            if (v > 300) v = 300;
+            return Math.round(v * 100) / 100;
+          }
+
+          function tick() {
+            if (emitted >= nPoints) {
+              stop();
+              return;
+            }
+            const price = nextPrice(lastPrice);
+            lastPrice = price;
+            const iso = new Date(nextTs).toISOString();
+            // Append to series data in store
+            const s = orka.priceStore.state.pricesById[series.series_id];
+            if (s) {
+              s.data.push([iso, price]);
+            }
+            emitted += 1;
+            nextTs += intervalMs;
+            if (stat) stat.textContent = `emitted ${emitted} / ${nPoints} pts`;
+            console.info('Simulated predicted price event', { series_id: series.series_id, interval_start: iso, price });
+          }
+
+          function stop() {
+            clearInterval(activePriceEmitters[series.series_id].timer);
+            delete activePriceEmitters[series.series_id];
+            if (stopBtn) {
+              stopBtn.disabled = true;
+              stopBtn.textContent = 'Stopped';
+            }
+            ensureListVisibility();
+          }
+
+          const timer = setInterval(tick, tickRealMs);
+          activePriceEmitters[series.series_id] = { timer, stop };
+          if (stopBtn) stopBtn.addEventListener('click', stop);
+          ensureListVisibility();
+        }
+
+        // Initial render for assets section
+        if (typeof renderAssetsList === 'function') {
+          renderAssetsList();
+        }
         console.info('Orka in-memory stores initialized', window.orka);
       })();
     </script>

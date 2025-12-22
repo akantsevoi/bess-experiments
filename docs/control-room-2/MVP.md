@@ -214,3 +214,101 @@ const bessA_Q50_Base: ConsumptionForecastSeries = {
 ```
 
 Note: When computing revenue or SLA-weighted metrics, the UI should pair a consumption forecast series with the corresponding price series via `price_assumption_source` to ensure consistent assumptions.
+
+## Data Sources UI (MVP behavior)
+
+- Assets section: Create and list assets (BESS). Cards show basic specs and a Data sources area.
+- Predicted electricity prices: Per asset, a dropdown lists all predicted price series available for the asset's `zone_code`.
+  - Selection persists in-memory at `assetsStore.assetsById[asset_id].datasources.predicted_price`.
+  - The “Add price stream” button opens the price modal prefilled with the asset's zone.
+- Date formatting: Timestamps display as `dd/mm/yyyy HH:MM:SS UTC` to be locale-agnostic for the MVP.
+
+### Assets (BESS)
+
+Goal: represent battery assets with enough detail for planning, optimization assumptions, and UI listing/selection. Keep minimal but expressive for MVP.
+
+Schema (TS-like):
+
+```
+type AssetId = string;
+type AssetType = 'BESS';
+
+interface BaseAsset {
+  asset_id: AssetId;               // unique, stable identifier
+  name: string;                    // human-readable label
+  asset_type: AssetType;           // 'BESS' for now
+  zone_code: string;               // e.g., 'DE-LU' — used to resolve prices
+  project_id?: string;             // optional grouping
+  commissioned_at?: ISO8601;       // optional metadata
+}
+
+// Battery-specific technical parameters
+interface BessSpec {
+  power_rating_mw: number;         // nameplate bidirectional power (<= grid constraint)
+  energy_capacity_mwh: number;     // usable energy capacity
+  max_charge_mw?: number;          // override of power limit for charge
+  max_discharge_mw?: number;       // override of power limit for discharge
+  min_soc_pct: number;             // [0..100]
+  max_soc_pct: number;             // [0..100], >= min_soc_pct
+  charge_efficiency_pct?: number;  // 0..100, default 95
+  discharge_efficiency_pct?: number; // 0..100, default 95
+  roundtrip_efficiency_pct?: number; // alternative to separate effs
+  ramp_mw_per_min?: number;        // optional operational constraint
+  parasitic_load_mw?: number;      // optional auxiliary consumption
+}
+
+type Asset = BaseAsset & {
+  bess: BessSpec;                  // required for 'BESS' assets
+  datasources?: {                  // selected data sources for this asset (by key)
+    predicted_price?: string;      // series_id of chosen predicted price series for the asset's zone
+    // future keys: actual_price, consumption_forecast, weather, etc.
+  };
+};
+
+interface AssetStoreV1 {
+  version: '1.0';
+  assetsById: Record<string, Asset>;
+  indexByZone: Record<string, string[]>;  // `${zone_code}` -> asset_id[]
+  indexByType: Record<string, string[]>;  // `${asset_type}` -> asset_id[]
+}
+```
+
+Conventions:
+- Keep units explicit in field names (`_mw`, `_mwh`, `_pct`).
+- Prefer `charge_efficiency_pct` and `discharge_efficiency_pct`. If both omitted, use `roundtrip_efficiency_pct` or default 95% per-leg.
+- `min_soc_pct` and `max_soc_pct` capture usable SoC window. Schedulers can derive SoC bounds in MWh from these and `energy_capacity_mwh`.
+- `zone_code` ties the asset to price series from the PriceStore.
+- `datasources.predicted_price` stores the selected predicted price `series_id` for calculations. If unset, UI may prompt to select or use a default.
+
+Basic operations (conceptual):
+- upsert(asset): set `assetsById[asset_id] = asset`, update `indexByZone` and `indexByType`.
+- get(asset_id): return the asset record.
+- list({ zone_code?, asset_type? }): filter via indexes, return matching assets.
+- clear(): reset store.
+
+Example asset:
+
+```
+const bessA: Asset = {
+  asset_id: 'BESS-A',
+  name: 'Battery A (50MW/100MWh)',
+  asset_type: 'BESS',
+  zone_code: 'DE-LU',
+  commissioned_at: '2024-06-01T00:00:00Z',
+  datasources: {
+    predicted_price: 'DE-LU_DA_predicted_q0.5_i2024-08-31T12:00:00Z_r1'
+  },
+  bess: {
+    power_rating_mw: 50,
+    energy_capacity_mwh: 100,
+    max_charge_mw: 50,
+    max_discharge_mw: 50,
+    min_soc_pct: 10,
+    max_soc_pct: 90,
+    charge_efficiency_pct: 95,
+    discharge_efficiency_pct: 95,
+    ramp_mw_per_min: 5,
+    parasitic_load_mw: 0.2
+  }
+};
+```

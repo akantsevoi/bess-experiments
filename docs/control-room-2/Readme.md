@@ -36,14 +36,14 @@ In order to calculate revenue loss we need few data sources:
     - same as item 4 but the one that was predicted
     - will be used to compare revenue
 
-## Predicted price
+## ry interval start (UTC, ISO 8601).
+- interval_duration_min: Predicted price
 - event_id: unique id of provided piece of information
 - zone_code: Bidding zone (e.g., DE-LU, GB, SE3 or EIC like 10Y1001A1001A82H).
 - market: Price type — DA, INTRADAY, RT.
 - currency: ISO 4217 (e.g., EUR, GBP).
 - issued_at: Forecast issuance timestamp (UTC, ISO 8601).
-- interval_start: Delivery interval start (UTC, ISO 8601).
-- interval_duration_min: Interval length in minutes (e.g., 60, 30, 15).
+- interval_start: DeliveInterval length in minutes (e.g., 60, 30, 15).
 - quantile: [0..1] used in case we have several predictions for the same time interval(default is 0.5)
 - price_per_mwh: Numeric price in currency/MWh (can be negative).
 - source: Provider/model identifier (e.g., ENTSOE_DA_V1).
