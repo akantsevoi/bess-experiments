@@ -647,12 +647,15 @@
           const actualConsLabelText = actualConsSeries ? `${actualConsSeries.source || ''}` : '—';
           const sla = computeTimeSLA(actualConsSeries) || { sla: 0 };
           const slaSup = computeSupplierTimeSLA(actualConsSeries) || { sla: 0 };
+          const slaPrice = computePriceWeightedSLA(asset) || { sla: 0 };
           const slaPct = (sla.sla * 100).toFixed(1) + '%';
           const slaSupPct = (slaSup.sla * 100).toFixed(1) + '%';
+          const slaPricePct = (slaPrice.sla * 100).toFixed(1) + '%';
           const crit = (asset.sla_targets && asset.sla_targets.critical) ?? 0.95;
           const warn = (asset.sla_targets && asset.sla_targets.warn) ?? 0.98;
           const slaColor = sla.sla < crit ? '#ef4444' : (sla.sla < warn ? '#f59e0b' : '#10b981');
           const slaSupColor = slaSup.sla < crit ? '#ef4444' : (slaSup.sla < warn ? '#f59e0b' : '#10b981');
+          const slaPriceColor = slaPrice.sla < crit ? '#ef4444' : (slaPrice.sla < warn ? '#f59e0b' : '#10b981');
           info.innerHTML = `
             <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
               <div>
@@ -666,6 +669,7 @@
                 <div>Actual consumption: ${actualConsLabelText}</div>
                 <div><strong>SLA (time):</strong> <span style="color:${slaColor}">${slaPct}</span></div>
                 <div><strong>Supplier SLA (time):</strong> <span style="color:${slaSupColor}">${slaSupPct}</span></div>
+                <div><strong>SLA (price-weighted):</strong> <span style="color:${slaPriceColor}">${slaPricePct}</span></div>
               </div>
             </div>`;
           if (hint) hint.textContent = 'updates every ~2s';
@@ -1467,13 +1471,14 @@
           const header = document.createElement('div');
           header.className = 'card';
           header.innerHTML = `
-            <div style="display:grid; grid-template-columns: 1fr 120px 160px 220px 120px 140px; gap:12px; font-size:12px; color: var(--muted);">
+            <div style="display:grid; grid-template-columns: 1fr 120px 160px 220px 120px 140px 160px; gap:12px; font-size:12px; color: var(--muted);">
               <div>Asset</div>
               <div>Zone</div>
               <div>Size</div>
               <div>Revenue (pred vs actual)</div>
               <div>SLA (time)</div>
               <div>Supplier SLA (time)</div>
+              <div>SLA (price-weighted)</div>
             </div>`;
           finAssetsListEl.appendChild(header);
           // rows
@@ -1491,14 +1496,18 @@
             const slaSup = computeSupplierTimeSLA(slaSeries) || { sla: 0 };
             const slaSupPct = (slaSup.sla * 100).toFixed(1) + '%';
             const slaSupColor = slaSup.sla < crit ? '#ef4444' : (slaSup.sla < warn ? '#f59e0b' : '#10b981');
+            const slaPrice = computePriceWeightedSLA(asset) || { sla: 0 };
+            const slaPricePct = (slaPrice.sla * 100).toFixed(1) + '%';
+            const slaPriceColor = slaPrice.sla < crit ? '#ef4444' : (slaPrice.sla < warn ? '#f59e0b' : '#10b981');
             row.innerHTML = `
-              <div style="display:grid; grid-template-columns: 1fr 120px 160px 220px 120px 140px; align-items:center; gap:12px;">
+              <div style="display:grid; grid-template-columns: 1fr 120px 160px 220px 120px 140px 160px; align-items:center; gap:12px;">
                 <div><strong>${asset.name}</strong> <span class="muted" style="font-size:12px">(${asset.asset_id})</span></div>
                 <div>${asset.zone_code}</div>
                 <div>${asset.bess.power_rating_mw}MW / ${asset.bess.energy_capacity_mwh}MWh</div>
                 <div>${revHtml}</div>
                 <div style="color:${slaColor}">${slaPct}</div>
                 <div style="color:${slaSupColor}">${slaSupPct}</div>
+                <div style="color:${slaPriceColor}">${slaPricePct}</div>
               </div>`;
             row.style.cursor = 'pointer';
             row.setAttribute('role', 'button');
@@ -1625,6 +1634,52 @@
           }
           const sla = total > 0 ? up / total : 0;
           return { sla, minsUp: up, minsTotal: total };
+        }
+
+        // Price-weighted SLA: joins telemetry (A_t), predicted (S_t, d_t), and actual prices (p_t)
+        function computePriceWeightedSLA(asset) {
+          if (!asset) return null;
+          const telemId = (asset.datasources && asset.datasources.actual_consumption) || null;
+          const telemetry = telemId ? orka.telemetryStore.state.seriesById[telemId] : orka.telemetryStore.getLatest(asset.asset_id);
+          if (!telemetry) return null;
+          const pred = orka.consumptionStore.getForecast(asset.asset_id);
+          if (!pred) return null;
+          const priceId = asset.datasources && asset.datasources.actual_price;
+          let priceSeries = priceId ? orka.priceStore.state.pricesById[priceId] : null;
+          if (!priceSeries) {
+            // fallback: find any actual price for zone
+            const candIds = (orka.priceStore.state.indexByZone[asset.zone_code] || []);
+            for (const id of candIds) {
+              const s = orka.priceStore.state.pricesById[id];
+              if (s && s.series_type === 'actual') { priceSeries = s; break; }
+            }
+          }
+          if (!priceSeries) return null;
+          // Build slot-based maps to avoid ms drift. Use telemetry interval as cadence.
+          const dtMin = telemetry.interval_duration_min || 60;
+          const intervalMs = dtMin * 60 * 1000;
+          const dtHours = dtMin / 60;
+          const toSlot = (iso) => Math.floor(new Date(iso).getTime() / intervalMs);
+          const priceMap = Object.create(null);
+          (priceSeries.data || []).forEach(([iso, v]) => { priceMap[toSlot(iso)] = v; });
+          const predMap = Object.create(null);
+          (pred.data || []).forEach(dp => { predMap[toSlot(dp.interval_start)] = dp; });
+          let exp = 0, avail = 0;
+          for (const dp of (telemetry.data || [])) {
+            const slot = toSlot(dp.interval_start);
+            const predDp = predMap[slot];
+            const price = priceMap[slot];
+            if (!predDp || price === undefined) continue;
+            const state = predDp.predicted_state;
+            const S = (state === 'DISCHARGING' || state === 'CHARGING') ? 1 : 0;
+            const d = state === 'DISCHARGING' ? 1 : (state === 'CHARGING' ? -1 : 0);
+            const w = Math.max(price * d, 0);
+            const a = (dp.availability_flag === 1 || dp.availability_flag === true) ? 1 : 0;
+            exp += S * w * dtHours;
+            avail += a * S * w * dtHours;
+          }
+          const sla = exp > 0 ? avail / exp : 0;
+          return { sla, weighted_available_value: avail, weighted_expected_value: exp };
         }
 
         if (formAddAsset) formAddAsset.addEventListener('submit', (e) => {
@@ -1780,6 +1835,17 @@
             if (s) s.data.push([iso, price]);
             emitted += 1; nextTs += intervalMs;
             if (stat) stat.textContent = `emitted ${emitted} / ${nPoints} pts`;
+            // Refresh views because price-weighted SLA depends on actual price
+            try {
+              renderFinancialAssetsList();
+              const route = parseRoute();
+              if (route.view === 'project') {
+                const a = orka.assetsStore.get(route.params.id);
+                if (a && a.datasources && a.datasources.actual_price === series.series_id) {
+                  renderProjectView(route.params.id);
+                }
+              }
+            } catch (e) { /* no-op */ }
           }
           function stop() {
             clearInterval(activeActualPriceEmitters[series.series_id].timer);
@@ -1877,6 +1943,14 @@
             nextTs += intervalMs;
             if (stat) stat.textContent = `emitted ${emitted} / ${nPoints} pts`;
             console.info('Simulated predicted consumption event', { series_id: series.series_id, interval_start: iso, state: p.state });
+            // Update views since price-weighted SLA depends on predicted states
+            try {
+              renderFinancialAssetsList();
+              const route = parseRoute();
+              if (route.view === 'project' && route.params.id === asset.asset_id) {
+                renderProjectView(asset.asset_id);
+              }
+            } catch (e) { /* no-op */ }
           }
 
           function stop() {
