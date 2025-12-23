@@ -235,7 +235,7 @@ Note: When computing revenue or SLA-weighted metrics, the UI should pair a consu
 - Actual consumption (telemetry):
   - Creation: Data Sources → “Actual consumption → +” (per asset). Fields: `asset`, `interval_min`, `horizon_h`, `source`.
   - Store: `telemetryStore` with series keyed by `series_id`; indexed by `asset_id`.
-  - Datapoints: `{ interval_start, state, energy_charged_mwh, energy_discharged_mwh, soe_pct_end, availability_flag }`.
+  - Datapoints: `{ interval_start, state, energy_charged_mwh, energy_discharged_mwh, soe_pct_end, availability_flag, downtime_flag, responsible_party, downtime_reason }`.
   - Emission: One interval every 5 seconds; respects asset SoC and power/efficiency parameters.
   - Asset usage: Asset cards include a dropdown to select the active actual consumption series; saved to `asset.datasources.actual_consumption`.
 
@@ -259,6 +259,7 @@ Note: When computing revenue or SLA-weighted metrics, the UI should pair a consu
     - Cumulative series: `cum_t = sum_{k<=t} rev_k`.
     - Join rule: Intervals are included only when both price and consumption datapoints exist for the same `interval_start` ISO timestamp (applied separately for predicted and actual overlays).
     - Rendering: Simple canvas line chart with labeled axes (Y: currency; X: timeline) and legend (Predicted vs Actual). Updates ~every 2 seconds to reflect streaming sources.
+  - Supplier-attributed time-based SLA: `SLA_time_supplier = sum(Available*_t · Δt) / sum(Δt)`, where `Available*_t = 1` if `A_t = 1` or `A_t = 0` but `responsible_party` is not in the supplier set (e.g., {OEM, O_AND_M_PROVIDER}); else 0. Displayed alongside SLA (time) with the same coloring thresholds.
   - Time-based SLA (MVP): Computed from the selected (or latest) actual telemetry as `SLA_time = sum(A_t · Δt) / sum(Δt)`, where `A_t = availability_flag ∈ {0,1}` and `Δt = interval_duration_min`. Displayed as a percentage on the project view with threshold coloring (red <95%, yellow <98%, green otherwise).
 
 Notes:

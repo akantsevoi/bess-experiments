@@ -646,10 +646,13 @@
           const actualPriceLabelText = actualPriceSeries ? actualPriceLabel(actualPriceSeries) : '—';
           const actualConsLabelText = actualConsSeries ? `${actualConsSeries.source || ''}` : '—';
           const sla = computeTimeSLA(actualConsSeries) || { sla: 0 };
+          const slaSup = computeSupplierTimeSLA(actualConsSeries) || { sla: 0 };
           const slaPct = (sla.sla * 100).toFixed(1) + '%';
+          const slaSupPct = (slaSup.sla * 100).toFixed(1) + '%';
           const crit = (asset.sla_targets && asset.sla_targets.critical) ?? 0.95;
           const warn = (asset.sla_targets && asset.sla_targets.warn) ?? 0.98;
           const slaColor = sla.sla < crit ? '#ef4444' : (sla.sla < warn ? '#f59e0b' : '#10b981');
+          const slaSupColor = slaSup.sla < crit ? '#ef4444' : (slaSup.sla < warn ? '#f59e0b' : '#10b981');
           info.innerHTML = `
             <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
               <div>
@@ -662,6 +665,7 @@
                 <div>Actual price: ${actualPriceLabelText}</div>
                 <div>Actual consumption: ${actualConsLabelText}</div>
                 <div><strong>SLA (time):</strong> <span style="color:${slaColor}">${slaPct}</span></div>
+                <div><strong>Supplier SLA (time):</strong> <span style="color:${slaSupColor}">${slaSupPct}</span></div>
               </div>
             </div>`;
           if (hint) hint.textContent = 'updates every ~2s';
@@ -1463,12 +1467,13 @@
           const header = document.createElement('div');
           header.className = 'card';
           header.innerHTML = `
-            <div style="display:grid; grid-template-columns: 1fr 120px 160px 220px 120px; gap:12px; font-size:12px; color: var(--muted);">
+            <div style="display:grid; grid-template-columns: 1fr 120px 160px 220px 120px 140px; gap:12px; font-size:12px; color: var(--muted);">
               <div>Asset</div>
               <div>Zone</div>
               <div>Size</div>
               <div>Revenue (pred vs actual)</div>
               <div>SLA (time)</div>
+              <div>Supplier SLA (time)</div>
             </div>`;
           finAssetsListEl.appendChild(header);
           // rows
@@ -1483,13 +1488,17 @@
             const crit = (asset.sla_targets && asset.sla_targets.critical) ?? 0.95;
             const warn = (asset.sla_targets && asset.sla_targets.warn) ?? 0.98;
             const slaColor = sla.sla < crit ? '#ef4444' : (sla.sla < warn ? '#f59e0b' : '#10b981');
+            const slaSup = computeSupplierTimeSLA(slaSeries) || { sla: 0 };
+            const slaSupPct = (slaSup.sla * 100).toFixed(1) + '%';
+            const slaSupColor = slaSup.sla < crit ? '#ef4444' : (slaSup.sla < warn ? '#f59e0b' : '#10b981');
             row.innerHTML = `
-              <div style="display:grid; grid-template-columns: 1fr 120px 160px 220px 120px; align-items:center; gap:12px;">
+              <div style="display:grid; grid-template-columns: 1fr 120px 160px 220px 120px 140px; align-items:center; gap:12px;">
                 <div><strong>${asset.name}</strong> <span class="muted" style="font-size:12px">(${asset.asset_id})</span></div>
                 <div>${asset.zone_code}</div>
                 <div>${asset.bess.power_rating_mw}MW / ${asset.bess.energy_capacity_mwh}MWh</div>
                 <div>${revHtml}</div>
                 <div style="color:${slaColor}">${slaPct}</div>
+                <div style="color:${slaSupColor}">${slaSupPct}</div>
               </div>`;
             row.style.cursor = 'pointer';
             row.setAttribute('role', 'button');
@@ -1590,6 +1599,29 @@
             if (!eligible) continue;
             total += dtMin;
             if (a === 1 || a === true) up += dtMin;
+          }
+          const sla = total > 0 ? up / total : 0;
+          return { sla, minsUp: up, minsTotal: total };
+        }
+
+        function computeSupplierTimeSLA(telemetrySeries, opts = {}) {
+          if (!telemetrySeries) return null;
+          const data = telemetrySeries.data || [];
+          if (!data.length) return { sla: 0, minsUp: 0, minsTotal: 0 };
+          const startMs = opts.windowStart ? new Date(opts.windowStart).getTime() : -Infinity;
+          const endMs = opts.windowEnd ? new Date(opts.windowEnd).getTime() : Infinity;
+          const dtMin = telemetrySeries.interval_duration_min || 60;
+          const supplierSet = new Set(opts.supplierSet || ['OEM', 'O_AND_M_PROVIDER']);
+          let up = 0, total = 0;
+          for (const dp of data) {
+            const t = new Date(dp.interval_start).getTime();
+            if (t < startMs || t > endMs) continue;
+            const eligible = opts.eligibleFilter ? !!opts.eligibleFilter(dp) : true;
+            if (!eligible) continue;
+            total += dtMin;
+            const avail = (dp.availability_flag === 1 || dp.availability_flag === true);
+            const supplierFault = !avail && supplierSet.has(dp.responsible_party);
+            if (avail || (!avail && !supplierFault)) up += dtMin;
           }
           const sla = total > 0 ? up / total : 0;
           return { sla, minsUp: up, minsTotal: total };
@@ -1901,9 +1933,18 @@
           const effDis = (asset.bess.discharge_efficiency_pct ?? 95) / 100;
           function nextPoint() {
             // small chance of downtime
-            const down = Math.random() < 0.10; // 5% intervals as DOWN for demo
+            const down = Math.random() < 0.05; // 5% intervals as DOWN for demo
             if (down) {
-              return { state: 'DOWN', charged: 0, discharged: 0, soeEnd: soePct, availability: 0 };
+              // Attribute responsibility (60% supplier-caused, 40% not)
+              const supplierCaused = Math.random() < 0.6;
+              const supplierParties = ['OEM', 'O_AND_M_PROVIDER'];
+              const nonSupplierParties = ['GRID_OPERATOR', 'OPERATOR'];
+              const resp = supplierCaused
+                ? supplierParties[Math.floor(Math.random() * supplierParties.length)]
+                : nonSupplierParties[Math.floor(Math.random() * nonSupplierParties.length)];
+              const reasons = ['INVERTER_FAULT', 'BATTERY_FAULT', 'HVAC_FAULT', 'COMMUNICATION_FAILURE', 'GRID_OUTAGE', 'SCHEDULED_MAINTENANCE'];
+              const reason = reasons[Math.floor(Math.random() * reasons.length)];
+              return { state: 'DOWN', charged: 0, discharged: 0, soeEnd: soePct, availability: 0, downtime_flag: 1, responsible_party: resp, downtime_reason: reason };
             }
             let state;
             if (soePct <= minPct + 2) state = 'CHARGING';
@@ -1919,7 +1960,7 @@
             if (state === 'DISCHARGING') nextSoe = Math.max(minPct, soePct - (eMag / effDis / cap) * 100);
             const charged = state === 'CHARGING' ? eMag : 0;
             const discharged = state === 'DISCHARGING' ? eMag : 0;
-            return { state, charged, discharged, soeEnd: Math.round(nextSoe * 100) / 100, availability: 1 };
+            return { state, charged, discharged, soeEnd: Math.round(nextSoe * 100) / 100, availability: 1, downtime_flag: 0 };
           }
           function tick() {
             if (emitted >= nPoints) { stop(); return; }
@@ -1933,13 +1974,24 @@
                 energy_charged_mwh: Math.round(p.charged * 1000) / 1000,
                 energy_discharged_mwh: Math.round(p.discharged * 1000) / 1000,
                 soe_pct_end: p.soeEnd,
-                availability_flag: p.availability
+                availability_flag: p.availability,
+                downtime_flag: p.downtime_flag,
+                responsible_party: p.responsible_party,
+                downtime_reason: p.downtime_reason
               });
             }
             emitted += 1;
             soePct = p.soeEnd;
             nextTs += intervalMs;
             if (stat) stat.textContent = `emitted ${emitted} / ${nPoints} pts`;
+            // Immediately update metrics (SLA, revenue) in visible views
+            try {
+              renderFinancialAssetsList();
+              const route = parseRoute();
+              if (route.view === 'project' && route.params.id === asset.asset_id) {
+                renderProjectView(asset.asset_id);
+              }
+            } catch (e) { /* no-op */ }
           }
           function stop() {
             clearInterval(activeActualConsEmitters[series.series_id].timer);
