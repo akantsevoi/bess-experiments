@@ -342,6 +342,27 @@
               </div>
               <div id="project-chart" style="height:clamp(220px, 40vh, 360px); width:100%; position:relative;"></div>
             </div>
+            <div class="card" id="project-debug-card">
+              <div class="row" style="justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <div><strong>Interval Debug</strong> <span class="muted" style="font-size:12px">latest 24 intervals</span></div>
+              </div>
+              <div style="overflow:auto">
+                <table style="width:100%; border-collapse:collapse; font-size:12px;">
+                  <thead>
+                    <tr style="text-align:left; color:var(--muted)">
+                      <th style="padding:6px 8px; border-bottom:1px solid var(--border);">Time</th>
+                      <th style="padding:6px 8px; border-bottom:1px solid var(--border);">Status</th>
+                      <th style="padding:6px 8px; border-bottom:1px solid var(--border);">Pred price</th>
+                      <th style="padding:6px 8px; border-bottom:1px solid var(--border);">Actual price</th>
+                      <th style="padding:6px 8px; border-bottom:1px solid var(--border);">Pred E (MWh)</th>
+                      <th style="padding:6px 8px; border-bottom:1px solid var(--border);">Actual E (MWh)</th>
+                      <th style="padding:6px 8px; border-bottom:1px solid var(--border);">SLA contrib</th>
+                    </tr>
+                  </thead>
+                  <tbody id="project-debug-body"></tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </section>
       </main>
@@ -674,6 +695,7 @@
             </div>`;
           if (hint) hint.textContent = 'updates every ~2s';
           drawRevenueChart(asset, priceSeries, consSeries, actualPriceSeries, actualConsSeries);
+          renderProjectDebugTable(asset);
           if (projectRenderTimer) clearInterval(projectRenderTimer);
           projectRenderTimer = setInterval(() => {
             const a = orka.assetsStore.get(assetId);
@@ -685,6 +707,7 @@
             const acId = a && a.datasources && a.datasources.actual_consumption;
             const acs = acId ? orka.telemetryStore.state.seriesById[acId] : orka.telemetryStore.getLatest(assetId);
             drawRevenueChart(a, ps, cs, aps, acs);
+            renderProjectDebugTable(a);
           }, 2000);
         }
 
@@ -875,6 +898,68 @@
             ctx.fillStyle = '#94a3b8'; ctx.fillText(actLbl, lx, legY);
           }
           host.appendChild(canvas);
+        }
+
+        function renderProjectDebugTable(asset) {
+          const body = document.getElementById('project-debug-body');
+          if (!body || !asset) return;
+          body.innerHTML = '';
+          // Resolve series
+          const telemId = (asset.datasources && asset.datasources.actual_consumption) || null;
+          const telemetry = telemId ? orka.telemetryStore.state.seriesById[telemId] : orka.telemetryStore.getLatest(asset.asset_id);
+          const pred = orka.consumptionStore.getForecast(asset.asset_id);
+          const predPriceId = asset.datasources && asset.datasources.predicted_price;
+          const predPrice = predPriceId ? orka.priceStore.state.pricesById[predPriceId] : null;
+          const actPriceId = asset.datasources && asset.datasources.actual_price;
+          let actPrice = actPriceId ? orka.priceStore.state.pricesById[actPriceId] : null;
+          if (!actPrice) {
+            const candIds = (orka.priceStore.state.indexByZone[asset.zone_code] || []);
+            for (const id of candIds) { const s = orka.priceStore.state.pricesById[id]; if (s && s.series_type === 'actual') { actPrice = s; break; } }
+          }
+          if (!telemetry) return;
+          const dtMin = telemetry.interval_duration_min || 60;
+          const intervalMs = dtMin * 60 * 1000;
+          const toSlot = (iso) => Math.floor(new Date(iso).getTime() / intervalMs);
+          const pPred = Object.create(null);
+          if (predPrice) (predPrice.data || []).forEach(([iso, v]) => { pPred[toSlot(iso)] = v; });
+          const pAct = Object.create(null);
+          if (actPrice) (actPrice.data || []).forEach(([iso, v]) => { pAct[toSlot(iso)] = v; });
+          const predMap = Object.create(null);
+          if (pred) (pred.data || []).forEach(dp => { predMap[toSlot(dp.interval_start)] = dp; });
+          // Build rows from latest telemetry intervals
+          const rows = (telemetry.data || []);
+          const n = rows.length;
+          const start = Math.max(0, n - 24);
+          for (let i = n - 1; i >= start; i--) {
+            const dp = rows[i];
+            const slot = toSlot(dp.interval_start);
+            const pp = pPred[slot];
+            const pa = pAct[slot];
+            const pdp = predMap[slot];
+            const state = dp.state || '';
+            const predE = pdp ? (pdp.predicted_state === 'DISCHARGING' ? pdp.predicted_energy_mwh : (pdp.predicted_state === 'CHARGING' ? -pdp.predicted_energy_mwh : 0)) : '';
+            const actE = (dp.energy_discharged_mwh || 0) - (dp.energy_charged_mwh || 0);
+            // SLA contribs
+            const A = (dp.availability_flag === 1 || dp.availability_flag === true) ? 1 : 0;
+            const S = pdp ? ((pdp.predicted_state === 'DISCHARGING' || pdp.predicted_state === 'CHARGING') ? 1 : 0) : 0;
+            const d = pdp ? (pdp.predicted_state === 'DISCHARGING' ? 1 : (pdp.predicted_state === 'CHARGING' ? -1 : 0)) : 0;
+            const w = (pa === undefined) ? 0 : Math.max(pa * d, 0);
+            const dtH = dtMin / 60;
+            const pwExp = S * w * dtH;
+            const pwAvail = A * S * w * dtH;
+            const slaContribText = `${A ? dtMin : 0}/${dtMin}m · pw ${pwAvail.toFixed(2)}/${pwExp.toFixed(2)}`;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td style="padding:6px 8px; border-bottom:1px solid var(--border); white-space:nowrap;">${formatUtc(dp.interval_start)}</td>
+              <td style="padding:6px 8px; border-bottom:1px solid var(--border);">${state}</td>
+              <td style="padding:6px 8px; border-bottom:1px solid var(--border);">${pp === undefined ? '' : pp.toFixed(2)}</td>
+              <td style="padding:6px 8px; border-bottom:1px solid var(--border);">${pa === undefined ? '' : pa.toFixed(2)}</td>
+              <td style="padding:6px 8px; border-bottom:1px solid var(--border);">${predE === '' ? '' : (Math.round(predE * 1000) / 1000).toFixed(3)}</td>
+              <td style="padding:6px 8px; border-bottom:1px solid var(--border);">${(Math.round(actE * 1000) / 1000).toFixed(3)}</td>
+              <td style="padding:6px 8px; border-bottom:1px solid var(--border);">${slaContribText}</td>
+            `;
+            body.appendChild(tr);
+          }
         }
 
         // Simple tab handling

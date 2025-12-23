@@ -250,6 +250,8 @@ Note: When computing revenue or SLA-weighted metrics, the UI should pair a consu
   - Each row is clickable and navigates to the project view `#project/<asset_id>`.
   - Adds a 5th column “SLA (time)”, computed from the selected (or latest) actual telemetry series for each asset.
     - Threshold coloring: SLA < 95% red; SLA < 98% yellow; otherwise green.
+  - Adds a 6th column “Supplier SLA (time)”, computed with supplier-attribution rules.
+  - Adds a 7th column “SLA (price-weighted)”, computed as described below; both use per-asset thresholds for coloring.
 
 - Project view (per-asset):
   - Header shows basic asset info, the selected predicted price datasource label, and the latest predicted consumption label.
@@ -257,6 +259,15 @@ Note: When computing revenue or SLA-weighted metrics, the UI should pair a consu
     - Metric: Cumulative predicted revenue over time, with optional actual cumulative revenue overlay when actual sources are selected.
     - Per-interval revenue: `rev_t = price_t * (E_dis_t - E_chg_t)` where sign is taken from predicted_state (DISCHARGING positive, CHARGING negative, IDLE zero).
     - Cumulative series: `cum_t = sum_{k<=t} rev_k`.
+    - Join rule: Intervals are included only when both price and consumption datapoints exist for the same `interval_start` ISO timestamp (applied separately for predicted and actual overlays).
+    - Rendering: Simple canvas line chart with labeled axes (Y: currency; X: timeline) and legend (Predicted vs Actual). Updates ~every 2 seconds to reflect streaming sources.
+  - Supplier-attributed time-based SLA: `SLA_time_supplier = sum(Available*_t · Δt) / sum(Δt)`, where `Available*_t = 1` if `A_t = 1` or `A_t = 0` but `responsible_party` is not in the supplier set (e.g., {OEM, O_AND_M_PROVIDER}); else 0. Displayed alongside SLA (time) with the same coloring thresholds.
+  - Time-based SLA (MVP): Computed from the selected (or latest) actual telemetry as `SLA_time = sum(A_t · Δt) / sum(Δt)`, where `A_t = availability_flag ∈ {0,1}` and `Δt = interval_duration_min`. Displayed as a percentage on the project view with threshold coloring (red <95%, yellow <98%, green otherwise).
+  - Price-weighted SLA: `SLA_price = Σ(A_t · S_t · w_t · Δt) / Σ(S_t · w_t · Δt)` with `w_t = max(p_t · d_t, 0)`, `p_t` = actual price, `S_t = 1` when predicted_state ∈ {CHARGING, DISCHARGING}, `d_t = +1 (DISCHARGING), −1 (CHARGING), 0 (IDLE)`. Joins use slot-based alignment at the telemetry cadence to avoid ms drift.
+  - Interval Debug table: latest 24 intervals with Time, Status, Pred price, Actual price, Pred E (signed), Actual E, and “SLA contrib” per row (“x/y m pw a/e”).
+
+Live updates
+- Metrics and the debug table recompute on every emitted event from telemetry, predicted consumption, and actual price streams, plus a periodic refresh.
     - Join rule: Intervals are included only when both price and consumption datapoints exist for the same `interval_start` ISO timestamp (applied separately for predicted and actual overlays).
     - Rendering: Simple canvas line chart with labeled axes (Y: currency; X: timeline) and legend (Predicted vs Actual). Updates ~every 2 seconds to reflect streaming sources.
   - Supplier-attributed time-based SLA: `SLA_time_supplier = sum(Available*_t · Δt) / sum(Δt)`, where `Available*_t = 1` if `A_t = 1` or `A_t = 0` but `responsible_party` is not in the supplier set (e.g., {OEM, O_AND_M_PROVIDER}); else 0. Displayed alongside SLA (time) with the same coloring thresholds.
