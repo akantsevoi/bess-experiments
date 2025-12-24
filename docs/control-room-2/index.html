@@ -948,6 +948,16 @@
             const pwExp = S * w * dtH;
             const pwAvail = A * S * w * dtH;
             const slaContribText = `${A ? dtMin : 0}/${dtMin}m · pw ${pwAvail.toFixed(2)}/${pwExp.toFixed(2)}`;
+            const tip = [
+              `A_t=${A}`,
+              `S_t=${S}${pdp ? ` (pred=${pdp.predicted_state})` : ''}`,
+              `d_t=${d}`,
+              `p_t=${pa === undefined ? '—' : pa.toFixed(2)}`,
+              `w_t=max(p·d,0)=${w.toFixed(2)}`,
+              `Δt_h=${dtH.toFixed(2)}`,
+              `PW avail/exp=${pwAvail.toFixed(2)}/${pwExp.toFixed(2)}`,
+              (dp.downtime_flag ? `down: ${dp.responsible_party || 'unknown'}${dp.downtime_reason ? ' ('+dp.downtime_reason+')' : ''}` : '')
+            ].filter(Boolean).join(' | ');
             const tr = document.createElement('tr');
             tr.innerHTML = `
               <td style="padding:6px 8px; border-bottom:1px solid var(--border); white-space:nowrap;">${formatUtc(dp.interval_start)}</td>
@@ -956,7 +966,7 @@
               <td style="padding:6px 8px; border-bottom:1px solid var(--border);">${pa === undefined ? '' : pa.toFixed(2)}</td>
               <td style="padding:6px 8px; border-bottom:1px solid var(--border);">${predE === '' ? '' : (Math.round(predE * 1000) / 1000).toFixed(3)}</td>
               <td style="padding:6px 8px; border-bottom:1px solid var(--border);">${(Math.round(actE * 1000) / 1000).toFixed(3)}</td>
-              <td style="padding:6px 8px; border-bottom:1px solid var(--border);">${slaContribText}</td>
+              <td style="padding:6px 8px; border-bottom:1px solid var(--border);" title="${tip}">${slaContribText}</td>
             `;
             body.appendChild(tr);
           }

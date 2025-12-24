@@ -265,6 +265,7 @@ Note: When computing revenue or SLA-weighted metrics, the UI should pair a consu
   - Time-based SLA (MVP): Computed from the selected (or latest) actual telemetry as `SLA_time = sum(A_t · Δt) / sum(Δt)`, where `A_t = availability_flag ∈ {0,1}` and `Δt = interval_duration_min`. Displayed as a percentage on the project view with threshold coloring (red <95%, yellow <98%, green otherwise).
   - Price-weighted SLA: `SLA_price = Σ(A_t · S_t · w_t · Δt) / Σ(S_t · w_t · Δt)` with `w_t = max(p_t · d_t, 0)`, `p_t` = actual price, `S_t = 1` when predicted_state ∈ {CHARGING, DISCHARGING}, `d_t = +1 (DISCHARGING), −1 (CHARGING), 0 (IDLE)`. Joins use slot-based alignment at the telemetry cadence to avoid ms drift.
   - Interval Debug table: latest 24 intervals with Time, Status, Pred price, Actual price, Pred E (signed), Actual E, and “SLA contrib” per row (“x/y m pw a/e”).
+    - Tooltips on “SLA contrib” show the exact inputs: `A_t`, `S_t` (and predicted state), `d_t`, `p_t`, `w_t`, `Δt_h`, and the computed `available/expected` price-weighted terms, plus downtime attribution when present.
 
 Live updates
 - Metrics and the debug table recompute on every emitted event from telemetry, predicted consumption, and actual price streams, plus a periodic refresh.
